@@ -1,0 +1,52 @@
+﻿using log4net.Util;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using SEG.Dtos;
+using SEG.Servicio.Interfaces;
+using Utilidades;
+
+namespace SEG.Api.Seguridad.Controllers
+{
+    [ApiController]
+    [Route("api/autenticacion")]
+    public class AutenticacionController : Controller
+    {
+        private readonly IAutenticacionServicio _autenticacionServicio;
+        public AutenticacionController(IAutenticacionServicio autenticacionServicio)
+        {
+            _autenticacionServicio = autenticacionServicio;
+        }
+
+        [HttpPost("autenticar")]
+        public async Task<ActionResult<ApiResponse<string>>> Autenticar(AutenticacionRequest autenticacionRequest)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var respuesta = await _autenticacionServicio.AutenticarAsync(autenticacionRequest);
+            if (!respuesta.Correcto)
+            {
+                return Unauthorized(respuesta);
+            }
+
+            return respuesta;
+        }
+
+        [HttpPost("seleccionarSede")]
+        [Authorize]
+        public async Task<ActionResult<ApiResponse<string>>> SeleccionarSede(int sedeId)
+        {
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
+            var seleccionSedeResponse = await _autenticacionServicio.SeleccionarSedeAsync(sedeId);
+            if (!seleccionSedeResponse.Correcto)
+                return Unauthorized(seleccionSedeResponse);
+
+            return seleccionSedeResponse;
+        }
+
+    }
+}
