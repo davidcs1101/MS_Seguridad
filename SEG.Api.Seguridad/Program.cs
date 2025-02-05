@@ -134,6 +134,18 @@ builder.Services.AddHttpContextAccessor();
 //Servicio que obtiene el UsuarioId del Token
 builder.Services.AddScoped<IUsuarioContextoServicio, UsuarioContextoServicio>();
 
+//OJO:ESTO ES PARA PERMITIR ACCESO DESDE MI FRONT REACT
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Allowhost", builder =>
+        builder
+        //.WithOrigins("https://localhost:3000","","") SOLO MI FRONT
+        .AllowAnyMethod() //OJO: ESTA LINEA NO ES UNA BUENA PRACTICA YA QUE LO IDEAL ES TENER UNA RESTRICCION DE LOS ORIGENES QUE PUEDEN CONSUMIR EL SITIO
+        .AllowAnyHeader()
+        .AllowAnyOrigin());
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -144,7 +156,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("Allowhost"); // Aquí aplicamos la política CORS para permitir a nuestro FRONT REACT LLEGAR
 app.UseMiddleware<MiddlewareExcepcionesGlobales>();
 
 app.UseAuthentication();
