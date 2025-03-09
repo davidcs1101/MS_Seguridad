@@ -10,7 +10,7 @@ namespace SEG.Servicio.Interfaces
 {
     public interface IAutenticacionServicio
     {
-        Task<ApiResponse<string>> AutenticarAsync(AutenticacionRequest autenticacionDto);
-        Task<ApiResponse<string>> SeleccionarSedeAsync(int sedeId);
+        Task<ApiResponse<string>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionDto);
+        Task<ApiResponse<string>> AutenticarSedeAsync(int sedeId);
     }
 }

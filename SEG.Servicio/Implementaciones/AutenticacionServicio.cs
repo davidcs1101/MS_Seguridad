@@ -35,7 +35,7 @@ namespace SEG.Servicio.Implementaciones
             _usuarioContextoServicio = usuarioContextoServicio;
         }
 
-        public async Task<ApiResponse<string>> AutenticarAsync(AutenticacionRequest autenticacionRequest)
+        public async Task<ApiResponse<string>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
         {
             var usuario = await _usuarioRepositorio.ObtenerPorUsuarioAsync(autenticacionRequest.NombreUsuario);
             if (usuario == null || usuario.Clave != ProcesadorClaves.EncriptarClave(autenticacionRequest.Clave))
@@ -45,7 +45,7 @@ namespace SEG.Servicio.Implementaciones
             return new ApiResponse<string> { Correcto = true, Mensaje = "", Data = token };
         }
 
-        public async Task<ApiResponse<string>> SeleccionarSedeAsync(int sedeId)
+        public async Task<ApiResponse<string>> AutenticarSedeAsync(int sedeId)
         {
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 

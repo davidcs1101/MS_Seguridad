@@ -24,22 +24,21 @@ namespace SEG.Api.Seguridad.Controllers
         [HttpGet("obtenerPorId")]
         public async Task<ActionResult<ApiResponse<GrupoDto?>>> ObtenerPorId(int id)
         {
-            var respuesta = await _grupoServicio.ObtenerPorIdAsync(id);
-            return respuesta;
+            return await _grupoServicio.ObtenerPorIdAsync(id);
         }
 
         [HttpGet("obtenerPorCodigo")]
         public async Task<ActionResult<ApiResponse<GrupoDto?>>> ObtenerPorCodigo(string codigo)
         {
-            var respuesta = await _grupoServicio.ObtenerPorCodigoAsync(codigo);
-            return respuesta;
+            return await _grupoServicio.ObtenerPorCodigoAsync(codigo);
+            
         }
 
         [HttpGet("listar")]
         public async Task<ActionResult<ApiResponse<List<GrupoDto>?>>> Listar()
         {
-            var grupos = await _grupoServicio.ListarAsync();
-            return grupos;
+            return await _grupoServicio.ListarAsync();
+            
         }
 
         [HttpPost("crear")]
@@ -48,8 +47,8 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var respuesta = await _grupoServicio.CrearAsync(grupoCreacionRequest);
-            return respuesta;
+            return await _grupoServicio.CrearAsync(grupoCreacionRequest);
+            
         }
 
         [HttpPut("modificar")]
@@ -58,15 +57,13 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var respuesta = await _grupoServicio.ModificarAsync(grupoModificacionRequest);
-            return respuesta;
+            return await _grupoServicio.ModificarAsync(grupoModificacionRequest);
         }
 
         [HttpDelete("eliminar")]
         public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id) 
         {
-            var respuesta = await _grupoServicio.EliminarAsync(id);
-            return respuesta;
+            return await _grupoServicio.EliminarAsync(id);
         }
     }
 }

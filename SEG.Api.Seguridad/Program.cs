@@ -70,6 +70,7 @@ builder.Services.AddScoped<IGrupoProgramaRepositorio, GrupoProgramaRepositorio>(
 builder.Services.AddScoped<IGrupoProgramaServicio, GrupoProgramaServicio>();
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 
+builder.Services.AddScoped<IApiResponseServicio, ApiResponseServicio>();
 //Configuramos AutoMapper para el mapeo de DTOS a las entidades y le decimos que se hará a nivel de Ensamblado
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

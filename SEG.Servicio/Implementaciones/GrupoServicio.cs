@@ -18,15 +18,17 @@ namespace SEG.Servicio.Implementaciones
         private readonly IGrupoRepositorio _grupoRepositorio;
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
+        private readonly IApiResponseServicio _respServicio;
 
-        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio)
+        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponseServicio respServicio)
         {
             _grupoRepositorio = grupoRepositorio;
             _mapper = mapper;
             _usuarioContextoServicio = usuarioContextoServicio;
+            _respServicio = respServicio;
         }
 
-        public async Task<ApiResponse<int>> CrearAsync(GrupoCreacionRequest grupoCreacionRequest) 
+        public async Task<ApiResponse<int>> CrearAsync(GrupoCreacionRequest grupoCreacionRequest)
         {
             var grupoExiste = await _grupoRepositorio.ObtenerPorCodigoAsync(grupoCreacionRequest.Codigo);
             if (grupoExiste != null)
@@ -40,10 +42,11 @@ namespace SEG.Servicio.Implementaciones
 
             var id = await _grupoRepositorio.CrearAsync(grupo);
 
-            return new ApiResponse<int> { Correcto = true, Mensaje = Textos.Generales.MENSAJE_REGISTRO_CREADO, Data = id };
+            return _respServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
+
         }
 
-        public async Task<ApiResponse<string>> ModificarAsync(GrupoModificacionRequest grupoModificacionRequest) 
+        public async Task<ApiResponse<string>> ModificarAsync(GrupoModificacionRequest grupoModificacionRequest)
         {
             var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(grupoModificacionRequest.Id);
             if (grupoExiste == null)
@@ -51,16 +54,16 @@ namespace SEG.Servicio.Implementaciones
 
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-            _mapper.Map(grupoModificacionRequest,grupoExiste);
+            _mapper.Map(grupoModificacionRequest, grupoExiste);
             grupoExiste.FechaModificado = DateTime.Now;
             grupoExiste.UsuarioModificadorId = usuarioId;
 
             await _grupoRepositorio.ModificarAsync(grupoExiste);
 
-            return new ApiResponse<string> { Correcto = true, Mensaje = Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO };
+            return _respServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO,"");
         }
 
-        public async Task<ApiResponse<string>> EliminarAsync(int id) 
+        public async Task<ApiResponse<string>> EliminarAsync(int id)
         {
             var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(id);
             if (grupoExiste == null)
@@ -69,12 +72,12 @@ namespace SEG.Servicio.Implementaciones
             var eliminado = await _grupoRepositorio.EliminarAsync(id);
 
             if (eliminado)
-                return new ApiResponse<string> { Correcto = true, Mensaje = Textos.Generales.MENSAJE_REGISTRO_ELIMINADO };
+                return _respServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO, "");
 
-            return new ApiResponse<string> { Correcto = false, Mensaje = Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO };
+            return _respServicio.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
         }
 
-        public async Task<ApiResponse<GrupoDto?>> ObtenerPorIdAsync(int id) 
+        public async Task<ApiResponse<GrupoDto?>> ObtenerPorIdAsync(int id)
         {
             var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(id);
             if (grupoExiste == null)
@@ -82,10 +85,10 @@ namespace SEG.Servicio.Implementaciones
 
             var grupoDto = _mapper.Map<GrupoDto>(grupoExiste);
 
-            return new ApiResponse<GrupoDto?> { Correcto = true, Mensaje = "", Data = grupoDto };
+            return _respServicio.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
         }
 
-        public async Task<ApiResponse<GrupoDto?>> ObtenerPorCodigoAsync(string codigo) 
+        public async Task<ApiResponse<GrupoDto?>> ObtenerPorCodigoAsync(string codigo)
         {
             var grupoExiste = await _grupoRepositorio.ObtenerPorCodigoAsync(codigo);
             if (grupoExiste == null)
@@ -93,14 +96,14 @@ namespace SEG.Servicio.Implementaciones
 
             var grupoDto = _mapper.Map<GrupoDto>(grupoExiste);
 
-            return new ApiResponse<GrupoDto?> { Correcto = true, Mensaje = "", Data = grupoDto };
+            return _respServicio.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
         }
 
         public async Task<ApiResponse<List<GrupoDto>?>> ListarAsync()
         {
             var gruposResultado = await _grupoRepositorio.Listar().ToListAsync();
 
-            return new ApiResponse<List<GrupoDto>?> { Correcto = true, Mensaje = "", Data = gruposResultado };
+            return _respServicio.CrearRespuesta<List<GrupoDto>?>(true, "", gruposResultado);
         }
 
     }

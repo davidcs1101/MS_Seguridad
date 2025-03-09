@@ -19,13 +19,13 @@ namespace SEG.Api.Seguridad.Controllers
             _autenticacionServicio = autenticacionServicio;
         }
 
-        [HttpPost("autenticar")]
+        [HttpPost("autenticarUsuario")]
         public async Task<ActionResult<ApiResponse<string>>> Autenticar(AutenticacionRequest autenticacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var respuesta = await _autenticacionServicio.AutenticarAsync(autenticacionRequest);
+            var respuesta = await _autenticacionServicio.AutenticarUsuarioAsync(autenticacionRequest);
             if (!respuesta.Correcto)
             {
                 return Unauthorized(respuesta);
@@ -34,14 +34,14 @@ namespace SEG.Api.Seguridad.Controllers
             return respuesta;
         }
 
-        [HttpPost("seleccionarSede")]
+        [HttpPost("autenticarSede")]
         [Authorize]
-        public async Task<ActionResult<ApiResponse<string>>> SeleccionarSede(int sedeId)
+        public async Task<ActionResult<ApiResponse<string>>> Autenticar(int sedeId)
         {
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
 
-            var seleccionSedeResponse = await _autenticacionServicio.SeleccionarSedeAsync(sedeId);
+            var seleccionSedeResponse = await _autenticacionServicio.AutenticarSedeAsync(sedeId);
             if (!seleccionSedeResponse.Correcto)
                 return Unauthorized(seleccionSedeResponse);
 
