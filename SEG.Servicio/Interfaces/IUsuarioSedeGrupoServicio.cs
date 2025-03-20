@@ -14,6 +14,6 @@ namespace SEG.Servicio.Interfaces
         Task<ApiResponse<string>> ModificarAsync(UsuarioSedeGrupoModificacionRequest usuarioSedeGrupoModificacionRequest);
         Task<ApiResponse<string>> EliminarAsync(int id);
         Task<ApiResponse<UsuarioSedeGrupoDto?>> ObtenerUsuarioSedeAsync(int usuarioId, int sedeId);
-        Task<ApiResponse<List<UsuarioSedeGrupoDto>?>> ListarPorUsuarioIdAsync(int? usuarioId);
+        Task<ApiResponse<List<UsuarioSedeGrupoDto>?>> ListarPorUsuarioIdLogueadoAsync();
     }
 }

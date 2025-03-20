@@ -15,6 +15,7 @@ using System.Text;
 using SEG.Api.Seguridad.Infraestructura;
 using Microsoft.AspNetCore.Authorization;
 using Utilidades;
+using SEG.Dominio.Entidades;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +72,16 @@ builder.Services.AddScoped<IGrupoProgramaServicio, GrupoProgramaServicio>();
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 
 builder.Services.AddScoped<IApiResponseServicio, ApiResponseServicio>();
+
+builder.Services.AddScoped<IUsuarioValidador, UsuarioValidador>();
+builder.Services.AddScoped<IGrupoValidador, GrupoValidador>();
+builder.Services.AddScoped<IProgramaValidador, ProgramaValidador>();
+builder.Services.AddScoped<IUsuarioSedeGrupoValidador, UsuarioSedeGrupoValidador>();
+
+builder.Services.AddScoped<IConstructorTextosNotificacion, ConstructorTextosNotificacion>();
+builder.Services.AddScoped<IConstructorMensajesNotificacionCorreo, ConstructorMensajesNotificacionCorreo>();
+builder.Services.AddScoped<INotificadorCorreo, NotificadorCorreo>();
+
 //Configuramos AutoMapper para el mapeo de DTOS a las entidades y le decimos que se hará a nivel de Ensamblado
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

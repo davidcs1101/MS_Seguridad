@@ -18,12 +18,11 @@ namespace SEG.Api.Seguridad.Controllers
             _usuarioSedeGrupoServicio = usuarioSedeGrupoServicio; 
         }
 
-        [HttpGet("listarPorUsuarioId")]
+        [HttpGet("listarPorUsuarioIdLogueado")]
         [Authorize]
-        public async Task<ActionResult<ApiResponse<List<UsuarioSedeGrupoDto>?>>> ListarPorUsuarioI()
+        public async Task<ActionResult<ApiResponse<List<UsuarioSedeGrupoDto>?>>> ListarPorUsuarioIdLogueado()
         {
-            var usuarioTokenId = Convert.ToInt32(User.FindFirst("UsuarioId")?.Value);
-            var respuesta = await _usuarioSedeGrupoServicio.ListarPorUsuarioIdAsync(usuarioTokenId);
+            var respuesta = await _usuarioSedeGrupoServicio.ListarPorUsuarioIdLogueadoAsync();
             if (!respuesta.Correcto)
                 return NotFound(respuesta);
 

@@ -24,7 +24,7 @@ namespace SEG.Dtos
         public string Cuerpo { get; set; } = null!;
 
         [Required(ErrorMessage = Textos.Generales.VALIDA_CAMPO_OBLIGATORIO)]
-        public bool esCuerpoHtml { get; set; }
+        public bool EsCuerpoHtml { get; set; }
 
 
         public static ValidationResult? ValidarCorreos(List<string> correos, ValidationContext contexto) 
