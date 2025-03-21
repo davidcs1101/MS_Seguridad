@@ -23,15 +23,13 @@ namespace SEG.Api.Seguridad.Controllers
         [HttpGet("obtenerPorId")]
         public async Task<ActionResult<ApiResponse<ProgramaDto?>>> ObtenerPorId(int id)
         {
-            var respuesta = await _programaServicio.ObtenerPorIdAsync(id);
-            return respuesta;
+            return await _programaServicio.ObtenerPorIdAsync(id);
         }
 
         [HttpGet("obtenerPorCodigo")]
         public async Task<ActionResult<ApiResponse<ProgramaDto?>>> ObtenerPorCodigo(string codigo)
         {
-            var respuesta = await _programaServicio.ObtenerPorCodigoAsync(codigo);
-            return respuesta;
+            return await _programaServicio.ObtenerPorCodigoAsync(codigo);
         }
 
         [HttpPost("crear")]
@@ -40,8 +38,7 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var respuesta = await _programaServicio.CrearAsync(programaCreacionRequest);
-            return respuesta;
+            return await _programaServicio.CrearAsync(programaCreacionRequest);
         }
 
         [HttpPut("modificar")]
@@ -50,22 +47,19 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var respuesta = await _programaServicio.ModificarAsync(programaModificacionRequest);
-            return respuesta;
+            return await _programaServicio.ModificarAsync(programaModificacionRequest);
         }
 
         [HttpDelete("eliminar")]
         public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id)
         {
-            var respuesta = await _programaServicio.EliminarAsync(id);
-            return respuesta;
+            return await _programaServicio.EliminarAsync(id);
         }
 
         [HttpGet("listar")]
         public async Task<ActionResult<ApiResponse<List<ProgramaDto>?>>> Listar()
         {
-            var programas = await _programaServicio.ListarAsync();
-            return programas;
+            return await _programaServicio.ListarAsync();
         }
     }
 }

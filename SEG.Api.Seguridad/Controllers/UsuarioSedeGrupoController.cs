@@ -22,11 +22,7 @@ namespace SEG.Api.Seguridad.Controllers
         [Authorize]
         public async Task<ActionResult<ApiResponse<List<UsuarioSedeGrupoDto>?>>> ListarPorUsuarioIdLogueado()
         {
-            var respuesta = await _usuarioSedeGrupoServicio.ListarPorUsuarioIdLogueadoAsync();
-            if (!respuesta.Correcto)
-                return NotFound(respuesta);
-
-            return respuesta;
+            return await _usuarioSedeGrupoServicio.ListarPorUsuarioIdLogueadoAsync();
         }
 
         [HttpPost("crear")]
@@ -36,8 +32,7 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var respuesta = await _usuarioSedeGrupoServicio.CrearAsync(usuarioSedeGrupoCreacionRequest);
-            return respuesta;
+            return await _usuarioSedeGrupoServicio.CrearAsync(usuarioSedeGrupoCreacionRequest);
         }
 
         [HttpPut("modificar")]
@@ -47,16 +42,14 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var respuesta = await _usuarioSedeGrupoServicio.ModificarAsync(usuarioSedeGrupoModificacionRequest);
-            return respuesta;
+            return await _usuarioSedeGrupoServicio.ModificarAsync(usuarioSedeGrupoModificacionRequest);
         }
 
         [HttpDelete("eliminar")]
         [Authorize(policy: "UsuarioSedesGruposPermiso")]
         public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id) 
         {
-            var respuesta = await _usuarioSedeGrupoServicio.EliminarAsync(id);
-            return respuesta;
+            return await _usuarioSedeGrupoServicio.EliminarAsync(id);
         }
     }
 }

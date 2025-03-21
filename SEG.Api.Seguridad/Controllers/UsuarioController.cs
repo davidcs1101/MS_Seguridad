@@ -25,8 +25,7 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var respuesta = await _usuarioServicio.CrearAsync(usuarioCreacionRequest);
-            return respuesta;
+            return await _usuarioServicio.CrearAsync(usuarioCreacionRequest);
         }
 
         [HttpPut("modificarClave")]
@@ -36,21 +35,13 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var respuesta = await _usuarioServicio.ModificarClaveAsync(clave);
-            if (!respuesta.Correcto)
-                return NotFound(respuesta);
-
-            return respuesta;
+            return await _usuarioServicio.ModificarClaveAsync(clave);
         }
 
         [HttpPut("restablecerClave")]
         public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> RestablecerClave(string nombreUsuario)
         {
-            var respuesta = await _usuarioServicio.RestablecerClavePorUsuarioAsync(nombreUsuario);
-            if (!respuesta.Correcto)
-                return NotFound(respuesta);
-
-            return respuesta;
+            return await _usuarioServicio.RestablecerClavePorUsuarioAsync(nombreUsuario);
         }
 
         [HttpPut("modificarEmail")]
@@ -60,24 +51,21 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var respuesta = await _usuarioServicio.ModificarEmailAsync(email);
-            return respuesta;
+            return await _usuarioServicio.ModificarEmailAsync(email);
         }
 
         [HttpGet("obtenerNombreUsuarioPorId")]
         [Authorize]//VALIDAR POSTERIORMENTE SI SE REQUIERE UN PERMISO ESPECIFICO
         public async Task<ActionResult<ApiResponse<string>>> ObtenerNombreUsuarioPorIdAsync(int id) 
         {
-            var respuesta = await _usuarioServicio.ObtenerNombreUsuarioPorIdAsync(id);
-            return respuesta;
+            return await _usuarioServicio.ObtenerNombreUsuarioPorIdAsync(id);
         }
 
         [HttpPost("listar")]
         [Authorize]//VALIDAR POSTERIORMENTE SI SE REQUIERE UN PERMISO ESPECIFICO
         public async Task<ActionResult<ApiResponse<List<UsuarioDto>?>>> ListarAsync(IdsListadoDto ids)
         {
-            var usuarios = await _usuarioServicio.ListarAsync(ids);
-            return usuarios;
+            return await _usuarioServicio.ListarAsync(ids);
         }
 
     }

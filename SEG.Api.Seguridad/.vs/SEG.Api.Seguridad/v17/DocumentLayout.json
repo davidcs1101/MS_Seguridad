@@ -1,21 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\Herramientas Escafandra\\React\\CSHARP\\SRC_BE\\MS_Seguridad\\SEG.Api.Seguridad\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{3D29DB42-359C-43F3-AA55-8D427BB65086}|..\\SEG.Servicio\\SEG.Servicio.csproj|c:\\users\\lenovo\\onedrive\\documentos\\herramientas escafandra\\react\\csharp\\src_be\\ms_seguridad\\seg.servicio\\implementaciones\\gruposervicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3D29DB42-359C-43F3-AA55-8D427BB65086}|..\\SEG.Servicio\\SEG.Servicio.csproj|c:\\users\\lenovo\\onedrive\\documentos\\herramientas escafandra\\react\\csharp\\src_be\\ms_seguridad\\seg.servicio\\implementaciones\\usuariovalidador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DE9908A3-0924-4B0F-9591-3F3ADB3EDEF6}|SEG.Api.Seguridad.csproj|c:\\users\\lenovo\\onedrive\\documentos\\herramientas escafandra\\react\\csharp\\src_be\\ms_seguridad\\seg.api.seguridad\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE9908A3-0924-4B0F-9591-3F3ADB3EDEF6}|SEG.Api.Seguridad.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3D29DB42-359C-43F3-AA55-8D427BB65086}|..\\SEG.Servicio\\SEG.Servicio.csproj|c:\\users\\lenovo\\onedrive\\documentos\\herramientas escafandra\\react\\csharp\\src_be\\ms_seguridad\\seg.servicio\\implementaciones\\usuarioservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -23,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -39,63 +25,15 @@
             },
             {
               "$type": "Bookmark",
+              "Name": "ST:0:0:{99b8fa2f-ab90-4f57-9c32-949f146f1914}"
+            },
+            {
+              "$type": "Bookmark",
               "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UsuarioValidador.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\Herramientas Escafandra\\React\\CSHARP\\SRC_BE\\MS_Seguridad\\SEG.Servicio\\Implementaciones\\UsuarioValidador.cs",
-              "RelativeDocumentMoniker": "..\\SEG.Servicio\\Implementaciones\\UsuarioValidador.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\Herramientas Escafandra\\React\\CSHARP\\SRC_BE\\MS_Seguridad\\SEG.Servicio\\Implementaciones\\UsuarioValidador.cs",
-              "RelativeToolTip": "..\\SEG.Servicio\\Implementaciones\\UsuarioValidador.cs",
-              "ViewState": "AQIAAAQAAAAAAAAAAAAawAkAAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-20T19:02:47.755Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GrupoServicio.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\Herramientas Escafandra\\React\\CSHARP\\SRC_BE\\MS_Seguridad\\SEG.Servicio\\Implementaciones\\GrupoServicio.cs",
-              "RelativeDocumentMoniker": "..\\SEG.Servicio\\Implementaciones\\GrupoServicio.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\Herramientas Escafandra\\React\\CSHARP\\SRC_BE\\MS_Seguridad\\SEG.Servicio\\Implementaciones\\GrupoServicio.cs",
-              "RelativeToolTip": "..\\SEG.Servicio\\Implementaciones\\GrupoServicio.cs",
-              "ViewState": "AQIAABAAAAAAAAAAAAAIwBwAAAA3AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-20T18:41:02.949Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UsuarioServicio.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\Herramientas Escafandra\\React\\CSHARP\\SRC_BE\\MS_Seguridad\\SEG.Servicio\\Implementaciones\\UsuarioServicio.cs",
-              "RelativeDocumentMoniker": "..\\SEG.Servicio\\Implementaciones\\UsuarioServicio.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\Herramientas Escafandra\\React\\CSHARP\\SRC_BE\\MS_Seguridad\\SEG.Servicio\\Implementaciones\\UsuarioServicio.cs",
-              "RelativeToolTip": "..\\SEG.Servicio\\Implementaciones\\UsuarioServicio.cs",
-              "ViewState": "AQIAACEAAAAAAAAAAAAAACEAAAAbAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-20T18:38:10.991Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\Herramientas Escafandra\\React\\CSHARP\\SRC_BE\\MS_Seguridad\\SEG.Api.Seguridad\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\Herramientas Escafandra\\React\\CSHARP\\SRC_BE\\MS_Seguridad\\SEG.Api.Seguridad\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAADwAAAAAAAAAAAAAAEcAAABMAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-20T18:30:23.979Z",
-              "EditorCaption": ""
             }
           ]
         }
