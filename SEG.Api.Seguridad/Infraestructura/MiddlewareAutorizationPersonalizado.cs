@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SEG.Dtos;
+using SEG.Servicio.Interfaces;
 using System.Net.Http;
 using Utilidades;
 
@@ -10,10 +11,11 @@ namespace SEG.Api.Seguridad.Infraestructura
     public class MiddlewareAutorizationPersonalizado
     {
         private readonly RequestDelegate _next;
-
-        public MiddlewareAutorizationPersonalizado(RequestDelegate next)
+        private readonly IApiResponseServicio _apiResponseServicio;
+        public MiddlewareAutorizationPersonalizado(RequestDelegate next, IApiResponseServicio apiResponseServicio)
         {
             _next = next;
+            _apiResponseServicio = apiResponseServicio;
         }
 
         public async Task InvokeAsync(HttpContext contexto)
@@ -36,13 +38,8 @@ namespace SEG.Api.Seguridad.Infraestructura
                     if (!contexto.User.HasClaim(c => c.Type == "Accion" && c.Value == "CAMBIOCLAVEOK"))
                     {
                         contexto.Response.ContentType = "application/json";
-                        var respuesta = new ApiResponse<string>
-                        {
-                            Correcto = false,
-                            Mensaje = "El usuario no ha realizado el cambio de clave. No tienes permiso para realizar la acción."
-                        };
 
-                        var respuestaJson = JsonConvert.SerializeObject(respuesta);
+                        var respuestaJson = JsonConvert.SerializeObject(_apiResponseServicio.CrearRespuesta(false, "El usuario no ha realizado el cambio de clave. No tienes permiso para realizar la acción.", ""));
                         contexto.Response.StatusCode = 403; //Forbidden
                         await contexto.Response.WriteAsync(respuestaJson);
                         return;

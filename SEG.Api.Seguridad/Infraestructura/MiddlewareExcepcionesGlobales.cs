@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage.Json;
 using MySqlConnector;
 using Newtonsoft.Json;
 using SEG.Dtos;
+using SEG.Servicio.Interfaces;
 using System;
 using System.Net;
 using Utilidades;
@@ -12,10 +13,12 @@ namespace SEG.Api.Seguridad.Infraestructura
     public class MiddlewareExcepcionesGlobales
     {
         private readonly RequestDelegate _requestDelegate;
+        private readonly IApiResponseServicio _apiResponseServicio;
 
-        public MiddlewareExcepcionesGlobales(RequestDelegate requestDelegate)
+        public MiddlewareExcepcionesGlobales(RequestDelegate requestDelegate, IApiResponseServicio apiResponseServicio = null)
         {
             _requestDelegate = requestDelegate;
+            _apiResponseServicio = apiResponseServicio;
         }
 
         public async Task InvokeAsync(HttpContext httpContext) 
@@ -34,11 +37,7 @@ namespace SEG.Api.Seguridad.Infraestructura
         private Task ManejarExcepcionesAsync(HttpContext contexto, Exception e) 
         {
             contexto.Response.ContentType = "application/json";
-            var respuesta = new ApiResponse<string>
-            {
-                Correcto = false,
-                Mensaje = Textos.Generales.MENSAJE_ERROR_SERVIDOR
-            };
+            var respuesta = _apiResponseServicio.CrearRespuesta(false, Textos.Generales.MENSAJE_ERROR_SERVIDOR,"");
 
             if (e is KeyNotFoundException) 
             {
