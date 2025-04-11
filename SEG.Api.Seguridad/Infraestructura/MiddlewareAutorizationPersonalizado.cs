@@ -11,11 +11,11 @@ namespace SEG.Api.Seguridad.Infraestructura
     public class MiddlewareAutorizationPersonalizado
     {
         private readonly RequestDelegate _next;
-        private readonly IApiResponseServicio _apiResponseServicio;
-        public MiddlewareAutorizationPersonalizado(RequestDelegate next, IApiResponseServicio apiResponseServicio)
+        private readonly IServiceProvider _serviceProvider;
+        public MiddlewareAutorizationPersonalizado(RequestDelegate next, IServiceProvider serviceProvider)
         {
             _next = next;
-            _apiResponseServicio = apiResponseServicio;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task InvokeAsync(HttpContext contexto)
@@ -31,18 +31,22 @@ namespace SEG.Api.Seguridad.Infraestructura
                     return;
                 }
 
-                //Si No contiene SedeId, Es un Token de usuario (Login Inicial)
-                if (!contexto.User.HasClaim(c => c.Type == "SedeId"))
+                using (var scope = _serviceProvider.CreateScope()) 
                 {
-                    //Si el usuario no ha realizado su cambio de clave, DENEGAMOS el acceso
-                    if (!contexto.User.HasClaim(c => c.Type == "Accion" && c.Value == "CAMBIOCLAVEOK"))
+                    var _apiResponseServicio = scope.ServiceProvider.GetRequiredService<IApiResponseServicio>();
+                    //Si No contiene SedeId, Es un Token de usuario (Login Inicial)
+                    if (!contexto.User.HasClaim(c => c.Type == "SedeId"))
                     {
-                        contexto.Response.ContentType = "application/json";
+                        //Si el usuario no ha realizado su cambio de clave, DENEGAMOS el acceso
+                        if (!contexto.User.HasClaim(c => c.Type == "Accion" && c.Value == "CAMBIOCLAVEOK"))
+                        {
+                            contexto.Response.ContentType = "application/json";
 
-                        var respuestaJson = JsonConvert.SerializeObject(_apiResponseServicio.CrearRespuesta(false, "El usuario no ha realizado el cambio de clave. No tienes permiso para realizar la acción.", ""));
-                        contexto.Response.StatusCode = 403; //Forbidden
-                        await contexto.Response.WriteAsync(respuestaJson);
-                        return;
+                            var respuestaJson = JsonConvert.SerializeObject(_apiResponseServicio.CrearRespuesta(false, "El usuario no ha realizado el cambio de clave. No tienes permiso para realizar la acción.", ""));
+                            contexto.Response.StatusCode = 403; //Forbidden
+                            await contexto.Response.WriteAsync(respuestaJson);
+                            return;
+                        }
                     }
                 }
             }

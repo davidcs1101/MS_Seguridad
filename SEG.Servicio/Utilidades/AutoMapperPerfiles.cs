@@ -26,6 +26,8 @@ namespace SEG.Servicio.Utilidades
             CreateMap<ProgramaCreacionRequest, SEG_Programa>();
             CreateMap<ProgramaModificacionRequest, SEG_Programa>();
             CreateMap<SEG_Programa, ProgramaDto>();
+
+            CreateMap<GrupoProgramaCreacionRequest, SEG_GrupoPrograma>();
         }
     }
 }

@@ -69,6 +69,7 @@ builder.Services.AddScoped<IProgramaRepositorio, ProgramaRepositorio>();
 builder.Services.AddScoped<IProgramaServicio, ProgramaServicio>();
 builder.Services.AddScoped<IGrupoProgramaRepositorio, GrupoProgramaRepositorio>();
 builder.Services.AddScoped<IGrupoProgramaServicio, GrupoProgramaServicio>();
+builder.Services.AddScoped<IGrupoProgramaValidador, GrupoProgramaValidador>();
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 
 builder.Services.AddScoped<IApiResponseServicio, ApiResponseServicio>();
@@ -112,15 +113,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
-builder.Services.AddAuthorization(options => options.AddPolicy("UsuarioSedesGruposPermiso",
-permiso => permiso.RequireClaim("Programa", "USUARIOSSEDESGRUPOS")));
+builder.Services.AddAuthorization(options => options.AddPolicy("UsuariosPermiso",
+permiso => permiso.RequireClaim("Programa", "USUARIOS")));
 builder.Services.AddAuthorization(options => options.AddPolicy("GruposPermiso",
 permiso => permiso.RequireClaim("Programa", "GRUPOS")));
 builder.Services.AddAuthorization(options => options.AddPolicy("ProgramasPermiso",
 permiso => permiso.RequireClaim("Programa", "PROGRAMAS")));
-builder.Services.AddAuthorization(options => options.AddPolicy("UsuariosPermiso",
-permiso => permiso.RequireClaim("Programa", "USUARIOS")));
+builder.Services.AddAuthorization(options => options.AddPolicy("GruposProgramasPermiso",
+permiso => permiso.RequireClaim("Programa", "GRUPOSPROGRAMAS")));
+builder.Services.AddAuthorization(options => options.AddPolicy("UsuarioSedesGruposPermiso",
+permiso => permiso.RequireClaim("Programa", "USUARIOSSEDESGRUPOS")));
 
 builder.Services.AddDbContext<AppDbContext>
     (opciones => opciones

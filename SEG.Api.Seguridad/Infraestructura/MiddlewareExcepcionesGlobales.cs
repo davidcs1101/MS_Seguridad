@@ -13,12 +13,12 @@ namespace SEG.Api.Seguridad.Infraestructura
     public class MiddlewareExcepcionesGlobales
     {
         private readonly RequestDelegate _requestDelegate;
-        private readonly IApiResponseServicio _apiResponseServicio;
+        private readonly IServiceProvider _serviceProvider;
 
-        public MiddlewareExcepcionesGlobales(RequestDelegate requestDelegate, IApiResponseServicio apiResponseServicio = null)
+        public MiddlewareExcepcionesGlobales(RequestDelegate requestDelegate, IServiceProvider serviceProvider = null)
         {
             _requestDelegate = requestDelegate;
-            _apiResponseServicio = apiResponseServicio;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task InvokeAsync(HttpContext httpContext) 
@@ -37,32 +37,36 @@ namespace SEG.Api.Seguridad.Infraestructura
         private Task ManejarExcepcionesAsync(HttpContext contexto, Exception e) 
         {
             contexto.Response.ContentType = "application/json";
-            var respuesta = _apiResponseServicio.CrearRespuesta(false, Textos.Generales.MENSAJE_ERROR_SERVIDOR,"");
+            using (var scope = _serviceProvider.CreateScope()) 
+            { 
+                var _apiResponseServicio = scope.ServiceProvider.GetRequiredService<IApiResponseServicio>();
+                var respuesta = _apiResponseServicio.CrearRespuesta(false, Textos.Generales.MENSAJE_ERROR_SERVIDOR, "");
 
-            if (e is KeyNotFoundException) 
-            {
-                contexto.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                respuesta.Mensaje = e.Message;
-            }
-            else if (e is DbUpdateException) 
-            {
-                contexto.Response.StatusCode = (int)HttpStatusCode.Conflict;
-                respuesta.Mensaje = e.Message;
-            }
-            else
-            {
-                contexto.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                Logs.EscribirLog("e", "", e);
-            }
+                if (e is KeyNotFoundException)
+                {
+                    contexto.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                    respuesta.Mensaje = e.Message;
+                }
+                else if (e is DbUpdateException)
+                {
+                    contexto.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                    respuesta.Mensaje = e.Message;
+                }
+                else
+                {
+                    contexto.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    Logs.EscribirLog("e", "", e);
+                }
 
-            // Si es desarrollo, incluir el detalle del error
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-            {
-                //respuesta.Mensaje = e.Message;
-            }
+                // Si es desarrollo, incluir el detalle del error
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                {
+                    //respuesta.Mensaje = e.Message;
+                }
 
-            var respuestaJson = JsonConvert.SerializeObject(respuesta);
-            return contexto.Response.WriteAsync(respuestaJson);
+                var respuestaJson = JsonConvert.SerializeObject(respuesta);
+                return contexto.Response.WriteAsync(respuestaJson);
+            }
         }
     }
 }
