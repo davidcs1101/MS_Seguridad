@@ -34,5 +34,17 @@ namespace SEG.Api.Seguridad.Controllers
 
             return await _grupoProgramaServicio.ModificarAsync(grupoProgramaModificacionRequest);
         }
+
+        [HttpDelete("eliminar")]
+        public async Task<ApiResponse<string>> Eliminar(int id) 
+        { 
+            return await _grupoProgramaServicio.EliminarAsync(id);
+        }
+
+        [HttpGet("obtenerPorGrupoPrograma")]
+        public async Task<ApiResponse<GrupoProgramaDto?>> ObtenerPorGrupoPrograma(int grupoId, int programaId) 
+        {
+            return await _grupoProgramaServicio.ObtenerGrupoProgramaAsync(grupoId, programaId);
+        }
     }
 }

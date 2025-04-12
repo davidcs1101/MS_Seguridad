@@ -12,8 +12,8 @@ namespace SEG.Servicio.Interfaces
     {
         Task<ApiResponse<int>> CrearAsync(GrupoProgramaCreacionRequest grupoProgramaCreacionRequest);
         Task<ApiResponse<string>> ModificarAsync(GrupoProgramaModificacionRequest grupoProgramaModificacionRequest);
-        //Task<ApiResponse<string>> EliminarAsync(int id);
-        //Task<ApiResponse<GrupoProgramaDto?>> ObtenerGrupoProgramaAsync(int grupoId, int programaId);
+        Task<ApiResponse<string>> EliminarAsync(int id);
+        Task<ApiResponse<GrupoProgramaDto?>> ObtenerGrupoProgramaAsync(int grupoId, int programaId);
         //Task<List<SEG_Programa>> ListarProgramasPorGrupo();
     }
 }

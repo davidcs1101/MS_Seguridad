@@ -76,5 +76,25 @@ namespace SEG.Servicio.Implementaciones
             return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }
 
+        public async Task<ApiResponse<string>> EliminarAsync(int id) { 
+            var grupoProgramaExiste = await _grupoProgramaRepositorio.ObtenerPorIdAsync(id);
+            _grupoProgramaValidador.ValidarDatoNoEncontrado(grupoProgramaExiste, Textos.GruposProgramas.MENSAJE_GRUPOPROGRAMA_NO_EXISTE_ID);
+
+            var eliminado = await _grupoProgramaRepositorio.EliminarAsync(id);
+
+            if (eliminado)
+                return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO,"");
+
+            return _apiResponseServicio.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
+        }
+
+        public async Task<ApiResponse<GrupoProgramaDto?>> ObtenerGrupoProgramaAsync(int grupoId, int programaId) {
+            var grupoProgramaExiste = await _grupoProgramaRepositorio.ObtenerGrupoProgramaAsync(grupoId, programaId);
+            _grupoProgramaValidador.ValidarDatoNoEncontrado(grupoProgramaExiste, Textos.GruposProgramas.MENSAJE_GRUPOPROGRAMA_NO_EXISTE_GRUPO_PROGRAMA);
+
+            var grupoProgramaDto = _mapper.Map<GrupoProgramaDto>(grupoProgramaExiste);
+
+            return _apiResponseServicio.CrearRespuesta<GrupoProgramaDto?> (true, "", grupoProgramaDto);
+        }
     }
 }
