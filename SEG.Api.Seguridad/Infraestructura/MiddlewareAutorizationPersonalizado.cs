@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using SEG.Dtos;
-using SEG.Servicio.Interfaces;
-using System.Net.Http;
-using Utilidades;
+﻿using Newtonsoft.Json;
+using SEG.Aplicacion.Servicio.Interfaces;
 
 namespace SEG.Api.Seguridad.Infraestructura
 {

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SEG.Dtos;
-using SEG.Servicio.Implementaciones;
-using SEG.Servicio.Interfaces;
+using SEG.Aplicacion.Servicio.Interfaces;
 
 namespace SEG.Api.Seguridad.Controllers
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEG.Dominio.Entidades;
-using SEG.Dominio.Entidades.Configuraciones;
-using SEG.Dominio.Entidades.Semilla;
+using SEG.DataAccess.EntidadesConfig;
+using SEG.DataAccess.Semilla;
 
 namespace SEG.DataAccess
 {

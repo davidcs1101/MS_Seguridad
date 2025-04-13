@@ -1,4 +1,4 @@
-﻿using SEG.Servicio.Interfaces;
+﻿using SEG.Aplicacion.Servicio.Interfaces;
 
 namespace SEG.Api.Seguridad.Infraestructura
 {

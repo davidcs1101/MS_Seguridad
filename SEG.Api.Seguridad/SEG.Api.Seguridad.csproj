@@ -18,9 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SEG.Aplicacion\SEG.Aplicacion.csproj" />
     <ProjectReference Include="..\SEG.Dominio\SEG.Dominio.csproj" />
     <ProjectReference Include="..\SEG.Dtos\SEG.Dtos.csproj" />
-    <ProjectReference Include="..\SEG.Servicio\SEG.Servicio.csproj" />
+    <ProjectReference Include="..\SEG.Infraestructura\SEG.Infraestructura.csproj" />
   </ItemGroup>
 
 </Project>

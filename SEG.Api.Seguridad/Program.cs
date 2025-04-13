@@ -2,20 +2,15 @@ using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SEG.DataAccess;
-using SEG.Repositorio.Implementaciones;
-using SEG.Repositorio.Interfaces;
-using SEG.Servicio.Implementaciones;
-using SEG.Servicio.Interfaces;
-using System.Configuration;
+using SEG.Dominio.Repositorio.Interfaces;
+using SEG.Infraestructura.Repositorio.Implementaciones;
 using System.Text;
 using SEG.Api.Seguridad.Infraestructura;
-using Microsoft.AspNetCore.Authorization;
-using Utilidades;
-using SEG.Dominio.Entidades;
+using SEG.Aplicacion.Servicio.Interfaces;
+using SEG.Aplicacion.Servicio.Implementaciones;
 
 var builder = WebApplication.CreateBuilder(args);
 

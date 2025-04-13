@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.Json;
-using MySqlConnector;
+//using MySqlConnector; //Si queremos poner excepciones del tipo de base de datos especifico
 using Newtonsoft.Json;
-using SEG.Dtos;
-using SEG.Servicio.Interfaces;
-using System;
+using SEG.Aplicacion.Servicio.Interfaces;
 using System.Net;
 using Utilidades;
 

@@ -1,11 +1,7 @@
-﻿using log4net.Util;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SEG.Dtos;
-using SEG.Servicio.Interfaces;
-using Utilidades;
+using SEG.Aplicacion.Servicio.Interfaces;
 
 namespace SEG.Api.Seguridad.Controllers
 {
