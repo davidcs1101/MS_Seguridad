@@ -4,13 +4,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SEG.DataAccess;
-using SEG.Dominio.Repositorio.Interfaces;
-using SEG.Infraestructura.Repositorio.Implementaciones;
 using System.Text;
-using SEG.Api.Seguridad.Infraestructura;
-using SEG.Aplicacion.Servicio.Interfaces;
-using SEG.Aplicacion.Servicio.Implementaciones;
+using SEG.DataAccess;
+using SEG.Dominio.Repositorio;
+using SEG.Dominio.Servicios;
+using SEG.Infraestructura.Aplicacion.ServiciosExternos;
+using SEG.Infraestructura.Dominio.Repositorio;
+using SEG.Infraestructura.Dominio.Servicios;
+using SEG.Aplicacion.CasosUso.Implementaciones;
+using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Aplicacion.ServiciosExternos;
+using SEG.Aplicacion.Servicios.Interfaces;
+using SEG.Aplicacion.Servicios.Implementaciones;
+using SEG.Api.Seguridad.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,7 +73,7 @@ builder.Services.AddScoped<IGrupoProgramaServicio, GrupoProgramaServicio>();
 builder.Services.AddScoped<IGrupoProgramaValidador, GrupoProgramaValidador>();
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 
-builder.Services.AddScoped<IApiResponseServicio, ApiResponseServicio>();
+builder.Services.AddScoped<IApiResponse, ApiResponse>();
 
 builder.Services.AddScoped<IUsuarioValidador, UsuarioValidador>();
 builder.Services.AddScoped<IGrupoValidador, GrupoValidador>();
