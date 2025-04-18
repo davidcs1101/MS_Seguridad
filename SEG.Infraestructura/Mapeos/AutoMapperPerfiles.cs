@@ -1,17 +1,12 @@
 ﻿using AutoMapper;
 using SEG.Dominio.Entidades;
 using SEG.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SEG.Aplicacion.Utilidades
+namespace SEG.Infraestructura.Mapeos
 {
     public class AutoMapperPerfiles : Profile
     {
-        public AutoMapperPerfiles() 
+        public AutoMapperPerfiles()
         {
             CreateMap<UsuarioCreacionRequest, SEG_Usuario>();
             

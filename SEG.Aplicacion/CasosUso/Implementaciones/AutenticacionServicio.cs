@@ -7,7 +7,6 @@ using System.Security.Claims;
 using System.Text;
 using Utilidades;
 using SEG.Dominio.Repositorio;
-using SEG.Aplicacion.Utilidades;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.CasosUso.Interfaces;

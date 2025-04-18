@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using SEG.Dtos;
 using Microsoft.EntityFrameworkCore;
-using Utilidades;
-using SEG.Aplicacion.Utilidades;
 using SEG.Dominio.Entidades;
 using SEG.Dominio.Repositorio;
 using SEG.Dominio.Servicios;
 using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
+using Utilidades;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
