@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-//using MySqlConnector; //Si queremos poner excepciones del tipo de base de datos especifico
+﻿//using MySqlConnector; //Si queremos poner excepciones del tipo de base de datos especifico
 using Newtonsoft.Json;
 using System.Net;
 using Utilidades;
@@ -48,6 +47,11 @@ namespace SEG.Api.Seguridad.Middlewares
                 else if (e is DatoYaExisteException)
                 {
                     contexto.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                    respuesta.Mensaje = e.Message;
+                }
+                else if (e is SolicitudHttpException)
+                {
+                    contexto.Response.StatusCode = (int)HttpStatusCode.BadGateway;
                     respuesta.Mensaje = e.Message;
                 }
                 else
