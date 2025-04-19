@@ -20,7 +20,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public readonly IGrupoProgramaValidador _grupoProgramaValidador;
         public readonly IUsuarioContextoServicio _usuarioContextoServicio;
         public readonly IMapper _mapper;
-        public readonly IApiResponse _apiResponseServicio;
+        public readonly IApiResponse _apiResponse;
 
         public GrupoProgramaServicio(IGrupoProgramaRepositorio grupoProgramaRepositorio, IProgramaRepositorio programaRepositorio, IGrupoValidador grupoValidador, IProgramaValidador programaValidador, IGrupoRepositorio grupoRepositorio, IGrupoProgramaValidador grupoProgramaValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApiResponse apiResponseServicio)
         {
@@ -32,7 +32,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _grupoProgramaValidador = grupoProgramaValidador;
             _usuarioContextoServicio = usuarioContextoServicio;
             _mapper = mapper;
-            _apiResponseServicio = apiResponseServicio;
+            _apiResponse = apiResponseServicio;
         }
 
         public async Task<ApiResponse<int>> CrearAsync(GrupoProgramaCreacionRequest grupoProgramaCreacionRequest)
@@ -54,7 +54,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var id = await _grupoProgramaRepositorio.CrearAsync(grupoPrograma);
 
-            return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
         }
 
         public async Task<ApiResponse<string>> ModificarAsync(GrupoProgramaModificacionRequest grupoProgramaModificacionRequest)
@@ -70,7 +70,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             await _grupoProgramaRepositorio.ModificarAsync(grupoProgramaExiste);
 
-            return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }
 
         public async Task<ApiResponse<string>> EliminarAsync(int id) { 
@@ -80,9 +80,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var eliminado = await _grupoProgramaRepositorio.EliminarAsync(id);
 
             if (eliminado)
-                return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO,"");
+                return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO,"");
 
-            return _apiResponseServicio.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
+            return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
         }
 
         public async Task<ApiResponse<GrupoProgramaDto?>> ObtenerGrupoProgramaAsync(int grupoId, int programaId) {
@@ -91,7 +91,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var grupoProgramaDto = _mapper.Map<GrupoProgramaDto>(grupoProgramaExiste);
 
-            return _apiResponseServicio.CrearRespuesta<GrupoProgramaDto?> (true, "", grupoProgramaDto);
+            return _apiResponse.CrearRespuesta<GrupoProgramaDto?> (true, "", grupoProgramaDto);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IProgramaRepositorio _programaRepositorio;
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
-        private readonly IApiResponse _apiResponseServicio;
+        private readonly IApiResponse _apiResponse;
         private readonly IProgramaValidador _programaValidador;
 
         public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IProgramaValidador programaValidador, IApiResponse apiResponseServicio)
@@ -25,7 +25,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _mapper = mapper;
             _usuarioContextoServicio = usuarioContextoServicio;
             _programaValidador = programaValidador;
-            _apiResponseServicio = apiResponseServicio;
+            _apiResponse = apiResponseServicio;
         }
 
         public async Task<ApiResponse<int>> CrearAsync(ProgramaCreacionRequest programaCreacionRequest)
@@ -41,7 +41,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var id = await _programaRepositorio.CrearAsync(programa);
 
-            return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
         }
 
         public async Task<ApiResponse<string>> ModificarAsync(ProgramaModificacionRequest programaModificacionRequest)
@@ -57,7 +57,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             await _programaRepositorio.ModificarAsync(programaExiste);
 
-            return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }
 
         public async Task<ApiResponse<string>> EliminarAsync(int id)
@@ -68,9 +68,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var eliminado = await _programaRepositorio.EliminarAsync(id);
 
             if (eliminado)
-                return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO, "");
+                return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO, "");
 
-            return _apiResponseServicio.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
+            return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
         }
 
         public async Task<ApiResponse<ProgramaDto?>> ObtenerPorIdAsync(int id)
@@ -80,7 +80,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var programaDto = _mapper.Map<ProgramaDto>(programaExiste);
 
-            return _apiResponseServicio.CrearRespuesta<ProgramaDto?>(true, "", programaDto);
+            return _apiResponse.CrearRespuesta<ProgramaDto?>(true, "", programaDto);
         }
 
         public async Task<ApiResponse<ProgramaDto?>> ObtenerPorCodigoAsync(string codigo)
@@ -90,7 +90,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var programaDto = _mapper.Map<ProgramaDto>(programaExiste);
 
-            return _apiResponseServicio.CrearRespuesta<ProgramaDto?>(true, "", programaDto);
+            return _apiResponse.CrearRespuesta<ProgramaDto?>(true, "", programaDto);
         }
 
         public async Task<ApiResponse<List<ProgramaDto>?>> ListarAsync()
@@ -112,7 +112,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                     EstadoActivo = p.EstadoActivo
                 }).ToList();
 
-            return _apiResponseServicio.CrearRespuesta<List<ProgramaDto>?>(true, "", programasResultado);
+            return _apiResponse.CrearRespuesta<List<ProgramaDto>?>(true, "", programasResultado);
         }
 
     }

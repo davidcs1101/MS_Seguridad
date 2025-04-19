@@ -28,7 +28,7 @@ namespace SEG.Api.Seguridad.Middlewares
 
                 using (var scope = _serviceProvider.CreateScope()) 
                 {
-                    var _apiResponseServicio = scope.ServiceProvider.GetRequiredService<IApiResponse>();
+                    var _apiResponse = scope.ServiceProvider.GetRequiredService<IApiResponse>();
                     //Si No contiene SedeId, Es un Token de usuario (Login Inicial)
                     if (!contexto.User.HasClaim(c => c.Type == "SedeId"))
                     {
@@ -37,7 +37,7 @@ namespace SEG.Api.Seguridad.Middlewares
                         {
                             contexto.Response.ContentType = "application/json";
 
-                            var respuestaJson = JsonConvert.SerializeObject(_apiResponseServicio.CrearRespuesta(false, "El usuario no ha realizado el cambio de clave. No tienes permiso para realizar la acción.", ""));
+                            var respuestaJson = JsonConvert.SerializeObject(_apiResponse.CrearRespuesta(false, "El usuario no ha realizado el cambio de clave. No tienes permiso para realizar la acción.", ""));
                             contexto.Response.StatusCode = 403; //Forbidden
                             await contexto.Response.WriteAsync(respuestaJson);
                             return;

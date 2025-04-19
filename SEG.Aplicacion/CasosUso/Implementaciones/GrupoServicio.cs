@@ -16,7 +16,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IGrupoRepositorio _grupoRepositorio;
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
-        private readonly IApiResponse _apiResponseServicio;
+        private readonly IApiResponse _apiResponse;
         private readonly IGrupoValidador _grupoValidador;
 
         public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IGrupoValidador grupoValidador)
@@ -24,7 +24,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _grupoRepositorio = grupoRepositorio;
             _mapper = mapper;
             _usuarioContextoServicio = usuarioContextoServicio;
-            _apiResponseServicio = apiResponseServicio;
+            _apiResponse = apiResponseServicio;
             _grupoValidador = grupoValidador;
         }
 
@@ -41,7 +41,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var id = await _grupoRepositorio.CrearAsync(grupo);
 
-            return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
 
         }
 
@@ -58,7 +58,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             await _grupoRepositorio.ModificarAsync(grupoExiste);
 
-            return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO,"");
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO,"");
         }
 
         public async Task<ApiResponse<string>> EliminarAsync(int id)
@@ -69,9 +69,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var eliminado = await _grupoRepositorio.EliminarAsync(id);
 
             if (eliminado)
-                return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO, "");
+                return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO, "");
 
-            return _apiResponseServicio.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
+            return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
         }
 
         public async Task<ApiResponse<GrupoDto?>> ObtenerPorIdAsync(int id)
@@ -81,7 +81,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var grupoDto = _mapper.Map<GrupoDto>(grupoExiste);
 
-            return _apiResponseServicio.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
+            return _apiResponse.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
         }
 
         public async Task<ApiResponse<GrupoDto?>> ObtenerPorCodigoAsync(string codigo)
@@ -91,7 +91,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var grupoDto = _mapper.Map<GrupoDto>(grupoExiste);
 
-            return _apiResponseServicio.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
+            return _apiResponse.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
         }
 
         public async Task<ApiResponse<List<GrupoDto>?>> ListarAsync()
@@ -113,7 +113,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                     EstadoActivo = g.EstadoActivo
                 }).ToList();
 
-            return _apiResponseServicio.CrearRespuesta<List<GrupoDto>?>(true, "", gruposResultado);
+            return _apiResponse.CrearRespuesta<List<GrupoDto>?>(true, "", gruposResultado);
         }
 
     }

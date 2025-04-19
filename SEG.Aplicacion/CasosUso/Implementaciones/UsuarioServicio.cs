@@ -19,7 +19,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IUsuarioValidador _usuarioValidador;
-        private readonly IApiResponse _apiResponseServicio;
+        private readonly IApiResponse _apiResponse;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio,
             IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, INotificadorCorreo notificadorCorreo, IApiResponse apiResponseServicio)
@@ -30,7 +30,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _usuarioValidador = usuarioValidador;
             _constructorMensajesNotificacionCorreo = constructorMensajesNotificacionCorreo;
             _notificadorCorreo = notificadorCorreo;
-            _apiResponseServicio = apiResponseServicio;
+            _apiResponse = apiResponseServicio;
         }
 
 
@@ -58,7 +58,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeCreacionUsuario(usuario, nuevaClave);
             var notificado = await _notificadorCorreo.EnviarAsync(datosCorreo);
 
-            return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = id, Clave = nuevaClave, NotificadoPorCorreo = notificado });
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = id, Clave = nuevaClave, NotificadoPorCorreo = notificado });
         }
 
         public async Task<ApiResponse<UsuarioOtrosDatosDto>> ModificarClaveAsync(string clave)
@@ -77,7 +77,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeModificacionClaveUsuario(usuarioExiste);
             var notificado = await _notificadorCorreo.EnviarAsync(datosCorreo);
 
-            return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = notificado });
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = notificado });
         }
 
         public async Task<ApiResponse<UsuarioOtrosDatosDto>> RestablecerClavePorUsuarioAsync(string nombreUsuario)
@@ -95,7 +95,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeRestablecimientoClaveUsuario(usuarioExiste,nuevaClave);
             var notificado = await _notificadorCorreo.EnviarAsync(datosCorreo);
 
-            return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = notificado, Clave = nuevaClave });
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = notificado, Clave = nuevaClave });
         }
 
         public async Task<ApiResponse<string>> ModificarEmailAsync(string email)
@@ -113,7 +113,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             usuarioExiste.UsuarioModificadorId = usuarioId;
             await _usuarioRepositorio.ModificarAsync(usuarioExiste);
 
-            return _apiResponseServicio.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO,"");
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO,"");
         }
 
         public async Task<ApiResponse<string>> ObtenerNombreUsuarioPorIdAsync(int id) 
@@ -121,7 +121,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorIdAsync(id);
             _usuarioValidador.ValidarDatoNoEncontrado(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NO_EXISTE_ID);
 
-            return _apiResponseServicio.CrearRespuesta(true, "", usuarioExiste.NombreUsuario);
+            return _apiResponse.CrearRespuesta(true, "", usuarioExiste.NombreUsuario);
         }
 
         public async Task<ApiResponse<List<UsuarioDto>?>> ListarAsync(IdsListadoDto? idsListado = null)
@@ -148,7 +148,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 usuariosResultado = usuariosResultado.Where(u => idsListado.Ids.Contains(u.Id));
 
             var usuariosObtenidos = await usuariosResultado.ToListAsync();
-            return _apiResponseServicio.CrearRespuesta<List<UsuarioDto>?>(true,"", usuariosObtenidos);
+            return _apiResponse.CrearRespuesta<List<UsuarioDto>?>(true,"", usuariosObtenidos);
         }
     }
 }

@@ -36,8 +36,8 @@ namespace SEG.Api.Seguridad.Middlewares
             contexto.Response.ContentType = "application/json";
             using (var scope = _serviceProvider.CreateScope()) 
             { 
-                var _apiResponseServicio = scope.ServiceProvider.GetRequiredService<IApiResponse>();
-                var respuesta = _apiResponseServicio.CrearRespuesta(false, Textos.Generales.MENSAJE_ERROR_SERVIDOR, "");
+                var _apiResponse = scope.ServiceProvider.GetRequiredService<IApiResponse>();
+                var respuesta = _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_ERROR_SERVIDOR, "");
 
                 if (e is DatoNoEncontradoException)
                 {

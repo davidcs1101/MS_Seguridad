@@ -20,7 +20,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IGrupoProgramaRepositorio _grupoRepositorio;
         private readonly IConfiguration _configuracion;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
-        private readonly IApiResponse _apiResponseServicio;
+        private readonly IApiResponse _apiResponse;
         public AutenticacionServicio(IUsuarioRepositorio usuarioRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeRepositorio, IGrupoProgramaRepositorio grupoRepositorio, IConfiguration configuracion,
             IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio)
         {
@@ -29,17 +29,17 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _grupoRepositorio = grupoRepositorio;
             _configuracion = configuracion;
             _usuarioContextoServicio = usuarioContextoServicio;
-            _apiResponseServicio = apiResponseServicio;
+            _apiResponse = apiResponseServicio;
         }
 
         public async Task<ApiResponse<string>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
         {
             var usuario = await _usuarioRepositorio.ObtenerPorUsuarioAsync(autenticacionRequest.NombreUsuario);
             if (usuario == null || usuario.Clave != ProcesadorClaves.EncriptarClave(autenticacionRequest.Clave))
-                return _apiResponseServicio.CrearRespuesta(false, Textos.Usuarios.MENSAJE_LOGIN_INCORRECTO, "");
+                return _apiResponse.CrearRespuesta(false, Textos.Usuarios.MENSAJE_LOGIN_INCORRECTO, "");
          
             var token = await GenerarTokenAsync(usuario, null, null);
-            return _apiResponseServicio.CrearRespuesta(true, "", token);
+            return _apiResponse.CrearRespuesta(true, "", token);
         }
 
         public async Task<ApiResponse<string>> AutenticarSedeAsync(int sedeId)
@@ -48,10 +48,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var usuarioSede = await _usuarioSedeRepositorio.ObtenerUsuarioSedeAsync(usuarioId, sedeId);
             if (usuarioSede == null)
-                return _apiResponseServicio.CrearRespuesta(false, Textos.Usuarios.MENSAJE_LOGIN_SEDE_INCORRECTO, "");
+                return _apiResponse.CrearRespuesta(false, Textos.Usuarios.MENSAJE_LOGIN_SEDE_INCORRECTO, "");
 
             var token = await GenerarTokenAsync(usuarioSede.Usuario, usuarioSede.GrupoId, usuarioSede.SedeId);
-            return _apiResponseServicio.CrearRespuesta(true, "", token);
+            return _apiResponse.CrearRespuesta(true, "", token);
         }
 
         private  async Task<string> GenerarTokenAsync(SEG_Usuario usuario, int? grupoId, int? sedeId)
