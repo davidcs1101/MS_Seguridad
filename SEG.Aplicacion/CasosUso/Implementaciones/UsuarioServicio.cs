@@ -3,11 +3,11 @@ using SEG.Dtos;
 using Microsoft.EntityFrameworkCore;
 using SEG.Dominio.Entidades;
 using SEG.Dominio.Repositorio;
-using SEG.Dominio.Servicios;
 using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using Utilidades;
+using SEG.Dominio.Servicios.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {

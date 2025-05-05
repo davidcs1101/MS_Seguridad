@@ -1,8 +1,8 @@
 ﻿using SEG.Dominio.Entidades;
 using SEG.Dominio.Excepciones;
-using SEG.Dominio.Servicios;
+using SEG.Dominio.Servicios.Interfaces;
 
-namespace SEG.Infraestructura.Dominio.Servicios
+namespace SEG.Dominio.Servicios.Implementaciones
 {
     public class ProgramaValidador : IProgramaValidador
     {

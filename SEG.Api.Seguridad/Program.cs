@@ -6,17 +6,17 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using SEG.Dominio.Repositorio;
-using SEG.Dominio.Servicios;
 using SEG.DataAccess;
 using SEG.Infraestructura.Aplicacion.ServiciosExternos;
 using SEG.Infraestructura.Dominio.Repositorio;
-using SEG.Infraestructura.Dominio.Servicios;
 using SEG.Aplicacion.CasosUso.Implementaciones;
 using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.Servicios.Implementaciones;
 using SEG.Api.Seguridad.Middlewares;
+using SEG.Dominio.Servicios.Interfaces;
+using SEG.Dominio.Servicios.Implementaciones;
 
 var builder = WebApplication.CreateBuilder(args);
 

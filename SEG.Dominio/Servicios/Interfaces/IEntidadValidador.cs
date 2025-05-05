@@ -1,4 +1,4 @@
-﻿namespace SEG.Dominio.Servicios
+﻿namespace SEG.Dominio.Servicios.Interfaces
 {
     public interface IEntidadValidador<TEntity>
     {
