@@ -15,7 +15,17 @@ namespace SEG.Api.Seguridad.Controllers
             _usuarioServicio = usuarioServicio;
         }
 
+        [HttpPost("registrar")]
+        public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> Registrar(UsuarioCreacionRequest usuarioCreacionRequest)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return await _usuarioServicio.RegistrarAsync(usuarioCreacionRequest);
+        }
+
         [HttpPost("crear")]
+        [Authorize]
         public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> Crear(UsuarioCreacionRequest usuarioCreacionRequest)
         {
             if (!ModelState.IsValid)

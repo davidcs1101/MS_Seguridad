@@ -34,31 +34,22 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         }
 
 
-        public async Task<ApiResponse<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest) 
+        public async Task<ApiResponse<UsuarioOtrosDatosDto>> RegistrarAsync(UsuarioCreacionRequest usuarioCreacionRequest) 
         {
-            var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(usuarioCreacionRequest.NombreUsuario);
-            _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NOMBRE_EXISTE);
-
-            usuarioExiste = await _usuarioRepositorio.ObtenerPorEmailAsync(usuarioCreacionRequest.Email);
-            _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_EMAIL_EXISTE);
-
-            usuarioExiste = await _usuarioRepositorio.ObtenerPorIdentificacionAsync(usuarioCreacionRequest.TipoIdentificacionId, usuarioCreacionRequest.Identificacion);
-            _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_DOCUMENTO_EXISTE);
-
-            var usuario = _mapper.Map<SEG_Usuario>(usuarioCreacionRequest);
             var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
-            usuario.Clave = ProcesadorClaves.EncriptarClave(nuevaClave);
-            usuario.CambiarClave=true;
-            usuario.FechaCreado = DateTime.Now;
-            usuario.UsuarioCreadorId = 1;
-            usuario.EstadoActivo = true;
-
-            var id = await _usuarioRepositorio.CrearAsync(usuario);
-
+            var usuario = await this.CrearAsync(usuarioCreacionRequest, 1, nuevaClave);
             var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeCreacionUsuario(usuario, nuevaClave);
             var notificado = await _notificadorCorreo.EnviarAsync(datosCorreo);
 
-            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = id, Clave = nuevaClave, NotificadoPorCorreo = notificado });
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, NotificadoPorCorreo = notificado });
+        }
+
+        public async Task<ApiResponse<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest)
+        {
+            var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
+            var usuario = await this.CrearAsync(usuarioCreacionRequest, _usuarioContextoServicio.ObtenerUsuarioIdToken(), nuevaClave);
+
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, Clave = nuevaClave });
         }
 
         public async Task<ApiResponse<UsuarioOtrosDatosDto>> ModificarClaveAsync(string clave)
@@ -149,6 +140,31 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var usuariosObtenidos = await usuariosResultado.ToListAsync();
             return _apiResponse.CrearRespuesta<List<UsuarioDto>?>(true,"", usuariosObtenidos);
+        }
+
+
+
+        private async Task<SEG_Usuario> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest, int usuarioCreadorId, string nuevaClave) 
+        {
+            var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(usuarioCreacionRequest.NombreUsuario);
+            _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NOMBRE_EXISTE);
+
+            usuarioExiste = await _usuarioRepositorio.ObtenerPorEmailAsync(usuarioCreacionRequest.Email);
+            _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_EMAIL_EXISTE);
+
+            usuarioExiste = await _usuarioRepositorio.ObtenerPorIdentificacionAsync(usuarioCreacionRequest.TipoIdentificacionId, usuarioCreacionRequest.Identificacion);
+            _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_DOCUMENTO_EXISTE);
+
+            var usuario = _mapper.Map<SEG_Usuario>(usuarioCreacionRequest);
+            usuario.Clave = ProcesadorClaves.EncriptarClave(nuevaClave);
+            usuario.CambiarClave = true;
+            usuario.FechaCreado = DateTime.Now;
+            usuario.UsuarioCreadorId = usuarioCreadorId;
+            usuario.EstadoActivo = true;
+
+            var id = await _usuarioRepositorio.CrearAsync(usuario);
+            usuario.Id = id;
+            return usuario;
         }
     }
 }

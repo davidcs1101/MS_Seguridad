@@ -3,7 +3,7 @@
     public class UsuarioOtrosDatosDto
     {
         public int Id { get; set; }
-        public string Clave { get; set; } = null!;
-        public bool NotificadoPorCorreo { get; set; } = false;
+        public string? Clave { get; set; }
+        public bool? NotificadoPorCorreo { get; set; }
     }
 }
