@@ -17,6 +17,12 @@ using SEG.Aplicacion.Servicios.Implementaciones;
 using SEG.Api.Seguridad.Middlewares;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Implementaciones;
+using Hangfire;
+using Hangfire.MySql;
+using SEG.Aplicacion.Trabajos;
+using SEG.Dominio.Repositorio.UnidadTrabajo;
+using SEG.Intraestructura.Dominio.Repositorio.UnidadTrabajo;
+using SEG.Intraestructura.Dominio.Repositorio;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -84,6 +90,10 @@ builder.Services.AddScoped<IConstructorTextosNotificacion, ConstructorTextosNoti
 builder.Services.AddScoped<IConstructorMensajesNotificacionCorreo, ConstructorMensajesNotificacionCorreo>();
 builder.Services.AddScoped<INotificadorCorreo, NotificadorCorreo>();
 
+builder.Services.AddScoped<IColaSolicitudRepositorio, ColaSolicitudRepositorio>();
+
+builder.Services.AddScoped<IUnidadDeTrabajo, UnidadDeTrabajoEF>();
+
 //Configuramos AutoMapper para el mapeo de DTOS a las entidades y le decimos que se hará a nivel de Ensamblado
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -132,6 +142,17 @@ builder.Services.AddDbContext<AppDbContext>
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
 
+builder.Services.AddHangfire(opciones =>
+{
+    opciones.UseStorage(
+        new MySqlStorage(
+            builder.Configuration.GetConnectionString("DefaultConnection"),
+            new MySqlStorageOptions { TablesPrefix = "HAF_" }));
+});
+
+//Necesario para correr el background job server
+builder.Services.AddHangfireServer();
+
 //Configuracion para llamado de otros MicroServicios
 var configuracionUrlMicroServicios = builder.Configuration.GetSection("UrlMicroservicios");
 var urlCorreos = configuracionUrlMicroServicios["UrlMSEnvioCorreos"];
@@ -150,6 +171,14 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUsuarioContextoServicio, UsuarioContextoServicio>();
 
 var app = builder.Build();
+
+//Dashboard para ver los jobs en el navegador
+app.UseHangfireDashboard("/hangfire");
+
+RecurringJob.AddOrUpdate<ProcesadorColaSolicitudesPendientes>(
+    "procesador-solicitudes",
+    x => x.EjecutarAsync(),
+    Cron.Minutely);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

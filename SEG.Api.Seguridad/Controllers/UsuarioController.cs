@@ -24,14 +24,13 @@ namespace SEG.Api.Seguridad.Controllers
             return await _usuarioServicio.RegistrarAsync(usuarioCreacionRequest);
         }
 
-        [HttpPost("crear")]
-        [Authorize]
-        public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> Crear(UsuarioCreacionRequest usuarioCreacionRequest)
+        [HttpPost("registrarConSede")]
+        public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> RegistrarConSede(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return await _usuarioServicio.CrearAsync(usuarioCreacionRequest);
+            return await _usuarioServicio.RegistrarConSedeAsync(usuarioSedeCreacionRequest);
         }
 
         [HttpPut("modificarClave")]

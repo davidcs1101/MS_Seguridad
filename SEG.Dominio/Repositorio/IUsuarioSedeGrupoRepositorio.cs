@@ -5,6 +5,7 @@ namespace SEG.Dominio.Repositorio
     public interface IUsuarioSedeGrupoRepositorio
     {
         Task<int> CrearAsync(SEG_UsuarioSedeGrupo usuariosSedesGrupos);
+        void MarcarCrear(SEG_UsuarioSedeGrupo usuariosSedesGrupos);
         Task ModificarAsync(SEG_UsuarioSedeGrupo usuariosSedesGrupos);
         Task<bool> EliminarAsync(int id);
         Task<SEG_UsuarioSedeGrupo?> ObtenerUsuarioSedeAsync(int usuarioId, int sedeId);

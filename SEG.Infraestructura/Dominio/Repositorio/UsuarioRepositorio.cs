@@ -40,6 +40,11 @@ namespace SEG.Infraestructura.Dominio.Repositorio
             return usuario.Id;
         }
 
+        public void MarcarCrear(SEG_Usuario usuario)
+        {
+            _context.SEG_Usuarios.Add(usuario);
+        }
+
         public async Task ModificarAsync(SEG_Usuario usuario) 
         {
             _context.SEG_Usuarios.Update(usuario);

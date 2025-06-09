@@ -20,6 +20,11 @@ namespace SEG.Infraestructura.Dominio.Repositorio
             return usuariosSedesGrupos.Id;
         }
 
+        public void MarcarCrear(SEG_UsuarioSedeGrupo usuariosSedesGrupos)
+        {
+            _context.SEG_UsuariosSedesGrupos.Add(usuariosSedesGrupos);
+        }
+
         public async Task ModificarAsync(SEG_UsuarioSedeGrupo usuariosSedesGrupos)
         {
             _context.SEG_UsuariosSedesGrupos.Update(usuariosSedesGrupos);

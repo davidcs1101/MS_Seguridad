@@ -8,6 +8,7 @@ namespace SEG.Infraestructura.Mapeos
     {
         public AutoMapperPerfiles()
         {
+            CreateMap<UsuarioSedeCreacionRequest, UsuarioCreacionRequest>();
             CreateMap<UsuarioCreacionRequest, SEG_Usuario>();
             
             CreateMap<UsuarioSedeGrupoCreacionRequest, SEG_UsuarioSedeGrupo>();

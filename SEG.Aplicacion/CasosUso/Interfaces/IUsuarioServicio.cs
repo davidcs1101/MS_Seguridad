@@ -5,7 +5,7 @@ namespace SEG.Aplicacion.CasosUso.Interfaces
     public interface IUsuarioServicio
     {
         Task<ApiResponse<UsuarioOtrosDatosDto>> RegistrarAsync(UsuarioCreacionRequest usuarioCreacionRequest);
-        Task<ApiResponse<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest);
+        Task<ApiResponse<UsuarioOtrosDatosDto>> RegistrarConSedeAsync(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest);
         Task<ApiResponse<UsuarioOtrosDatosDto>> ModificarClaveAsync(string clave);
         Task<ApiResponse<UsuarioOtrosDatosDto>> RestablecerClavePorUsuarioAsync(string nombreUsuario);
         Task<ApiResponse<string>> ModificarEmailAsync(string email);

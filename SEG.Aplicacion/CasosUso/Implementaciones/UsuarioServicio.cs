@@ -8,6 +8,7 @@ using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using Utilidades;
 using SEG.Dominio.Servicios.Interfaces;
+using SEG.Dominio.Repositorio.UnidadTrabajo;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -20,9 +21,14 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IUsuarioValidador _usuarioValidador;
         private readonly IApiResponse _apiResponse;
+        private readonly IUnidadDeTrabajo _unidadDeTrabajo;
+        private readonly IGrupoRepositorio _grupoRepositorio;
+        private readonly IGrupoValidador _grupoValidador;
+        private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
+        private readonly IUsuarioSedeGrupoRepositorio _usuarioSedeGrupoRepositorio;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, INotificadorCorreo notificadorCorreo, IApiResponse apiResponseServicio)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, INotificadorCorreo notificadorCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IGrupoValidador grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;
@@ -31,25 +37,74 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _constructorMensajesNotificacionCorreo = constructorMensajesNotificacionCorreo;
             _notificadorCorreo = notificadorCorreo;
             _apiResponse = apiResponseServicio;
+            _unidadDeTrabajo = unidadDeTrabajo;
+            _grupoRepositorio = grupoRepositorio;
+            _grupoValidador = grupoValidador;
+            _colaSolicitudRepositorio = colaSolicitudRepositorio;
+            _usuarioSedeGrupoRepositorio = usuarioSedeGrupoRepositorio;
         }
 
 
         public async Task<ApiResponse<UsuarioOtrosDatosDto>> RegistrarAsync(UsuarioCreacionRequest usuarioCreacionRequest) 
         {
             var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
-            var usuario = await this.CrearAsync(usuarioCreacionRequest, 1, nuevaClave);
+            var usuario = await this.AsignarDatosAsync(usuarioCreacionRequest, 1, nuevaClave);
+            var id = await _usuarioRepositorio.CrearAsync(usuario);
             var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeCreacionUsuario(usuario, nuevaClave);
             var notificado = await _notificadorCorreo.EnviarAsync(datosCorreo);
 
-            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, NotificadoPorCorreo = notificado });
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = id, NotificadoPorCorreo = notificado });
         }
 
-        public async Task<ApiResponse<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest)
+        public async Task<ApiResponse<UsuarioOtrosDatosDto>> RegistrarConSedeAsync(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
         {
-            var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
-            var usuario = await this.CrearAsync(usuarioCreacionRequest, _usuarioContextoServicio.ObtenerUsuarioIdToken(), nuevaClave);
+            await using var transaccion = await _unidadDeTrabajo.IniciarTransaccionAsync();
 
-            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, Clave = nuevaClave });
+            try
+            {
+                var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
+                var usuarioCreacionRequest = _mapper.Map<UsuarioCreacionRequest>(usuarioSedeCreacionRequest);
+                var usuarioCreadorId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
+                var usuario = await this.AsignarDatosAsync(usuarioCreacionRequest, usuarioCreadorId, nuevaClave);
+
+                _usuarioRepositorio.MarcarCrear(usuario);
+                await _unidadDeTrabajo.GuardarCambiosAsync();
+
+                var grupo = await _grupoRepositorio.ObtenerPorCodigoAsync("ADMINISTRADOREMPRESA");
+                _grupoValidador.ValidarDatoNoEncontrado(grupo, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_CODIGO);
+
+                var usuarioSedeGrupo = new SEG_UsuarioSedeGrupo()
+                {
+                    UsuarioId = usuario.Id,
+                    SedeId = usuarioSedeCreacionRequest.SedeId,
+                    GrupoId = grupo.Id,
+                    FechaCreado = DateTime.Now,
+                    UsuarioCreadorId = usuarioCreadorId,
+                    EstadoActivo = true
+                };
+                _usuarioSedeGrupoRepositorio.MarcarCrear(usuarioSedeGrupo);
+
+                var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeCreacionUsuario(usuario, nuevaClave);
+                var solicitud = new SEG_ColaSolicitud
+                {
+                    Tipo = "EnviarCorreoCreacionUsuario",
+                    Payload = Utilidades.JsonHelper.Serializar(datosCorreo),
+                    Estado = Textos.EstadosColas.PENDIENTE,
+                    Reintentos = 0,
+                    FechaCreado = DateTime.Now
+                };
+                _colaSolicitudRepositorio.MarcarCrear(solicitud);
+
+                await _unidadDeTrabajo.GuardarCambiosAsync();
+                await transaccion.CommitAsync();
+
+                return _apiResponse.CrearRespuesta<UsuarioOtrosDatosDto>(true, "Usuario creado", null);
+            }
+            catch (Exception e)
+            {
+                await transaccion.RollbackAsync();
+                throw new Exception(e.Message);
+            }
         }
 
         public async Task<ApiResponse<UsuarioOtrosDatosDto>> ModificarClaveAsync(string clave)
@@ -144,7 +199,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
 
 
-        private async Task<SEG_Usuario> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest, int usuarioCreadorId, string nuevaClave) 
+        private async Task<SEG_Usuario> AsignarDatosAsync(UsuarioCreacionRequest usuarioCreacionRequest, int usuarioCreadorId, string nuevaClave) 
         {
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(usuarioCreacionRequest.NombreUsuario);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NOMBRE_EXISTE);
@@ -162,8 +217,6 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             usuario.UsuarioCreadorId = usuarioCreadorId;
             usuario.EstadoActivo = true;
 
-            var id = await _usuarioRepositorio.CrearAsync(usuario);
-            usuario.Id = id;
             return usuario;
         }
     }

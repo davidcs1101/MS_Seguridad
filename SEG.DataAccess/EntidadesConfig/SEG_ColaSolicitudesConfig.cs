@@ -1,0 +1,24 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SEG.Dominio.Entidades;
+
+namespace EMP.DataAccess.EntidadesConfig
+{
+    public class SEG_ColaSolicitudesConfig : IEntityTypeConfiguration<SEG_ColaSolicitud>
+    {
+        public void Configure(EntityTypeBuilder<SEG_ColaSolicitud> builder) 
+        {
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Tipo).HasColumnType("varchar(250)").HasComment("Tipo de solicitud a realizar.");
+            builder.Property(x => x.Payload).HasColumnType("Text").HasComment("Payload para la solicitud.");
+            builder.Property(x => x.Estado).HasColumnType("varchar(20)").HasComment("Estado del proceso de la solicitud");
+            builder.Property(x => x.Reintentos).HasDefaultValue(0).HasComment("Reintentos del proceso");
+            builder.Property(x => x.FechaCreado).HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnType("datetime");
+            builder.Property(x => x.FechaUltimoIntento).HasColumnType("datetime");
+            builder.Property(x => x.ErrorMensaje).HasColumnType("Text").HasComment("Detalle de error de procasado de la solicitud.");
+
+            builder.HasIndex(x => new { x.Tipo });
+            builder.HasIndex(x => new { x.Estado });
+        }
+    }
+}
