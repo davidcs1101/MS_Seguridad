@@ -15,16 +15,17 @@ namespace SEG.Api.Seguridad.Controllers
             _usuarioServicio = usuarioServicio;
         }
 
-        [HttpPost("registrar")]
-        public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> Registrar(UsuarioCreacionRequest usuarioCreacionRequest)
+        [HttpPost("crear")]
+        public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> Crear(UsuarioCreacionRequest usuarioCreacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return await _usuarioServicio.RegistrarAsync(usuarioCreacionRequest);
+            return await _usuarioServicio.CrearAsync(usuarioCreacionRequest);
         }
 
         [HttpPost("registrarConSede")]
+        [Authorize]
         public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> RegistrarConSede(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
         {
             if (!ModelState.IsValid)
@@ -51,7 +52,7 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpPut("modificarEmail")]
         [Authorize]
-        public async Task<ActionResult<ApiResponse<string>>> ModificarEmail(string email) 
+        public async Task<ActionResult<ApiResponse<string>>> ModificarEmail(string email)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -61,13 +62,13 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpGet("obtenerNombreUsuarioPorId")]
         [Authorize]//VALIDAR POSTERIORMENTE SI SE REQUIERE UN PERMISO ESPECIFICO
-        public async Task<ActionResult<ApiResponse<string>>> ObtenerNombreUsuarioPorIdAsync(int id) 
+        public async Task<ActionResult<ApiResponse<string>>> ObtenerNombreUsuarioPorIdAsync(int id)
         {
             return await _usuarioServicio.ObtenerNombreUsuarioPorIdAsync(id);
         }
 
         [HttpPost("listar")]
-        [Authorize]//VALIDAR POSTERIORMENTE SI SE REQUIERE UN PERMISO ESPECIFICO
+        //[Authorize]//VALIDAR POSTERIORMENTE SI SE REQUIERE UN PERMISO ESPECIFICO
         public async Task<ActionResult<ApiResponse<List<UsuarioDto>?>>> ListarAsync(IdsListadoDto ids)
         {
             return await _usuarioServicio.ListarAsync(ids);

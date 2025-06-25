@@ -9,6 +9,8 @@ using SEG.Aplicacion.Servicios.Interfaces;
 using Utilidades;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dominio.Repositorio.UnidadTrabajo;
+using SEG.Dominio.Excepciones;
+using SEG.Dominio.Enumeraciones;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -16,7 +18,6 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly IConstructorMensajesNotificacionCorreo _constructorMensajesNotificacionCorreo;
-        private readonly INotificadorCorreo _notificadorCorreo;
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IUsuarioValidador _usuarioValidador;
@@ -26,34 +27,55 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IGrupoValidador _grupoValidador;
         private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
         private readonly IUsuarioSedeGrupoRepositorio _usuarioSedeGrupoRepositorio;
+        private readonly ISerializadorJsonServicio _serializadorJsonServicio;
+        private readonly IJobEncoladorServicio _jobEncoladorServicio;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, INotificadorCorreo notificadorCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IGrupoValidador grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IGrupoValidador grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;
             _usuarioContextoServicio = usuarioContextoServicio;
             _usuarioValidador = usuarioValidador;
             _constructorMensajesNotificacionCorreo = constructorMensajesNotificacionCorreo;
-            _notificadorCorreo = notificadorCorreo;
             _apiResponse = apiResponseServicio;
             _unidadDeTrabajo = unidadDeTrabajo;
             _grupoRepositorio = grupoRepositorio;
             _grupoValidador = grupoValidador;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
             _usuarioSedeGrupoRepositorio = usuarioSedeGrupoRepositorio;
+            _serializadorJsonServicio = serializadorJsonServicio;
+            _jobEncoladorServicio = jobEncoladorServicio;
         }
 
 
-        public async Task<ApiResponse<UsuarioOtrosDatosDto>> RegistrarAsync(UsuarioCreacionRequest usuarioCreacionRequest) 
+        public async Task<ApiResponse<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest) 
         {
-            var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
-            var usuario = await this.AsignarDatosAsync(usuarioCreacionRequest, 1, nuevaClave);
-            var id = await _usuarioRepositorio.CrearAsync(usuario);
-            var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeCreacionUsuario(usuario, nuevaClave);
-            var notificado = await _notificadorCorreo.EnviarAsync(datosCorreo);
+            await using var transaccion = await _unidadDeTrabajo.IniciarTransaccionAsync();
 
-            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = id, NotificadoPorCorreo = notificado });
+            try
+            {
+                var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
+                var usuario = await this.AsignarDatosAsync(usuarioCreacionRequest, 1, nuevaClave);
+                _usuarioRepositorio.MarcarCrear(usuario);
+
+                var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeCreacionUsuario(usuario, nuevaClave);
+                var colaSolicitud = this.AgregarColaSolicitud(datosCorreo);
+
+                await _unidadDeTrabajo.GuardarCambiosAsync();
+                await transaccion.CommitAsync();
+
+                await _jobEncoladorServicio.EncolarPorColaSolicitudIdAsync(colaSolicitud.Id, true);
+                return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, NotificadoPorCorreo = null });
+            }
+            catch (DatoYaExisteException) {
+                await transaccion.RollbackAsync();
+                throw;
+            }
+            catch {
+                await transaccion.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<ApiResponse<UsuarioOtrosDatosDto>> RegistrarConSedeAsync(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
@@ -62,11 +84,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             try
             {
+                //Validar sede remota ANTES de iniciar lógica (Aquí se debe validar la sede en microservicio empresa)
+
                 var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
                 var usuarioCreacionRequest = _mapper.Map<UsuarioCreacionRequest>(usuarioSedeCreacionRequest);
                 var usuarioCreadorId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
                 var usuario = await this.AsignarDatosAsync(usuarioCreacionRequest, usuarioCreadorId, nuevaClave);
-
                 _usuarioRepositorio.MarcarCrear(usuario);
                 await _unidadDeTrabajo.GuardarCambiosAsync();
 
@@ -85,25 +108,25 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 _usuarioSedeGrupoRepositorio.MarcarCrear(usuarioSedeGrupo);
 
                 var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeCreacionUsuario(usuario, nuevaClave);
-                var solicitud = new SEG_ColaSolicitud
-                {
-                    Tipo = "EnviarCorreoCreacionUsuario",
-                    Payload = Utilidades.JsonHelper.Serializar(datosCorreo),
-                    Estado = Textos.EstadosColas.PENDIENTE,
-                    Reintentos = 0,
-                    FechaCreado = DateTime.Now
-                };
-                _colaSolicitudRepositorio.MarcarCrear(solicitud);
+                var colaSolicitud = this.AgregarColaSolicitud(datosCorreo);
 
                 await _unidadDeTrabajo.GuardarCambiosAsync();
                 await transaccion.CommitAsync();
 
-                return _apiResponse.CrearRespuesta<UsuarioOtrosDatosDto>(true, "Usuario creado", null);
+                await _jobEncoladorServicio.EncolarPorColaSolicitudIdAsync(colaSolicitud.Id, true);
+                return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, NotificadoPorCorreo = null });
             }
-            catch (Exception e)
-            {
+            catch (DatoYaExisteException){
                 await transaccion.RollbackAsync();
-                throw new Exception(e.Message);
+                throw;
+            }
+            catch (DatoNoEncontradoException){
+                await transaccion.RollbackAsync();
+                throw;
+            }
+            catch {
+                await transaccion.RollbackAsync();
+                throw;
             }
         }
 
@@ -120,28 +143,43 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             usuarioExiste.UsuarioModificadorId = usuarioId;
             await _usuarioRepositorio.ModificarAsync(usuarioExiste);
 
-            var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeModificacionClaveUsuario(usuarioExiste);
-            var notificado = await _notificadorCorreo.EnviarAsync(datosCorreo);
-
-            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = notificado });
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = false });
         }
 
         public async Task<ApiResponse<UsuarioOtrosDatosDto>> RestablecerClavePorUsuarioAsync(string nombreUsuario)
         {
-            var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(nombreUsuario);
-            _usuarioValidador.ValidarDatoNoEncontrado(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NO_EXISTE_NOMBRE);
+            await using var transaccion = await _unidadDeTrabajo.IniciarTransaccionAsync();
 
-            var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
-            usuarioExiste.Clave = ProcesadorClaves.EncriptarClave(nuevaClave);
-            usuarioExiste.CambiarClave = true;
-            usuarioExiste.FechaModificado = DateTime.Now;
-            usuarioExiste.UsuarioModificadorId = 1;
-            await _usuarioRepositorio.ModificarAsync(usuarioExiste);
+            try
+            {
+                var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(nombreUsuario);
+                _usuarioValidador.ValidarDatoNoEncontrado(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NO_EXISTE_NOMBRE);
 
-            var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeRestablecimientoClaveUsuario(usuarioExiste,nuevaClave);
-            var notificado = await _notificadorCorreo.EnviarAsync(datosCorreo);
+                var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
+                usuarioExiste.Clave = ProcesadorClaves.EncriptarClave(nuevaClave);
+                usuarioExiste.CambiarClave = true;
+                usuarioExiste.FechaModificado = DateTime.Now;
+                usuarioExiste.UsuarioModificadorId = 1;
+                _usuarioRepositorio.MarcarModificar(usuarioExiste);
 
-            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = notificado, Clave = nuevaClave });
+                var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeRestablecimientoClaveUsuario(usuarioExiste, nuevaClave);
+                var colaSolicitud = this.AgregarColaSolicitud(datosCorreo);
+
+                await _unidadDeTrabajo.GuardarCambiosAsync();
+                await transaccion.CommitAsync();
+
+                await _jobEncoladorServicio.EncolarPorColaSolicitudIdAsync(colaSolicitud.Id, true);
+                return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = false, Clave = nuevaClave });
+            }
+            catch (DatoNoEncontradoException) {
+                await transaccion.RollbackAsync();
+                throw;
+            }
+            catch
+            {
+                await transaccion.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<ApiResponse<string>> ModificarEmailAsync(string email)
@@ -218,6 +256,20 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             usuario.EstadoActivo = true;
 
             return usuario;
+        }
+
+        private SEG_ColaSolicitud AgregarColaSolicitud(DatoCorreoRequest datoCorreoRequest) 
+        {
+            var solicitud = new SEG_ColaSolicitud
+            {
+                Tipo = Textos.EventosColas.ENVIARCORREO,
+                Payload = _serializadorJsonServicio.Serializar(datoCorreoRequest),
+                Estado = EstadoCola.Pendiente,
+                Intentos = 0,
+                FechaCreado = DateTime.Now
+            };
+            _colaSolicitudRepositorio.MarcarCrear(solicitud);
+            return solicitud;
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SEG.Aplicacion.ServiciosExternos
 {
-    public interface IMSEnvioCorreosServicio
+    public interface IMSEnvioCorreosBackgroundServicio
     {
         Task<HttpResponseMessage> EnviarCorreoAsync(DatoCorreoRequest datoCorreoRequest);
     }

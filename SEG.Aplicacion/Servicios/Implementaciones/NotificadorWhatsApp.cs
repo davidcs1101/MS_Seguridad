@@ -6,9 +6,9 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
 {
     public class NotificadorWhatsApp : INotificadorWhatsApp
     {
-        private readonly IMSEnvioCorreosServicio _msEnvioCorreosServicio;
+        private readonly IMSEnvioCorreosBackgroundServicio _msEnvioCorreosServicio;
 
-        public NotificadorWhatsApp(IMSEnvioCorreosServicio msEnvioCorreosServicio, IConstructorTextosNotificacion constructorTextosNotificacion)
+        public NotificadorWhatsApp(IMSEnvioCorreosBackgroundServicio msEnvioCorreosServicio, IConstructorTextosNotificacion constructorTextosNotificacion)
         {
             _msEnvioCorreosServicio = msEnvioCorreosServicio;
         }

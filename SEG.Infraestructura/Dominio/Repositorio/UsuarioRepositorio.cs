@@ -51,6 +51,11 @@ namespace SEG.Infraestructura.Dominio.Repositorio
             await _context.SaveChangesAsync();
         }
 
+        public void MarcarModificar(SEG_Usuario usuario)
+        {
+            _context.SEG_Usuarios.Update(usuario);
+        }
+
         public IQueryable<SEG_Usuario> Listar()
         {
             return _context.SEG_Usuarios;

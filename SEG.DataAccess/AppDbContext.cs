@@ -11,12 +11,7 @@ namespace SEG.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            modelBuilder.ApplyConfiguration(new SEG_UsuarioConfig());
-            modelBuilder.ApplyConfiguration(new SEG_GrupoConfig());
-            modelBuilder.ApplyConfiguration(new SEG_ProgramaConfig());
-            modelBuilder.ApplyConfiguration(new SEG_GrupoProgramaConfig());
-            modelBuilder.ApplyConfiguration(new SEG_UsuarioSedeGrupoConfig());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
             SEG_DatosIniciales.Seed(modelBuilder);
             base.OnModelCreating(modelBuilder);

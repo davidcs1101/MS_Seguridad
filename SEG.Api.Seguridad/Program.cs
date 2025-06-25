@@ -19,10 +19,12 @@ using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Implementaciones;
 using Hangfire;
 using Hangfire.MySql;
-using SEG.Aplicacion.Trabajos;
 using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Intraestructura.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Intraestructura.Dominio.Repositorio;
+using SEG.Infraestructura.Servicios.Interfaces;
+using SEG.Infraestructura.Servicios.Implementaciones;
+using SEG.Dtos.AppSettings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,8 +93,24 @@ builder.Services.AddScoped<IConstructorMensajesNotificacionCorreo, ConstructorMe
 builder.Services.AddScoped<INotificadorCorreo, NotificadorCorreo>();
 
 builder.Services.AddScoped<IColaSolicitudRepositorio, ColaSolicitudRepositorio>();
+builder.Services.AddScoped<IColaSolicitudValidador, ColaSolicitudValidador>();
 
 builder.Services.AddScoped<IUnidadDeTrabajo, UnidadDeTrabajoEF>();
+
+builder.Services.AddScoped<ISerializadorJsonServicio, SerializadorJsonServicio>();
+
+builder.Services.AddScoped<IRespuestaHttpValidador, RespuestaHttpValidador>();
+
+builder.Services.AddScoped<IColaSolicitudServicio, ColaSolicitudServicio>();
+builder.Services.AddScoped<IJobEncoladorServicio, JobEncoladorServicio>();
+
+
+
+#region REG_Servicios de configuraciones Appsettings
+builder.Services.Configure<TrabajosColasSettings>(builder.Configuration.GetSection("TrabajosColas"));
+builder.Services.AddSingleton<IConfiguracionesTrabajosColas, ConfiguracionesTrabajosColas>();
+#endregion
+
 
 //Configuramos AutoMapper para el mapeo de DTOS a las entidades y le decimos que se hará a nivel de Ensamblado
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -147,16 +165,16 @@ builder.Services.AddHangfire(opciones =>
     opciones.UseStorage(
         new MySqlStorage(
             builder.Configuration.GetConnectionString("DefaultConnection"),
-            new MySqlStorageOptions { TablesPrefix = "HAF_" }));
+            new MySqlStorageOptions { TablesPrefix = "XHAF_SEG_" }));
 });
 
 //Necesario para correr el background job server
-builder.Services.AddHangfireServer();
+builder.Services.AddHangfireServer(opciones => {opciones.ServerName = "MSSeguridadServer";});
 
 //Configuracion para llamado de otros MicroServicios
 var configuracionUrlMicroServicios = builder.Configuration.GetSection("UrlMicroservicios");
 var urlCorreos = configuracionUrlMicroServicios["UrlMSEnvioCorreos"];
-builder.Services.AddHttpClient<IMSEnvioCorreosServicio, MSEnvioCorreosServicio>
+builder.Services.AddHttpClient<IMSEnvioCorreosBackgroundServicio, MSEnvioCorreosBackgroundServicio>
     (cliente =>
     {
         cliente.BaseAddress = new Uri(urlCorreos);
@@ -175,10 +193,11 @@ var app = builder.Build();
 //Dashboard para ver los jobs en el navegador
 app.UseHangfireDashboard("/hangfire");
 
-RecurringJob.AddOrUpdate<ProcesadorColaSolicitudesPendientes>(
-    "procesador-solicitudes",
-    x => x.EjecutarAsync(),
-    Cron.Minutely);
+//Configuracion para la tarea Job en segundo plano que rastrea las solicitudes pendientes de procesar.
+var configuracionTrabajosColas = app.Services.GetRequiredService<IConfiguracionesTrabajosColas>();
+RecurringJob.AddOrUpdate<IColaSolicitudServicio>("procesador_solicitudes", x => x.ProcesarColaSolicitudesAsync(),
+    configuracionTrabajosColas.ObtenerProcesarColaSolicitudesCron());
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

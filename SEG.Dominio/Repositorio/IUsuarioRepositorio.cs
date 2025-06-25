@@ -9,6 +9,7 @@ namespace SEG.Dominio.Repositorio
         Task<SEG_Usuario?> ObtenerPorEmailAsync(string email);
         Task<SEG_Usuario?> ObtenerPorIdentificacionAsync(int tipoIdentificacionId, string identificacion);
         Task ModificarAsync(SEG_Usuario usuario);
+        void MarcarModificar(SEG_Usuario usuario);
         Task<int> CrearAsync(SEG_Usuario usuario);
         void MarcarCrear(SEG_Usuario usuario);
         IQueryable<SEG_Usuario> Listar();

@@ -1,7 +1,7 @@
 ﻿using SEG.Infraestructura.Servicios.Interfaces;
 using SEG.Dominio.Excepciones;
 
-namespace DCO.Infraestructura.Servicios.Implementaciones
+namespace SEG.Infraestructura.Servicios.Implementaciones
 {
     public class RespuestaHttpValidador : IRespuestaHttpValidador
     {
