@@ -10,6 +10,8 @@ using SEG.Dominio.Repositorio;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Dominio.Servicios.Interfaces;
+using SEG.Aplicacion.ServiciosExternos.config;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -21,8 +23,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IConfiguration _configuracion;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
+        private readonly IUsuarioValidador _usuarioValidador;
+        private readonly IUsuarioSedeGrupoValidador _usuarioSedeGrupoValidador;
+        private readonly IConfiguracionesJwt _configuracionesJwt;
+
         public AutenticacionServicio(IUsuarioRepositorio usuarioRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeRepositorio, IGrupoProgramaRepositorio grupoRepositorio, IConfiguration configuracion,
-            IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio)
+            IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IUsuarioSedeGrupoValidador usuarioSedeGrupoValidador, IConfiguracionesJwt configuracionesJwt)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _usuarioSedeRepositorio = usuarioSedeRepositorio;
@@ -30,13 +36,15 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _configuracion = configuracion;
             _usuarioContextoServicio = usuarioContextoServicio;
             _apiResponse = apiResponseServicio;
+            _usuarioValidador = usuarioValidador;
+            _usuarioSedeGrupoValidador = usuarioSedeGrupoValidador;
+            _configuracionesJwt = configuracionesJwt;
         }
 
         public async Task<ApiResponse<string>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
         {
             var usuario = await _usuarioRepositorio.ObtenerPorUsuarioAsync(autenticacionRequest.NombreUsuario);
-            if (usuario == null || usuario.Clave != ProcesadorClaves.EncriptarClave(autenticacionRequest.Clave))
-                return _apiResponse.CrearRespuesta(false, Textos.Usuarios.MENSAJE_LOGIN_INCORRECTO, "");
+            _usuarioValidador.ValidarLoguin(usuario, ProcesadorClaves.EncriptarClave(autenticacionRequest.Clave), Textos.Usuarios.MENSAJE_LOGIN_INCORRECTO);
          
             var token = await GenerarTokenAsync(usuario, null, null);
             return _apiResponse.CrearRespuesta(true, "", token);
@@ -47,8 +55,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
             var usuarioSede = await _usuarioSedeRepositorio.ObtenerUsuarioSedeAsync(usuarioId, sedeId);
-            if (usuarioSede == null)
-                return _apiResponse.CrearRespuesta(false, Textos.Usuarios.MENSAJE_LOGIN_SEDE_INCORRECTO, "");
+            _usuarioSedeGrupoValidador.ValidarDatoNoEncontrado(usuarioSede, Textos.Usuarios.MENSAJE_LOGIN_SEDE_INCORRECTO);
 
             var token = await GenerarTokenAsync(usuarioSede.Usuario, usuarioSede.GrupoId, usuarioSede.SedeId);
             return _apiResponse.CrearRespuesta(true, "", token);
@@ -57,11 +64,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private  async Task<string> GenerarTokenAsync(SEG_Usuario usuario, int? grupoId, int? sedeId)
         {
             //Datos de configuracon para el Token
-            var configuracionJWT = _configuracion.GetSection("JWT");
-            var issuer = configuracionJWT["Issuer"];
-            var audiences = configuracionJWT.GetSection("Audience").GetChildren().Select(a => a.Value).ToList();
-            int tiempoExpiracion = Convert.ToInt32(configuracionJWT["MinutosDuracionTokenAutenticacionUsuario"]);
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuracionJWT["Key"]));
+            var issuer = _configuracionesJwt.ObtenerIssuer();
+            var audiences = _configuracionesJwt.ObtenerAudience();
+            int tiempoExpiracion = _configuracionesJwt.ObtenerMinutosDuracionTokenAutenticacionUsuario();
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuracionesJwt.ObtenerKey()));
             var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 
@@ -95,15 +101,14 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
              */
             if (!usuario.CambiarClave)
             {
-                tiempoExpiracion = Convert.ToInt32(configuracionJWT["MinutosDuracionTokenAutenticacionSede"]);
+                tiempoExpiracion = Convert.ToInt32(_configuracionesJwt.ObtenerMinutosDuracionTokenAutenticacionSede());
                 claims.Add(new Claim("Accion", "CAMBIOCLAVEOK"));
             }
             #endregion
 
-
             var token = new JwtSecurityToken(
                 issuer : issuer,
-                audience: _configuracion["JWT:Audience"],
+                audience: _configuracionesJwt.ObtenerAudienceTexto(),
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(tiempoExpiracion),
                 signingCredentials: credenciales);

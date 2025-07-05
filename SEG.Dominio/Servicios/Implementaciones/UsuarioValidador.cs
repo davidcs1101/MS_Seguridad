@@ -22,5 +22,12 @@ namespace SEG.Dominio.Servicios.Implementaciones
                 if (idUsuario != usuarioEmail.Id)
                     throw new DatoYaExisteException(mensaje);
         }
+        public void ValidarLoguin(SEG_Usuario? usuario, string clave, string mensaje)
+        {
+            if (usuario == null)
+                throw new LoguinException(mensaje);
+            if (usuario.Clave != clave)
+                throw new LoguinException(mensaje);
+        }
     }
 }

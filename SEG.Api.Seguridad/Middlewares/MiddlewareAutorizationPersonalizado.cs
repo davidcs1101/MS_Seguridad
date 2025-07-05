@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
-using SEG.Aplicacion.Servicios.Interfaces;
+﻿using SEG.Aplicacion.Servicios.Interfaces;
+using SEG.Aplicacion.ServiciosExternos;
+using Utilidades;
 
 namespace SEG.Api.Seguridad.Middlewares
 {
@@ -29,6 +30,7 @@ namespace SEG.Api.Seguridad.Middlewares
                 using (var scope = _serviceProvider.CreateScope()) 
                 {
                     var _apiResponse = scope.ServiceProvider.GetRequiredService<IApiResponse>();
+                    var _serializadorJson = scope.ServiceProvider.GetRequiredService<ISerializadorJsonServicio>();
                     //Si No contiene SedeId, Es un Token de usuario (Login Inicial)
                     if (!contexto.User.HasClaim(c => c.Type == "SedeId"))
                     {
@@ -37,7 +39,7 @@ namespace SEG.Api.Seguridad.Middlewares
                         {
                             contexto.Response.ContentType = "application/json";
 
-                            var respuestaJson = JsonConvert.SerializeObject(_apiResponse.CrearRespuesta(false, "El usuario no ha realizado el cambio de clave. No tienes permiso para realizar la acción.", ""));
+                            var respuestaJson = _serializadorJson.Serializar(_apiResponse.CrearRespuesta(false, Textos.Usuarios.MENSAJE_USUARIO_NO_CAMBIO_CLAVE, ""));
                             contexto.Response.StatusCode = 403; //Forbidden
                             await contexto.Response.WriteAsync(respuestaJson);
                             return;

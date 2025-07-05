@@ -36,7 +36,6 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
             var programa = _mapper.Map<SEG_Programa>(programaCreacionRequest);
-            programa.FechaCreado = DateTime.Now;
             programa.UsuarioCreadorId = usuarioId;
 
             var id = await _programaRepositorio.CrearAsync(programa);

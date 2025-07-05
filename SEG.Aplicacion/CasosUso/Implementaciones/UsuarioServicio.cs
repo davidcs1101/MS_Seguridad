@@ -101,9 +101,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                     UsuarioId = usuario.Id,
                     SedeId = usuarioSedeCreacionRequest.SedeId,
                     GrupoId = grupo.Id,
-                    FechaCreado = DateTime.Now,
                     UsuarioCreadorId = usuarioCreadorId,
-                    EstadoActivo = true
                 };
                 _usuarioSedeGrupoRepositorio.MarcarCrear(usuarioSedeGrupo);
 
@@ -250,10 +248,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var usuario = _mapper.Map<SEG_Usuario>(usuarioCreacionRequest);
             usuario.Clave = ProcesadorClaves.EncriptarClave(nuevaClave);
-            usuario.CambiarClave = true;
-            usuario.FechaCreado = DateTime.Now;
             usuario.UsuarioCreadorId = usuarioCreadorId;
-            usuario.EstadoActivo = true;
 
             return usuario;
         }

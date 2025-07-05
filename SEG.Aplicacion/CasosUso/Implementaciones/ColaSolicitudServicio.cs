@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Options;
-using SEG.Aplicacion.CasosUso.Interfaces;
-using SEG.Aplicacion.Servicios.Implementaciones;
+﻿using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
+using SEG.Aplicacion.ServiciosExternos.config;
 using SEG.Dominio.Enumeraciones;
 using SEG.Dominio.Repositorio;
 using SEG.Dominio.Repositorio.UnidadTrabajo;
@@ -33,7 +32,8 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         public async Task ProcesarColaSolicitudesAsync()
         {
-            var pendientes = _colaSolicitudRepositorio.Listar().Where(c => c.Estado == EstadoCola.Pendiente).Take(10).ToList();
+            var pendientes = _colaSolicitudRepositorio.Listar().Where(c => c.Estado == EstadoCola.Pendiente).OrderBy(c => c.Id)
+                .Take(_configuracionesTrabajosColas.ObtenerCantidadRegistrosProcesarIteracion()).ToList();
 
             foreach (var solicitud in pendientes)
             {
@@ -46,13 +46,13 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             await using var transaccion = await _unidadDeTrabajo.IniciarTransaccionAsync();
 
             var solicitudExiste = await _colaSolicitudRepositorio.ObtenerPorIdAsync(id);
-            _colaSolicitudValidador.ValidarDatoNoEncontrado(solicitudExiste, "El registro de solicitud no existe");
+            _colaSolicitudValidador.ValidarDatoNoEncontrado(solicitudExiste, Textos.ColasSolicitudes.MENSAJE_COLASOLICITUD_NO_EXISTE_ID);
 
             if (validarEstadoPendiente)
             {
                 if (solicitudExiste.Estado != EstadoCola.Pendiente)
                 {
-                    Logs.EscribirLog("w", $"La solicitud ya fue procesada: {solicitudExiste.Id}");
+                    Logs.EscribirLog("w", $"{Textos.ColasSolicitudes.MENSAJE_COLASOLICITUD_YA_PROCESADA}: {solicitudExiste.Id}");
                     return;
                 }
             }
@@ -79,7 +79,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 solicitudExiste.Intentos++;
                 solicitudExiste.Estado = solicitudExiste.Intentos >= _configuracionesTrabajosColas.ObtenerCantidadIntentosPorRegistroEnCola() ? EstadoCola.Fallido : EstadoCola.Pendiente;
                 solicitudExiste.ErrorMensaje = ex.Message;
-                Logs.EscribirLog("e", $"Error procesando solicitud pendiente {solicitudExiste.Id}");
+                Logs.EscribirLog("e", $"{Textos.ColasSolicitudes.MENSAJE_COLASOLICITUD_ERROR_PROCESO} : {solicitudExiste.Id}", ex);
             }
             _colaSolicitudRepositorio.MarcarModificar(solicitudExiste);
             await _unidadDeTrabajo.GuardarCambiosAsync();

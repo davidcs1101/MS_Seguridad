@@ -25,6 +25,8 @@ using SEG.Intraestructura.Dominio.Repositorio;
 using SEG.Infraestructura.Servicios.Interfaces;
 using SEG.Infraestructura.Servicios.Implementaciones;
 using SEG.Dtos.AppSettings;
+using SEG.Aplicacion.ServiciosExternos.config;
+using SEG.Infraestructura.Aplicacion.ServiciosExternos.config;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,6 +111,9 @@ builder.Services.AddScoped<IJobEncoladorServicio, JobEncoladorServicio>();
 #region REG_Servicios de configuraciones Appsettings
 builder.Services.Configure<TrabajosColasSettings>(builder.Configuration.GetSection("TrabajosColas"));
 builder.Services.AddSingleton<IConfiguracionesTrabajosColas, ConfiguracionesTrabajosColas>();
+
+builder.Services.Configure<JWTSettings>(builder.Configuration.GetSection("JWT"));
+builder.Services.AddSingleton<IConfiguracionesJwt, ConfiguracionesJwt>();
 #endregion
 
 

@@ -21,13 +21,7 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var respuesta = await _autenticacionServicio.AutenticarUsuarioAsync(autenticacionRequest);
-            if (!respuesta.Correcto)
-            {
-                return Unauthorized(respuesta);
-            }
-
-            return respuesta;
+            return await _autenticacionServicio.AutenticarUsuarioAsync(autenticacionRequest);
         }
 
         [HttpPost("autenticarSede")]
@@ -37,11 +31,7 @@ namespace SEG.Api.Seguridad.Controllers
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
 
-            var seleccionSedeResponse = await _autenticacionServicio.AutenticarSedeAsync(sedeId);
-            if (!seleccionSedeResponse.Correcto)
-                return Unauthorized(seleccionSedeResponse);
-
-            return seleccionSedeResponse;
+            return await _autenticacionServicio.AutenticarSedeAsync(sedeId);
         }
 
     }

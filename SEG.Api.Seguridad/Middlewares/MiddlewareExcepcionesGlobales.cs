@@ -1,9 +1,9 @@
 ﻿//using MySqlConnector; //Si queremos poner excepciones del tipo de base de datos especifico
-using Newtonsoft.Json;
 using System.Net;
 using Utilidades;
 using SEG.Dominio.Excepciones;
 using SEG.Aplicacion.Servicios.Interfaces;
+using SEG.Aplicacion.ServiciosExternos;
 
 namespace SEG.Api.Seguridad.Middlewares
 {
@@ -38,6 +38,7 @@ namespace SEG.Api.Seguridad.Middlewares
             { 
                 var _apiResponse = scope.ServiceProvider.GetRequiredService<IApiResponse>();
                 var respuesta = _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_ERROR_SERVIDOR, "");
+                var _serializadorJson = scope.ServiceProvider.GetRequiredService<ISerializadorJsonServicio>();
 
                 if (e is DatoNoEncontradoException)
                 {
@@ -54,6 +55,11 @@ namespace SEG.Api.Seguridad.Middlewares
                     contexto.Response.StatusCode = (int)HttpStatusCode.BadGateway;
                     respuesta.Mensaje = e.Message;
                 }
+                else if (e is LoguinException)
+                {
+                    contexto.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    respuesta.Mensaje = e.Message;
+                }
                 else
                 {
                     contexto.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -66,7 +72,7 @@ namespace SEG.Api.Seguridad.Middlewares
                     //respuesta.Mensaje = e.Message;
                 }
 
-                var respuestaJson = JsonConvert.SerializeObject(respuesta);
+                var respuestaJson = _serializadorJson.Serializar(respuesta);
                 return contexto.Response.WriteAsync(respuestaJson);
             }
         }

@@ -34,5 +34,7 @@ namespace SEG.Dtos
         [Required(ErrorMessage = Textos.Generales.VALIDA_CAMPO_OBLIGATORIO)]
         [MaxLength(60, ErrorMessage = Textos.Generales.VALIDA_VALOR_EXCEDE_LONGITUD)]
         public string NombreUsuario { get; set; } = null!;
+
+        public bool CambiarClave { get; set; } = true;
     }
 }

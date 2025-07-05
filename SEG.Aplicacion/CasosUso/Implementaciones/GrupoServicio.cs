@@ -36,7 +36,6 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
             var grupo = _mapper.Map<SEG_Grupo>(grupoCreacionRequest);
-            grupo.FechaCreado = DateTime.Now;
             grupo.UsuarioCreadorId = usuarioId;
 
             var id = await _grupoRepositorio.CrearAsync(grupo);
