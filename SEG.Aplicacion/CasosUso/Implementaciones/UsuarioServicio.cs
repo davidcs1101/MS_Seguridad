@@ -29,9 +29,11 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioSedeGrupoRepositorio _usuarioSedeGrupoRepositorio;
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IJobEncoladorServicio _jobEncoladorServicio;
+        private readonly IMSEmpresas _msEmpresas;
+        private readonly IMSDatosComunes _msDatosComunes;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IGrupoValidador grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IGrupoValidador grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IMSDatosComunes msDatosComunes)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;
@@ -46,6 +48,8 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _usuarioSedeGrupoRepositorio = usuarioSedeGrupoRepositorio;
             _serializadorJsonServicio = serializadorJsonServicio;
             _jobEncoladorServicio = jobEncoladorServicio;
+            _msEmpresas = msEmpresas;
+            _msDatosComunes = msDatosComunes;
         }
 
 
@@ -68,6 +72,11 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 await _jobEncoladorServicio.EncolarPorColaSolicitudIdAsync(colaSolicitud.Id, true);
                 return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, NotificadoPorCorreo = null });
             }
+            catch (SolicitudHttpException)
+            {
+                //Aquí no hacemos RollBack ya que la solicitud HTTP es la primera operación.
+                throw;
+            }
             catch (DatoYaExisteException) {
                 await transaccion.RollbackAsync();
                 throw;
@@ -84,7 +93,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             try
             {
-                //Validar sede remota ANTES de iniciar lógica (Aquí se debe validar la sede en microservicio empresa)
+                await _msEmpresas.ValidarSedeExisteAsync(usuarioSedeCreacionRequest.SedeId);
 
                 var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
                 var usuarioCreacionRequest = _mapper.Map<UsuarioCreacionRequest>(usuarioSedeCreacionRequest);
@@ -114,11 +123,16 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 await _jobEncoladorServicio.EncolarPorColaSolicitudIdAsync(colaSolicitud.Id, true);
                 return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, NotificadoPorCorreo = null });
             }
-            catch (DatoYaExisteException){
+            catch (SolicitudHttpException)
+            {
+                //Aquí no hacemos RollBack ya que la solicitud HTTP es la primera operación.
+                throw;
+            }
+            catch (DatoYaExisteException) {
                 await transaccion.RollbackAsync();
                 throw;
             }
-            catch (DatoNoEncontradoException){
+            catch (DatoNoEncontradoException) {
                 await transaccion.RollbackAsync();
                 throw;
             }
@@ -237,6 +251,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         private async Task<SEG_Usuario> AsignarDatosAsync(UsuarioCreacionRequest usuarioCreacionRequest, int usuarioCreadorId, string nuevaClave) 
         {
+            var codigoListaIdDetalleRequest = new CodigoListaIdDetalleRequest{CodigoLista = "TIPOSIDENTIFICACION",Id = usuarioCreacionRequest.TipoIdentificacionId};
+            await _msDatosComunes.ValidarIdDetalleExisteEnCodigoListaAsync(codigoListaIdDetalleRequest);
+
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(usuarioCreacionRequest.NombreUsuario);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NOMBRE_EXISTE);
 

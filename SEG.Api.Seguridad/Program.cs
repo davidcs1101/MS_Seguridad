@@ -106,6 +106,12 @@ builder.Services.AddScoped<IRespuestaHttpValidador, RespuestaHttpValidador>();
 builder.Services.AddScoped<IColaSolicitudServicio, ColaSolicitudServicio>();
 builder.Services.AddScoped<IJobEncoladorServicio, JobEncoladorServicio>();
 
+//Servicio que obtiene el UsuarioId del Token
+builder.Services.AddScoped<IUsuarioContextoServicio, UsuarioContextoServicio>();
+
+//Servicio para gestionar sedes desde el micorservicio de empresas
+builder.Services.AddScoped<IMSEmpresas, MSEmpresas>();
+builder.Services.AddScoped<IMSDatosComunes, MSDatosComunes>();
 
 
 #region REG_Servicios de configuraciones Appsettings
@@ -176,22 +182,39 @@ builder.Services.AddHangfire(opciones =>
 //Necesario para correr el background job server
 builder.Services.AddHangfireServer(opciones => {opciones.ServerName = "MSSeguridadServer";});
 
-//Configuracion para llamado de otros MicroServicios
-var configuracionUrlMicroServicios = builder.Configuration.GetSection("UrlMicroservicios");
-var urlCorreos = configuracionUrlMicroServicios["UrlMSEnvioCorreos"];
-builder.Services.AddHttpClient<IMSEnvioCorreosBackgroundServicio, MSEnvioCorreosBackgroundServicio>
-    (cliente =>
-    {
-        cliente.BaseAddress = new Uri(urlCorreos);
-        cliente.DefaultRequestHeaders.Add("Accept", "application/json");
-    }
-    );
 
 //Servicio para obtener el usuarioId de los Tokens de la solicitud
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<MiddlewareManejadorTokens>();
 
-//Servicio que obtiene el UsuarioId del Token
-builder.Services.AddScoped<IUsuarioContextoServicio, UsuarioContextoServicio>();
+
+//Configuracion para llamado de otros MicroServicios atraves de la Url Gateway
+var urlGateway = builder.Configuration["UrlGateway"];
+
+builder.Services.AddHttpClient<IMSEnvioCorreosBackgroundServicio, MSEnvioCorreosBackgroundServicio>
+    (cliente =>
+    {
+        cliente.BaseAddress = new Uri(urlGateway);
+        cliente.DefaultRequestHeaders.Add("Accept", "application/json");
+    });
+
+builder.Services.AddHttpClient<IMSEmpresasContextoWebServicio, MSEmpresasContextoWebServicio>
+    (cliente =>
+    {
+        cliente.BaseAddress = new Uri(urlGateway);
+        cliente.DefaultRequestHeaders.Add("Accept", "application/json");
+    })
+    .AddHttpMessageHandler<MiddlewareManejadorTokens>();
+
+builder.Services.AddHttpClient<IMSDatosComunesContextoWebServicio, MSDatosComunesContextoWebServicio>
+    (cliente =>
+    {
+        cliente.BaseAddress = new Uri(urlGateway);
+        cliente.DefaultRequestHeaders.Add("Accept", "application/json");
+    })
+    .AddHttpMessageHandler<MiddlewareManejadorTokens>();
+
+
 
 var app = builder.Build();
 

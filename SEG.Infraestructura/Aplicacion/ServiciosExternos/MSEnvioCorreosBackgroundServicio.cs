@@ -28,10 +28,10 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos
         {
             await AutenticarUsuarioAsync();
 
-            var url = "api/correos/enviarCorreo";
+            var url = "eco/correos/enviarCorreo";
             var respuesta = await _httpClient.PostAsJsonAsync(url, datoCorreoRequest);
 
-            _respuestaHttpValidador.ValidarRespuesta(respuesta, Textos.Generales.MENSAJE_ERROR_CONSUMO_SERVICIO);
+            await _respuestaHttpValidador.ValidarRespuesta(respuesta, Textos.Generales.MENSAJE_ERROR_CONSUMO_SERVICIO);
 
             return respuesta;
         }
