@@ -2,6 +2,7 @@
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.ServiciosExternos.config;
+using SEG.Dominio.Entidades;
 using SEG.Dominio.Enumeraciones;
 using SEG.Dominio.Repositorio;
 using SEG.Dominio.Repositorio.UnidadTrabajo;
@@ -17,10 +18,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
         private readonly INotificadorCorreo _notificadorCorreo;
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
-        private readonly IColaSolicitudValidador _colaSolicitudValidador;
+        private readonly IEntidadValidador<SEG_ColaSolicitud> _colaSolicitudValidador;
         private readonly IConfiguracionesTrabajosColas _configuracionesTrabajosColas;
 
-        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, INotificadorCorreo notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IColaSolicitudValidador colaSolicitudValidador, IConfiguracionesTrabajosColas configuracionesTrabajosColas)
+        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, INotificadorCorreo notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IConfiguracionesTrabajosColas configuracionesTrabajosColas)
         {
             _unidadDeTrabajo = unidadTrabajo;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;

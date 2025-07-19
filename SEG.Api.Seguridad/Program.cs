@@ -80,22 +80,17 @@ builder.Services.AddScoped<IProgramaRepositorio, ProgramaRepositorio>();
 builder.Services.AddScoped<IProgramaServicio, ProgramaServicio>();
 builder.Services.AddScoped<IGrupoProgramaRepositorio, GrupoProgramaRepositorio>();
 builder.Services.AddScoped<IGrupoProgramaServicio, GrupoProgramaServicio>();
-builder.Services.AddScoped<IGrupoProgramaValidador, GrupoProgramaValidador>();
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 
 builder.Services.AddScoped<IApiResponse, ApiResponse>();
 
 builder.Services.AddScoped<IUsuarioValidador, UsuarioValidador>();
-builder.Services.AddScoped<IGrupoValidador, GrupoValidador>();
-builder.Services.AddScoped<IProgramaValidador, ProgramaValidador>();
-builder.Services.AddScoped<IUsuarioSedeGrupoValidador, UsuarioSedeGrupoValidador>();
 
 builder.Services.AddScoped<IConstructorTextosNotificacion, ConstructorTextosNotificacion>();
 builder.Services.AddScoped<IConstructorMensajesNotificacionCorreo, ConstructorMensajesNotificacionCorreo>();
 builder.Services.AddScoped<INotificadorCorreo, NotificadorCorreo>();
 
 builder.Services.AddScoped<IColaSolicitudRepositorio, ColaSolicitudRepositorio>();
-builder.Services.AddScoped<IColaSolicitudValidador, ColaSolicitudValidador>();
 
 builder.Services.AddScoped<IUnidadDeTrabajo, UnidadDeTrabajoEF>();
 
@@ -112,6 +107,7 @@ builder.Services.AddScoped<IUsuarioContextoServicio, UsuarioContextoServicio>();
 //Servicio para gestionar sedes desde el micorservicio de empresas
 builder.Services.AddScoped<IMSEmpresas, MSEmpresas>();
 builder.Services.AddScoped<IMSDatosComunes, MSDatosComunes>();
+builder.Services.AddScoped(typeof(IEntidadValidador<>), typeof(EntidadValidador<>));
 
 
 #region REG_Servicios de configuraciones Appsettings

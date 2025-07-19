@@ -17,9 +17,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
-        private readonly IProgramaValidador _programaValidador;
+        private readonly IEntidadValidador<SEG_Programa> _programaValidador;
 
-        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IProgramaValidador programaValidador, IApiResponse apiResponseServicio)
+        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio)
         {
             _programaRepositorio = programaRepositorio;
             _mapper = mapper;

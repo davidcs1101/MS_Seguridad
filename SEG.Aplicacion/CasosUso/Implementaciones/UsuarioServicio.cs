@@ -24,7 +24,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IApiResponse _apiResponse;
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
         private readonly IGrupoRepositorio _grupoRepositorio;
-        private readonly IGrupoValidador _grupoValidador;
+        private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
         private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
         private readonly IUsuarioSedeGrupoRepositorio _usuarioSedeGrupoRepositorio;
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
@@ -33,7 +33,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IMSDatosComunes _msDatosComunes;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IGrupoValidador grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IMSDatosComunes msDatosComunes)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IMSDatosComunes msDatosComunes)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;

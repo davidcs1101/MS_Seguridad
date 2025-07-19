@@ -19,11 +19,11 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IUsuarioValidador _usuarioValidador;
-        private readonly IGrupoValidador _grupoValidador;
-        private readonly IUsuarioSedeGrupoValidador _usuarioSedeGrupoValidador;
+        private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
+        private readonly IEntidadValidador<SEG_UsuarioSedeGrupo> _usuarioSedeGrupoValidador;
         private readonly IApiResponse _apiResponse;
 
-        public UsuarioSedeGrupoServicio(IUsuarioRepositorio usuarioRepositorio, IGrupoRepositorio grupoRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IUsuarioValidador usuarioValidador, IGrupoValidador grupoValidador, IUsuarioSedeGrupoValidador usuarioSedeGrupoValidador, IApiResponse apiResponseServicio)
+        public UsuarioSedeGrupoServicio(IUsuarioRepositorio usuarioRepositorio, IGrupoRepositorio grupoRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IApiResponse apiResponseServicio)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _grupoRepositorio = grupoRepositorio;

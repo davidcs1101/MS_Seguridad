@@ -17,9 +17,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
-        private readonly IGrupoValidador _grupoValidador;
+        private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
 
-        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IGrupoValidador grupoValidador)
+        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador)
         {
             _grupoRepositorio = grupoRepositorio;
             _mapper = mapper;

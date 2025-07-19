@@ -24,11 +24,11 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
         private readonly IUsuarioValidador _usuarioValidador;
-        private readonly IUsuarioSedeGrupoValidador _usuarioSedeGrupoValidador;
+        private readonly IEntidadValidador<SEG_UsuarioSedeGrupo> _usuarioSedeGrupoValidador;
         private readonly IConfiguracionesJwt _configuracionesJwt;
 
         public AutenticacionServicio(IUsuarioRepositorio usuarioRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeRepositorio, IGrupoProgramaRepositorio grupoRepositorio, IConfiguration configuracion,
-            IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IUsuarioSedeGrupoValidador usuarioSedeGrupoValidador, IConfiguracionesJwt configuracionesJwt)
+            IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IConfiguracionesJwt configuracionesJwt)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _usuarioSedeRepositorio = usuarioSedeRepositorio;

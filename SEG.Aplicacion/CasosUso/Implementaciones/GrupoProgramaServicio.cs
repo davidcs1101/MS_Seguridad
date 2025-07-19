@@ -7,6 +7,7 @@ using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
+using static Utilidades.Textos;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -14,15 +15,15 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
     {
         private readonly IGrupoProgramaRepositorio _grupoProgramaRepositorio;
         public readonly IGrupoRepositorio _grupoRepositorio;
-        public readonly IGrupoValidador _grupoValidador;
+        public readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
         public readonly IProgramaRepositorio _programaRepositorio;
-        public readonly IProgramaValidador _programaValidador;
-        public readonly IGrupoProgramaValidador _grupoProgramaValidador;
+        public readonly IEntidadValidador<SEG_Programa> _programaValidador;
+        public readonly IEntidadValidador<SEG_GrupoPrograma> _grupoProgramaValidador;
         public readonly IUsuarioContextoServicio _usuarioContextoServicio;
         public readonly IMapper _mapper;
         public readonly IApiResponse _apiResponse;
 
-        public GrupoProgramaServicio(IGrupoProgramaRepositorio grupoProgramaRepositorio, IProgramaRepositorio programaRepositorio, IGrupoValidador grupoValidador, IProgramaValidador programaValidador, IGrupoRepositorio grupoRepositorio, IGrupoProgramaValidador grupoProgramaValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApiResponse apiResponseServicio)
+        public GrupoProgramaServicio(IGrupoProgramaRepositorio grupoProgramaRepositorio, IProgramaRepositorio programaRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Programa> programaValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPrograma> grupoProgramaValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApiResponse apiResponseServicio)
         {
             _grupoProgramaRepositorio = grupoProgramaRepositorio;
             _grupoRepositorio = grupoRepositorio;
