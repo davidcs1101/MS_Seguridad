@@ -17,50 +17,30 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.config
             _serviceProvider = serviceProvider;
         }
 
-        public string ObtenerIssuer()
+        public string ObtenerEmisor()
         {
-            return string.IsNullOrWhiteSpace(_opciones.Issuer) ? "" : _opciones.Issuer;
+            return string.IsNullOrWhiteSpace(_opciones.Emisor) ? "" : _opciones.Emisor;
         }
 
-        public string ObtenerAudienceTexto()
+        public string ObtenerAudienciasDestinoTexto()
         {
-            var audiencetexto = "";
+            var audienciasDestinotexto = "";
             using (var scope = _serviceProvider.CreateScope()) 
             {
                 var _serializadorJson = scope.ServiceProvider.GetRequiredService<ISerializadorJsonServicio>();
-                audiencetexto = _serializadorJson.Serializar(_opciones.Audience);
+                audienciasDestinotexto = _serializadorJson.Serializar(_opciones.AudienciasDestino);
             }
-            return string.IsNullOrWhiteSpace(audiencetexto) ? "" : audiencetexto;
+            return string.IsNullOrWhiteSpace(audienciasDestinotexto) ? "" : audienciasDestinotexto;
         }
 
-        public List<string?> ObtenerAudience()
+        public List<string?> ObtenerAudienciasDestino()
         {
-            var listaAudience = new List<string>();
-
-            if (_opciones.Audience != null)
-            {
-                // Usa reflexión para obtener todas las propiedades del objeto Audience
-                PropertyInfo[] propiedades = typeof(Audience).GetProperties();
-
-                foreach (PropertyInfo propiedad in propiedades)
-                {
-                    if (propiedad.PropertyType == typeof(string))
-                    {
-                        // Obtiene el valor de la propiedad del objeto Audience
-                        string? valorAudience = propiedad.GetValue(_opciones.Audience) as string;
-
-                        // Si el valor no es nulo o vacío, lo añade a la lista
-                        if (!string.IsNullOrWhiteSpace(valorAudience))
-                            listaAudience.Add(valorAudience);
-                    }
-                }
-            }
-            return listaAudience;
+            return _opciones.AudienciasDestino ?? new List<string?>();
         }
 
-        public string ObtenerKey()
+        public string ObtenerLlave()
         {
-            return string.IsNullOrWhiteSpace(_opciones.Key) ? "" : _opciones.Key;
+            return string.IsNullOrWhiteSpace(_opciones.Llave) ? "" : _opciones.Llave;
         }
 
         public int ObtenerMinutosDuracionTokenAutenticacionUsuario()

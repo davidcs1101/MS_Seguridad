@@ -12,6 +12,8 @@ namespace SEG.Infraestructura.Servicios.Implementaciones
             if (!respuesta.IsSuccessStatusCode)
             {
                 detalleError = $"{mensaje} {respuesta.ReasonPhrase}. ";
+                if (respuesta.StatusCode == System.Net.HttpStatusCode.BadGateway)
+                    throw new SolicitudHttpException(detalleError);
                 var error = await respuesta.Content.ReadFromJsonAsync<ApiResponse<string>>();
                 if (error is not null && !string.IsNullOrWhiteSpace(error.Mensaje))
                     detalleError += error.Mensaje;

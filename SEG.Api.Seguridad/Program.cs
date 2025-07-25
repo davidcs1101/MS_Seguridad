@@ -129,9 +129,9 @@ builder.Services.AddLogging(loggingBuilder => { loggingBuilder.AddLog4Net(); });
 
 // Configuracion de JWT
 var configuracionJWT = builder.Configuration.GetSection("JWT");
-var issuer = configuracionJWT["Issuer"];
-var audiences = configuracionJWT.GetSection("Audience").GetChildren().Select(a => a.Value).ToList();
-var key = configuracionJWT["Key"];
+var emisor = configuracionJWT["Emisor"];
+var audiencia = configuracionJWT["Audiencia"];
+var key = configuracionJWT["Llave"];
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer
     (opcion =>
@@ -142,8 +142,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = issuer,
-            ValidAudiences = audiences,
+            ValidIssuer = emisor,
+            ValidAudience = audiencia,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
             ClockSkew = TimeSpan.Zero //No se permite tolerancia de tiempo una vez el token caduca (por defecto es 5 minutos si no se establece)
         };

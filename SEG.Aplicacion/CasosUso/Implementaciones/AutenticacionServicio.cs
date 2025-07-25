@@ -64,11 +64,11 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private  async Task<string> GenerarTokenAsync(SEG_Usuario usuario, int? grupoId, int? sedeId)
         {
             //Datos de configuracon para el Token
-            var issuer = _configuracionesJwt.ObtenerIssuer();
-            var audiences = _configuracionesJwt.ObtenerAudience();
+            var emisor = _configuracionesJwt.ObtenerEmisor();
+            var audienciasDestino = _configuracionesJwt.ObtenerAudienciasDestino();
             int tiempoExpiracion = _configuracionesJwt.ObtenerMinutosDuracionTokenAutenticacionUsuario();
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuracionesJwt.ObtenerKey()));
-            var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuracionesJwt.ObtenerLlave()));
+            var credenciales = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
 
 
             #region REG_Adicionamos Claims específicos del usuario
@@ -107,12 +107,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             #endregion
 
             var token = new JwtSecurityToken(
-                issuer : issuer,
-                audience: _configuracionesJwt.ObtenerAudienceTexto(),
+                issuer : emisor,
+                audience: _configuracionesJwt.ObtenerAudienciasDestinoTexto(),
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(tiempoExpiracion),
                 signingCredentials: credenciales);
-            token.Payload["aud"] = audiences;
+            token.Payload["aud"] = audienciasDestino;
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

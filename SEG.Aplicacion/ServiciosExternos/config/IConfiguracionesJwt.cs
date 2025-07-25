@@ -2,10 +2,10 @@
 {
     public interface IConfiguracionesJwt
     {
-        string ObtenerIssuer();
-        string ObtenerAudienceTexto();
-        List<string?> ObtenerAudience();
-        string ObtenerKey();
+        string ObtenerEmisor();
+        string ObtenerAudienciasDestinoTexto();
+        List<string?> ObtenerAudienciasDestino();
+        string ObtenerLlave();
         int ObtenerMinutosDuracionTokenAutenticacionUsuario();
         int ObtenerMinutosDuracionTokenAutenticacionSede();
     }
