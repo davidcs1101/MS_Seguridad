@@ -7,16 +7,23 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
     public class MSDatosComunes : IMSDatosComunes
     {
         private readonly IMSDatosComunesContextoWebServicio _msDatosComunesContextoWebServicio;
+        private readonly ISerializadorJsonServicio _serializadorJsonServicio;
 
-        public MSDatosComunes(IMSDatosComunesContextoWebServicio msDatosComunesContextoWebServicio)
+        public MSDatosComunes(IMSDatosComunesContextoWebServicio msDatosComunesContextoWebServicio, ISerializadorJsonServicio serializadorJsonServicio)
         {
             _msDatosComunesContextoWebServicio = msDatosComunesContextoWebServicio;
+            _serializadorJsonServicio = serializadorJsonServicio;
         }
 
-        public async Task<bool> ValidarIdDetalleExisteEnCodigoListaAsync(CodigoListaIdDetalleRequest codigoListaIdDetalleRequest) 
+        public async Task<int> ObtenerIdListaDetallePorCodigoConstanteYCodigoListaDetalleAsync(CodigoDetalleRequest codigoListaIdDetalleRequest) 
         {
-            await _msDatosComunesContextoWebServicio.ValidarIdDetalleExisteEnCodigoListaAsync(codigoListaIdDetalleRequest);
-            return true;
+            var respuesta = await _msDatosComunesContextoWebServicio.ObtenerListaDetallePorCodigoConstanteYCodigoListaDetalleAsync(codigoListaIdDetalleRequest);
+            var contenidoJson = await respuesta.Content.ReadAsStringAsync();
+            var resultado =  _serializadorJsonServicio.Deserializar<ApiResponse<ListaDetalleDto?>>(contenidoJson);
+            if (resultado == null || resultado.Data == null)
+                return 0;
+
+            return resultado.Data.Id;
         }
     }
 }

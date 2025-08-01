@@ -6,7 +6,8 @@ namespace SEG.Dtos
     public class UsuarioCreacionRequest
     {
         [Required(ErrorMessage = Textos.Generales.VALIDA_CAMPO_OBLIGATORIO)]
-        public int TipoIdentificacionId { get; set; }
+        [MaxLength(30, ErrorMessage = Textos.Generales.VALIDA_VALOR_EXCEDE_LONGITUD)]
+        public string TipoIdentificacion { get; set; } = null!;
 
         [Required(ErrorMessage = Textos.Generales.VALIDA_CAMPO_OBLIGATORIO)]
         [MaxLength(20, ErrorMessage = Textos.Generales.VALIDA_VALOR_EXCEDE_LONGITUD)]

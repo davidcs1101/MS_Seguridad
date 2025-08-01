@@ -4,6 +4,6 @@ namespace SEG.Aplicacion.Servicios.Interfaces
 {
     public interface IMSDatosComunes
     {
-        Task<bool> ValidarIdDetalleExisteEnCodigoListaAsync(CodigoListaIdDetalleRequest codigoListaIdDetalleRequest);
+        Task<int> ObtenerIdListaDetallePorCodigoConstanteYCodigoListaDetalleAsync(CodigoDetalleRequest codigoListaIdDetalleRequest);
     }
 }

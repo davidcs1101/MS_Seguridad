@@ -251,19 +251,20 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         private async Task<SEG_Usuario> AsignarDatosAsync(UsuarioCreacionRequest usuarioCreacionRequest, int usuarioCreadorId, string nuevaClave) 
         {
-            var codigoListaIdDetalleRequest = new CodigoListaIdDetalleRequest{CodigoLista = "TIPOSIDENTIFICACION",Id = usuarioCreacionRequest.TipoIdentificacionId};
-            await _msDatosComunes.ValidarIdDetalleExisteEnCodigoListaAsync(codigoListaIdDetalleRequest);
-
+            var codigoListaIdDetalleRequest = new CodigoDetalleRequest{Codigo = "TIPOIDENTIREGISTROUSUARIO", CodigoListaDetalle = usuarioCreacionRequest.TipoIdentificacion};
+            var tipoIdentificacionId = await _msDatosComunes.ObtenerIdListaDetallePorCodigoConstanteYCodigoListaDetalleAsync(codigoListaIdDetalleRequest);
+            
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(usuarioCreacionRequest.NombreUsuario);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NOMBRE_EXISTE);
 
             usuarioExiste = await _usuarioRepositorio.ObtenerPorEmailAsync(usuarioCreacionRequest.Email);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_EMAIL_EXISTE);
 
-            usuarioExiste = await _usuarioRepositorio.ObtenerPorIdentificacionAsync(usuarioCreacionRequest.TipoIdentificacionId, usuarioCreacionRequest.Identificacion);
+            usuarioExiste = await _usuarioRepositorio.ObtenerPorIdentificacionAsync(tipoIdentificacionId, usuarioCreacionRequest.Identificacion);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_DOCUMENTO_EXISTE);
 
             var usuario = _mapper.Map<SEG_Usuario>(usuarioCreacionRequest);
+            usuario.TipoIdentificacionId = tipoIdentificacionId;
             usuario.Clave = ProcesadorClaves.EncriptarClave(nuevaClave);
             usuario.UsuarioCreadorId = usuarioCreadorId;
 

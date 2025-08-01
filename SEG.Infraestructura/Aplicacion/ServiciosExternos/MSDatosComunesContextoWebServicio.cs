@@ -18,10 +18,10 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos
             _respuestaHttpValidador = respuestaHttpValidador;
         }
 
-        public async Task<HttpResponseMessage> ValidarIdDetalleExisteEnCodigoListaAsync(CodigoListaIdDetalleRequest codigoListaIdDetalleRequest)
+        public async Task<HttpResponseMessage> ObtenerListaDetallePorCodigoConstanteYCodigoListaDetalleAsync(CodigoDetalleRequest codigoDetalleRequest)
         {
-            var url = $"dco/listasDetalles/validarIdDetalleExisteEnCodigoLista";
-            var respuesta = await _httpClient.PostAsJsonAsync(url, codigoListaIdDetalleRequest);
+            var url = $"dco/listasDetalles/obtenerPorCodigoConstanteYCodigoListaDetalle";
+            var respuesta = await _httpClient.PostAsJsonAsync(url, codigoDetalleRequest);
 
             await _respuestaHttpValidador.ValidarRespuesta(respuesta, Textos.Generales.MENSAJE_ERROR_CONSUMO_SERVICIO);
 
