@@ -4,11 +4,11 @@ using SEG.Aplicacion.Servicios.Interfaces;
 
 namespace SEG.Aplicacion.Servicios.Implementaciones
 {
-    public class NotificadorCorreo : INotificadorCorreo
+    public class MSEnvioCorreos : IMSEnvioCorreos
     {
         private readonly IMSEnvioCorreosBackgroundServicio _msEnvioCorreosBackgroundServicio;
 
-        public NotificadorCorreo(IMSEnvioCorreosBackgroundServicio msEnvioCorreosBackgroundServicio)
+        public MSEnvioCorreos(IMSEnvioCorreosBackgroundServicio msEnvioCorreosBackgroundServicio)
         {
             _msEnvioCorreosBackgroundServicio = msEnvioCorreosBackgroundServicio;
         }

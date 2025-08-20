@@ -26,7 +26,11 @@ using SEG.Infraestructura.Servicios.Interfaces;
 using SEG.Infraestructura.Servicios.Implementaciones;
 using SEG.Dtos.AppSettings;
 using SEG.Aplicacion.ServiciosExternos.config;
-using SEG.Infraestructura.Aplicacion.ServiciosExternos.config;
+using SEG.Infraestructura.Aplicacion.ServiciosExternos.Config;
+using SEG.Aplicacion.Servicios.Implementaciones.Cache;
+using SEG.Aplicacion.Servicios.Interfaces.Cache;
+using Hangfire.Common;
+using Utilidades;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,15 +92,15 @@ builder.Services.AddScoped<IUsuarioValidador, UsuarioValidador>();
 
 builder.Services.AddScoped<IConstructorTextosNotificacion, ConstructorTextosNotificacion>();
 builder.Services.AddScoped<IConstructorMensajesNotificacionCorreo, ConstructorMensajesNotificacionCorreo>();
-builder.Services.AddScoped<INotificadorCorreo, NotificadorCorreo>();
+builder.Services.AddScoped<IMSEnvioCorreos, MSEnvioCorreos>();
 
 builder.Services.AddScoped<IColaSolicitudRepositorio, ColaSolicitudRepositorio>();
 
 builder.Services.AddScoped<IUnidadDeTrabajo, UnidadDeTrabajoEF>();
 
-builder.Services.AddScoped<ISerializadorJsonServicio, SerializadorJsonServicio>();
+builder.Services.AddSingleton<ISerializadorJsonServicio, SerializadorJsonServicio>();
 
-builder.Services.AddScoped<IRespuestaHttpValidador, RespuestaHttpValidador>();
+builder.Services.AddSingleton<IRespuestaHttpValidador, RespuestaHttpValidador>();
 
 builder.Services.AddScoped<IColaSolicitudServicio, ColaSolicitudServicio>();
 builder.Services.AddScoped<IJobEncoladorServicio, JobEncoladorServicio>();
@@ -104,10 +108,14 @@ builder.Services.AddScoped<IJobEncoladorServicio, JobEncoladorServicio>();
 //Servicio que obtiene el UsuarioId del Token
 builder.Services.AddScoped<IUsuarioContextoServicio, UsuarioContextoServicio>();
 
-//Servicio para gestionar sedes desde el micorservicio de empresas
-builder.Services.AddScoped<IMSEmpresas, MSEmpresas>();
-builder.Services.AddScoped<IMSDatosComunes, MSDatosComunes>();
 builder.Services.AddScoped(typeof(IEntidadValidador<>), typeof(EntidadValidador<>));
+
+//Servicio para gestionar sedes desde el micorservicio de empresas
+builder.Services.AddSingleton<IMSEmpresas, MSEmpresas>();
+builder.Services.AddSingleton<IMSDatosComunes, MSDatosComunes>();
+
+//Para cachear datos de otros microservicios
+builder.Services.AddSingleton<IDatosComunesListasCache, DatosComunesListasCache>();
 
 
 #region REG_Servicios de configuraciones Appsettings
@@ -202,13 +210,12 @@ builder.Services.AddHttpClient<IMSEmpresasContextoWebServicio, MSEmpresasContext
     })
     .AddHttpMessageHandler<MiddlewareManejadorTokens>();
 
-builder.Services.AddHttpClient<IMSDatosComunesContextoWebServicio, MSDatosComunesContextoWebServicio>
+builder.Services.AddHttpClient<IMSDatosComunesBackgroundServicio, MSDatosComunesBackgroundServicio>
     (cliente =>
     {
         cliente.BaseAddress = new Uri(urlGateway);
         cliente.DefaultRequestHeaders.Add("Accept", "application/json");
-    })
-    .AddHttpMessageHandler<MiddlewareManejadorTokens>();
+    });
 
 
 
@@ -220,6 +227,13 @@ app.UseHangfireDashboard("/hangfire");
 //Configuracion para la tarea Job en segundo plano que rastrea las solicitudes pendientes de procesar.
 var configuracionTrabajosColas = app.Services.GetRequiredService<IConfiguracionesTrabajosColas>();
 RecurringJob.AddOrUpdate<IColaSolicitudServicio>("procesador_solicitudes", x => x.ProcesarColaSolicitudesAsync(),
+    configuracionTrabajosColas.ObtenerProcesarColaSolicitudesCron());
+
+
+
+// Aquí encolas el trabajo al arrancar la app
+BackgroundJob.Enqueue<IDatosComunesListasCache>(x => x.InicializarAsync());
+RecurringJob.AddOrUpdate<IDatosComunesListasCache>("inicializar_listas_identificacion", x => x.InicializarAsync(),
     configuracionTrabajosColas.ObtenerProcesarColaSolicitudesCron());
 
 

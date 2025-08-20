@@ -11,6 +11,8 @@ using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Dominio.Excepciones;
 using SEG.Dominio.Enumeraciones;
+using SEG.Aplicacion.Servicios.Interfaces.Cache;
+using SEG.Aplicacion.Servicios.Implementaciones.Cache;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -30,10 +32,11 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IJobEncoladorServicio _jobEncoladorServicio;
         private readonly IMSEmpresas _msEmpresas;
-        private readonly IMSDatosComunes _msDatosComunes;
+        private readonly IDatosComunesListasCache _datosComunesListasCache;
+        private readonly IEntidadValidador<ListaDetalleDto> _listaDetalleDtoValidador;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IMSDatosComunes msDatosComunes)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IDatosComunesListasCache datosComunesListasCache, IEntidadValidador<ListaDetalleDto> listaDetalleDtoValidador)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;
@@ -49,7 +52,8 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _serializadorJsonServicio = serializadorJsonServicio;
             _jobEncoladorServicio = jobEncoladorServicio;
             _msEmpresas = msEmpresas;
-            _msDatosComunes = msDatosComunes;
+            _datosComunesListasCache = datosComunesListasCache;
+            _listaDetalleDtoValidador = listaDetalleDtoValidador;
         }
 
 
@@ -251,20 +255,20 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         private async Task<SEG_Usuario> AsignarDatosAsync(UsuarioCreacionRequest usuarioCreacionRequest, int usuarioCreadorId, string nuevaClave) 
         {
-            var codigoListaIdDetalleRequest = new CodigoDetalleRequest{Codigo = "TIPOIDENTIREGISTROUSUARIO", CodigoListaDetalle = usuarioCreacionRequest.TipoIdentificacion};
-            var tipoIdentificacionId = await _msDatosComunes.ObtenerIdListaDetallePorCodigoConstanteYCodigoListaDetalleAsync(codigoListaIdDetalleRequest);
-            
+            var tipoIdentificacion = _datosComunesListasCache.ObtenerPorCodigoDetalle(usuarioCreacionRequest.TipoIdentificacion);
+            _listaDetalleDtoValidador.ValidarDatoNoEncontrado(tipoIdentificacion, "DFGDGFGFD");
+
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(usuarioCreacionRequest.NombreUsuario);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NOMBRE_EXISTE);
 
             usuarioExiste = await _usuarioRepositorio.ObtenerPorEmailAsync(usuarioCreacionRequest.Email);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_EMAIL_EXISTE);
 
-            usuarioExiste = await _usuarioRepositorio.ObtenerPorIdentificacionAsync(tipoIdentificacionId, usuarioCreacionRequest.Identificacion);
+            usuarioExiste = await _usuarioRepositorio.ObtenerPorIdentificacionAsync(tipoIdentificacion.Id, usuarioCreacionRequest.Identificacion);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_DOCUMENTO_EXISTE);
 
             var usuario = _mapper.Map<SEG_Usuario>(usuarioCreacionRequest);
-            usuario.TipoIdentificacionId = tipoIdentificacionId;
+            usuario.TipoIdentificacionId = tipoIdentificacion.Id;
             usuario.Clave = ProcesadorClaves.EncriptarClave(nuevaClave);
             usuario.UsuarioCreadorId = usuarioCreadorId;
 

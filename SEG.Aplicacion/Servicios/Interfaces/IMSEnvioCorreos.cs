@@ -2,7 +2,7 @@
 
 namespace SEG.Aplicacion.Servicios.Interfaces
 {
-    public interface INotificadorCorreo
+    public interface IMSEnvioCorreos
     {
         Task<bool> EnviarAsync(DatoCorreoRequest datoCorreoRequest);
     }

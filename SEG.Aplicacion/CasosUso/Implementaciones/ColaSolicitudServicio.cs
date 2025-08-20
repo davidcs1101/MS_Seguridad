@@ -16,12 +16,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
     {
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
         private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
-        private readonly INotificadorCorreo _notificadorCorreo;
+        private readonly IMSEnvioCorreos _notificadorCorreo;
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IEntidadValidador<SEG_ColaSolicitud> _colaSolicitudValidador;
         private readonly IConfiguracionesTrabajosColas _configuracionesTrabajosColas;
 
-        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, INotificadorCorreo notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IConfiguracionesTrabajosColas configuracionesTrabajosColas)
+        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IMSEnvioCorreos notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IConfiguracionesTrabajosColas configuracionesTrabajosColas)
         {
             _unidadDeTrabajo = unidadTrabajo;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;

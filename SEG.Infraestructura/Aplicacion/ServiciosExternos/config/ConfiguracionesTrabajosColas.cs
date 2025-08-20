@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using SEG.Aplicacion.ServiciosExternos.config;
 using SEG.Dtos.AppSettings;
-namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.config
+namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.Config
 {
     public class ConfiguracionesTrabajosColas : IConfiguracionesTrabajosColas
     {
