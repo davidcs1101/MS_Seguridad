@@ -21,15 +21,17 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
             await InicializarListasTiposIdentificacionAsync();
         }
 
-        public Task ActualizarAsync(List<ListaDetalleDto> listasDetalle)
+        public Task Actualizar(List<ListaDetalleDto> listasDetalle)
         {
-            switch (listasDetalle.FirstOrDefault()?.CodigoLista)
+            var codigoLista = listasDetalle.FirstOrDefault()?.CodigoLista;
+            switch (codigoLista)
             {
                 case CodigosListas.TIPOSIDENTIFICACION:
                     lock (_lock)
                         _listaTiposIdentificacion = listasDetalle.ToList();
                     break;
             }
+            Logs.EscribirLog("i", "Cache de datos comunes actualizada : " + codigoLista);
             return Task.CompletedTask;
         }
 
@@ -45,41 +47,45 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
             }
         }
 
-        public ListaDetalleDto? ObtenerPorId(int id)
+        public ListaDetalleDto? ObtenerPorCodigoListaYId(string codigoLista,int id)
         {
-            lock (_lock)
-                return _listaTiposIdentificacion.FirstOrDefault(t => t.Id == id);
+            switch (codigoLista)
+            {
+                case CodigosListas.TIPOSIDENTIFICACION:
+                    lock (_lock)
+                        return _listaTiposIdentificacion.FirstOrDefault(t => t.Id == id);
+                default:
+                    return null;
+            }
         }
 
-        public ListaDetalleDto? ObtenerPorCodigoDetalle(string codigoDetalle)
+        public ListaDetalleDto? ObtenerPorCodigoListaYCodigoListaDetalle(string codigoLista,string codigoDetalle)
         {
-            lock (_lock)
-                return _listaTiposIdentificacion.FirstOrDefault(t => t.Codigo == codigoDetalle);
+            switch (codigoLista) {
+                case CodigosListas.TIPOSIDENTIFICACION:
+                    lock (_lock)
+                        return _listaTiposIdentificacion.FirstOrDefault(t => t.Codigo == codigoDetalle);
+                default:
+                    return null;
+            }
         }
 
 
 
         private async Task InicializarListasTiposIdentificacionAsync()
         {
-            try
+            lock (_lock)
             {
-                lock (_lock)
-                {
-                    if (_listaTiposIdentificacion.Count > 0)
-                        return;
-                }
-                var lista = await ObtenerListasDetallePorCodigoListaAsync(CodigosListas.TIPOSIDENTIFICACION);
-                lock (_lock)
-                {
-                    if (_listaTiposIdentificacion.Count == 0) // segundo chequeo
-                        _listaTiposIdentificacion = lista;
-                }
-
+                if (_listaTiposIdentificacion.Count > 0)
+                    return;
             }
-            catch (Exception ex)
+            var lista = await ObtenerListasDetallePorCodigoListaAsync(CodigosListas.TIPOSIDENTIFICACION);
+            lock (_lock)
             {
-                throw;
+                if (_listaTiposIdentificacion.Count == 0) // segundo chequeo
+                    _listaTiposIdentificacion = lista;
             }
+            Logs.EscribirLog("i", $"Caché de datos comunes inicializada: {CodigosListas.TIPOSIDENTIFICACION}");
         }
 
         private async Task<List<ListaDetalleDto?>> ObtenerListasDetallePorCodigoListaAsync(string codigoLista)

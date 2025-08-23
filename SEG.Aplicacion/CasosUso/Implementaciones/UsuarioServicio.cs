@@ -255,8 +255,8 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         private async Task<SEG_Usuario> AsignarDatosAsync(UsuarioCreacionRequest usuarioCreacionRequest, int usuarioCreadorId, string nuevaClave) 
         {
-            var tipoIdentificacion = _datosComunesListasCache.ObtenerPorCodigoDetalle(usuarioCreacionRequest.TipoIdentificacion);
-            _listaDetalleDtoValidador.ValidarDatoNoEncontrado(tipoIdentificacion, "DFGDGFGFD");
+            var tipoIdentificacion = _datosComunesListasCache.ObtenerPorCodigoListaYCodigoListaDetalle(CodigosListas.TIPOSIDENTIFICACION,usuarioCreacionRequest.TipoIdentificacion);
+            _listaDetalleDtoValidador.ValidarDatoNoEncontrado(tipoIdentificacion, Textos.ListasDetalles.MENSAJE_LISTADETALLE_NO_EXISTE_EN_CODIGOLISTA(CodigosListas.TIPOSIDENTIFICACION, usuarioCreacionRequest.TipoIdentificacion));
 
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(usuarioCreacionRequest.NombreUsuario);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NOMBRE_EXISTE);

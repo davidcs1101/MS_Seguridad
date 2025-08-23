@@ -7,7 +7,7 @@
         public string Codigo { get; set; } = null!;
         public string Nombre { get; set; } = null!;
 
-        public string CodigoLista { get; set; } = null!;
-        public string CodigoDatoConstante { get; set; } = null!;
+        public string? CodigoLista { get; set; }
+        public string? CodigoDatoConstante { get; set; }
     }
 }

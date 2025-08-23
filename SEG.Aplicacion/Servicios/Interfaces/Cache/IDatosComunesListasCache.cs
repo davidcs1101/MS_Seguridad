@@ -5,10 +5,10 @@ namespace SEG.Aplicacion.Servicios.Interfaces.Cache
     public interface IDatosComunesListasCache
     {
         Task InicializarAsync();
-        Task ActualizarAsync(List<ListaDetalleDto> nuevosDatos);
+        Task Actualizar(List<ListaDetalleDto> nuevosDatos);
         IReadOnlyList<ListaDetalleDto> ListarPorCodigoLista(string codigoLista);
-        ListaDetalleDto? ObtenerPorId(int id);
-        ListaDetalleDto? ObtenerPorCodigoDetalle(string codigoDetalle);
+        ListaDetalleDto? ObtenerPorCodigoListaYId(string codigoLista,int id);
+        ListaDetalleDto? ObtenerPorCodigoListaYCodigoListaDetalle(string codigoLista,string codigoDetalle);
 
     }
 }
