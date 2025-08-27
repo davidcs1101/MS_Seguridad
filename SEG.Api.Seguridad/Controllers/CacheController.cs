@@ -19,14 +19,12 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPost("actualizarDatosComunesListas")]
-        public ActionResult<ApiResponse<bool>> ActualizarDatosComunesListas(List<ListaDetalleDto> listaDetalle)
+        public ActionResult<ApiResponse<string>> ActualizarDatosComunesListas(List<ListaDetalleDto> listaDetalle)
         {
             if (listaDetalle == null)
                 return BadRequest();
 
-            _datosComunesListasCache.Actualizar(listaDetalle);
-
-            return new ApiResponse<bool> { Correcto = true, Mensaje = "OK", Data = true };
+            return _datosComunesListasCache.Actualizar(listaDetalle);
         }
     }
 }

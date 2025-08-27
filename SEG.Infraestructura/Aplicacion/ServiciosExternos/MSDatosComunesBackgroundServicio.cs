@@ -3,7 +3,6 @@ using SEG.Dtos;
 using SEG.Aplicacion.ServiciosExternos;
 using Utilidades;
 using SEG.Infraestructura.Servicios.Interfaces;
-using System.Net.Http;
 
 namespace SEG.Infraestructura.Aplicacion.ServiciosExternos
 {

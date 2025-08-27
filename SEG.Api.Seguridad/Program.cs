@@ -86,7 +86,7 @@ builder.Services.AddScoped<IGrupoProgramaRepositorio, GrupoProgramaRepositorio>(
 builder.Services.AddScoped<IGrupoProgramaServicio, GrupoProgramaServicio>();
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 
-builder.Services.AddScoped<IApiResponse, ApiResponse>();
+builder.Services.AddSingleton<IApiResponse, ApiResponse>();
 
 builder.Services.AddScoped<IUsuarioValidador, UsuarioValidador>();
 

@@ -7,11 +7,13 @@ namespace SEG.Api.Seguridad.Middlewares
     public class MiddlewareAutorizationPersonalizado
     {
         private readonly RequestDelegate _next;
-        private readonly IServiceProvider _serviceProvider;
-        public MiddlewareAutorizationPersonalizado(RequestDelegate next, IServiceProvider serviceProvider)
+        private readonly ISerializadorJsonServicio _serializadorJsonServicio;
+        private readonly IApiResponse _apiResponse;
+        public MiddlewareAutorizationPersonalizado(RequestDelegate next, IServiceProvider serviceProvider, ISerializadorJsonServicio serializadorJsonServicio, IApiResponse apiResponse)
         {
             _next = next;
-            _serviceProvider = serviceProvider;
+            _serializadorJsonServicio = serializadorJsonServicio;
+            _apiResponse = apiResponse;
         }
 
         public async Task InvokeAsync(HttpContext contexto)
@@ -27,23 +29,18 @@ namespace SEG.Api.Seguridad.Middlewares
                     return;
                 }
 
-                using (var scope = _serviceProvider.CreateScope()) 
+                //Si No contiene SedeId, Es un Token de usuario (Login Inicial)
+                if (!contexto.User.HasClaim(c => c.Type == "SedeId"))
                 {
-                    var _apiResponse = scope.ServiceProvider.GetRequiredService<IApiResponse>();
-                    var _serializadorJson = scope.ServiceProvider.GetRequiredService<ISerializadorJsonServicio>();
-                    //Si No contiene SedeId, Es un Token de usuario (Login Inicial)
-                    if (!contexto.User.HasClaim(c => c.Type == "SedeId"))
+                    //Si el usuario no ha realizado su cambio de clave, DENEGAMOS el acceso
+                    if (!contexto.User.HasClaim(c => c.Type == "Accion" && c.Value == "CAMBIOCLAVEOK"))
                     {
-                        //Si el usuario no ha realizado su cambio de clave, DENEGAMOS el acceso
-                        if (!contexto.User.HasClaim(c => c.Type == "Accion" && c.Value == "CAMBIOCLAVEOK"))
-                        {
-                            contexto.Response.ContentType = "application/json";
+                        contexto.Response.ContentType = "application/json";
 
-                            var respuestaJson = _serializadorJson.Serializar(_apiResponse.CrearRespuesta(false, Textos.Usuarios.MENSAJE_USUARIO_NO_CAMBIO_CLAVE, ""));
-                            contexto.Response.StatusCode = 403; //Forbidden
-                            await contexto.Response.WriteAsync(respuestaJson);
-                            return;
-                        }
+                        var respuestaJson = _serializadorJsonServicio.Serializar(_apiResponse.CrearRespuesta(false, Textos.Usuarios.MENSAJE_USUARIO_NO_CAMBIO_CLAVE, ""));
+                        contexto.Response.StatusCode = 403; //Forbidden
+                        await contexto.Response.WriteAsync(respuestaJson);
+                        return;
                     }
                 }
             }

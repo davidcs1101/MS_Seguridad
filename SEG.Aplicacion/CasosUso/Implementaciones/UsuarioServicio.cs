@@ -12,7 +12,6 @@ using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Dominio.Excepciones;
 using SEG.Dominio.Enumeraciones;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
-using SEG.Aplicacion.Servicios.Implementaciones.Cache;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -73,7 +72,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 await _unidadDeTrabajo.GuardarCambiosAsync();
                 await transaccion.CommitAsync();
 
-                await _jobEncoladorServicio.EncolarPorColaSolicitudIdAsync(colaSolicitud.Id, true);
+                await _jobEncoladorServicio.EncolarPorColaSolicitudId(colaSolicitud.Id, true);
                 return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, NotificadoPorCorreo = null });
             }
             catch (SolicitudHttpException)
@@ -124,7 +123,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 await _unidadDeTrabajo.GuardarCambiosAsync();
                 await transaccion.CommitAsync();
 
-                await _jobEncoladorServicio.EncolarPorColaSolicitudIdAsync(colaSolicitud.Id, true);
+                await _jobEncoladorServicio.EncolarPorColaSolicitudId(colaSolicitud.Id, true);
                 return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, NotificadoPorCorreo = null });
             }
             catch (SolicitudHttpException)
@@ -184,7 +183,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 await _unidadDeTrabajo.GuardarCambiosAsync();
                 await transaccion.CommitAsync();
 
-                await _jobEncoladorServicio.EncolarPorColaSolicitudIdAsync(colaSolicitud.Id, true);
+                await _jobEncoladorServicio.EncolarPorColaSolicitudId(colaSolicitud.Id, true);
                 return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = false, Clave = nuevaClave });
             }
             catch (DatoNoEncontradoException) {

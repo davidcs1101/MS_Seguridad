@@ -2,7 +2,7 @@
 {
     public interface IJobEncoladorServicio
     {
-        Task EncolarPorColaSolicitudIdAsync(int Id, bool validarEstadoPendiente = false);
-        Task EncolarCacheListaTiposIdentificacionAsync();
+        Task EncolarPorColaSolicitudId(int Id, bool validarEstadoPendiente = false);
+        Task EncolarCacheListaTiposIdentificacion();
     }
 }

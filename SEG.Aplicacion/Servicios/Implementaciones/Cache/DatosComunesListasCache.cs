@@ -10,10 +10,12 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
         private readonly object _lock = new();
         private List<ListaDetalleDto> _listaTiposIdentificacion = new();
         private readonly IMSDatosComunes _msDatosComunes;
+        private IApiResponse _apiResponse;
 
-        public DatosComunesListasCache(IMSDatosComunes msDatosComunes)
+        public DatosComunesListasCache(IMSDatosComunes msDatosComunes, IApiResponse apiResponse)
         {
             _msDatosComunes = msDatosComunes;
+            _apiResponse = apiResponse;
         }
 
         public async Task InicializarAsync()
@@ -21,7 +23,7 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
             await InicializarListasTiposIdentificacionAsync();
         }
 
-        public Task Actualizar(List<ListaDetalleDto> listasDetalle)
+        public ApiResponse<string> Actualizar(List<ListaDetalleDto> listasDetalle)
         {
             var codigoLista = listasDetalle.FirstOrDefault()?.CodigoLista;
             switch (codigoLista)
@@ -31,8 +33,10 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
                         _listaTiposIdentificacion = listasDetalle.ToList();
                     break;
             }
-            Logs.EscribirLog("i", "Cache de datos comunes actualizada : " + codigoLista);
-            return Task.CompletedTask;
+
+            var mensaje = Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_ACTUALIZADA;
+            Logs.EscribirLog("i", $"{mensaje}: {codigoLista}");
+            return _apiResponse.CrearRespuesta(true, mensaje, "");
         }
 
         public IReadOnlyList<ListaDetalleDto> ListarPorCodigoLista(string codigoLista)
@@ -85,7 +89,7 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
                 if (_listaTiposIdentificacion.Count == 0) // segundo chequeo
                     _listaTiposIdentificacion = lista;
             }
-            Logs.EscribirLog("i", $"Caché de datos comunes inicializada: {CodigosListas.TIPOSIDENTIFICACION}");
+            Logs.EscribirLog("i", $"{Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_INICIALIZADA}: {CodigosListas.TIPOSIDENTIFICACION}");
         }
 
         private async Task<List<ListaDetalleDto?>> ObtenerListasDetallePorCodigoListaAsync(string codigoLista)

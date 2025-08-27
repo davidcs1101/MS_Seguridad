@@ -6,7 +6,7 @@ using SEG.Aplicacion.Servicios.Interfaces.Cache;
 
 public class JobEncoladorServicio: IJobEncoladorServicio
 {
-    public Task EncolarPorColaSolicitudIdAsync(int Id, bool validarEstadoPendiente = false)
+    public Task EncolarPorColaSolicitudId(int Id, bool validarEstadoPendiente = false)
     {
         try{
             BackgroundJob.Enqueue<IColaSolicitudServicio>(x => x.ProcesarPorColaSolicitudIdAsync(Id, validarEstadoPendiente));
@@ -17,7 +17,7 @@ public class JobEncoladorServicio: IJobEncoladorServicio
         return Task.CompletedTask;
     }
 
-    public Task EncolarCacheListaTiposIdentificacionAsync() 
+    public Task EncolarCacheListaTiposIdentificacion() 
     {
         try
         {
