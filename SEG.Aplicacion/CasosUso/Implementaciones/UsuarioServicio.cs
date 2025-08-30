@@ -72,7 +72,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 await _unidadDeTrabajo.GuardarCambiosAsync();
                 await transaccion.CommitAsync();
 
-                await _jobEncoladorServicio.EncolarPorColaSolicitudId(colaSolicitud.Id, true);
+                _ = _jobEncoladorServicio.EncolarPorColaSolicitudId(colaSolicitud.Id, true);
                 return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, NotificadoPorCorreo = null });
             }
             catch (SolicitudHttpException)
@@ -123,7 +123,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 await _unidadDeTrabajo.GuardarCambiosAsync();
                 await transaccion.CommitAsync();
 
-                await _jobEncoladorServicio.EncolarPorColaSolicitudId(colaSolicitud.Id, true);
+                _ = _jobEncoladorServicio.EncolarPorColaSolicitudId(colaSolicitud.Id, true);
                 return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = usuario.Id, NotificadoPorCorreo = null });
             }
             catch (SolicitudHttpException)
@@ -183,7 +183,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 await _unidadDeTrabajo.GuardarCambiosAsync();
                 await transaccion.CommitAsync();
 
-                await _jobEncoladorServicio.EncolarPorColaSolicitudId(colaSolicitud.Id, true);
+                _ = _jobEncoladorServicio.EncolarPorColaSolicitudId(colaSolicitud.Id, true);
                 return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = false, Clave = nuevaClave });
             }
             catch (DatoNoEncontradoException) {
