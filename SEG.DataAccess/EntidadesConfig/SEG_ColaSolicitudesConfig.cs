@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SEG.Dominio.Entidades;
 
-namespace EMP.DataAccess.EntidadesConfig
+namespace SEG.DataAccess.EntidadesConfig
 {
     public class SEG_ColaSolicitudesConfig : IEntityTypeConfiguration<SEG_ColaSolicitud>
     {
