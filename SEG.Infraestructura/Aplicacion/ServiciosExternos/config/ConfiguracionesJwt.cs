@@ -8,12 +8,12 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.Config
     public class ConfiguracionesJwt: IConfiguracionesJwt
     {
         private readonly JWTSettings _opciones;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ISerializadorJsonServicio _serializadorJsonServicio;
 
-        public ConfiguracionesJwt(IOptions<JWTSettings> opciones, IServiceProvider serviceProvider)
+        public ConfiguracionesJwt(IOptions<JWTSettings> opciones, IServiceProvider serviceProvider, ISerializadorJsonServicio serializadorJsonServicio)
         {
             _opciones = opciones.Value;
-            _serviceProvider = serviceProvider;
+            _serializadorJsonServicio = serializadorJsonServicio;
         }
 
         public string ObtenerEmisor()
@@ -24,11 +24,7 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.Config
         public string ObtenerAudienciasDestinoTexto()
         {
             var audienciasDestinotexto = "";
-            using (var scope = _serviceProvider.CreateScope()) 
-            {
-                var _serializadorJson = scope.ServiceProvider.GetRequiredService<ISerializadorJsonServicio>();
-                audienciasDestinotexto = _serializadorJson.Serializar(_opciones.AudienciasDestino);
-            }
+            audienciasDestinotexto = _serializadorJsonServicio.Serializar(_opciones.AudienciasDestino);
             return string.IsNullOrWhiteSpace(audienciasDestinotexto) ? "" : audienciasDestinotexto;
         }
 

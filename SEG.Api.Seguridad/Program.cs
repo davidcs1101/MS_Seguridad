@@ -29,8 +29,6 @@ using SEG.Aplicacion.ServiciosExternos.config;
 using SEG.Infraestructura.Aplicacion.ServiciosExternos.Config;
 using SEG.Aplicacion.Servicios.Implementaciones.Cache;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
-using Hangfire.Common;
-using Utilidades;
 
 var builder = WebApplication.CreateBuilder(args);
 
