@@ -137,7 +137,7 @@ builder.Services.AddLogging(loggingBuilder => { loggingBuilder.AddLog4Net(); });
 var configuracionJWT = builder.Configuration.GetSection("JWT");
 var emisor = configuracionJWT["Emisor"];
 var audiencia = configuracionJWT["Audiencia"];
-var key = configuracionJWT["Llave"];
+var llave = configuracionJWT["Llave"];
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer
     (opcion =>
@@ -150,7 +150,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = emisor,
             ValidAudience = audiencia,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(llave)),
             ClockSkew = TimeSpan.Zero //No se permite tolerancia de tiempo una vez el token caduca (por defecto es 5 minutos si no se establece)
         };
     });
@@ -185,25 +185,27 @@ builder.Services.AddHangfire(opciones =>
 builder.Services.AddHangfireServer(opciones => {opciones.ServerName = "MSSeguridadServer";});
 
 
-//Servicio para obtener el usuarioId de los Tokens de la solicitud
+//Servicio para obtener el usuarioId de los Tokens de la solicitud Web
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddTransient<MiddlewareManejadorTokens>();
 
-
 //Configuracion para llamado de otros MicroServicios atraves de la Url Gateway
-var urlGateway = builder.Configuration["UrlGateway"];
+var urlMsEnvioCorreo = builder.Configuration["UrlMsEnvioCorreo"];
+var urlMsEmpresas = builder.Configuration["UrlMsEmpresas"];
+var urlMsDatosComunes = builder.Configuration["UrlMsDatosComunes"];
 
 builder.Services.AddHttpClient<IMSEnvioCorreosBackgroundServicio, MSEnvioCorreosBackgroundServicio>
     (cliente =>
     {
-        cliente.BaseAddress = new Uri(urlGateway);
+        cliente.BaseAddress = new Uri(urlMsEnvioCorreo);
         cliente.DefaultRequestHeaders.Add("Accept", "application/json");
     });
 
 builder.Services.AddHttpClient<IMSEmpresasContextoWebServicio, MSEmpresasContextoWebServicio>
     (cliente =>
     {
-        cliente.BaseAddress = new Uri(urlGateway);
+        cliente.BaseAddress = new Uri(urlMsEmpresas);
         cliente.DefaultRequestHeaders.Add("Accept", "application/json");
     })
     .AddHttpMessageHandler<MiddlewareManejadorTokens>();
@@ -211,7 +213,7 @@ builder.Services.AddHttpClient<IMSEmpresasContextoWebServicio, MSEmpresasContext
 builder.Services.AddHttpClient<IMSDatosComunesBackgroundServicio, MSDatosComunesBackgroundServicio>
     (cliente =>
     {
-        cliente.BaseAddress = new Uri(urlGateway);
+        cliente.BaseAddress = new Uri(urlMsDatosComunes);
         cliente.DefaultRequestHeaders.Add("Accept", "application/json");
     });
 
