@@ -10,9 +10,9 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
         private readonly object _lock = new();
         private List<ListaDetalleDto> _listaTiposIdentificacion = new();
         private readonly IMSDatosComunes _msDatosComunes;
-        private IApiResponse _apiResponse;
+        private IApisResponse _apiResponse;
 
-        public DatosComunesListasCache(IMSDatosComunes msDatosComunes, IApiResponse apiResponse)
+        public DatosComunesListasCache(IMSDatosComunes msDatosComunes, IApisResponse apiResponse)
         {
             _msDatosComunes = msDatosComunes;
             _apiResponse = apiResponse;

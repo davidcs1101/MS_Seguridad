@@ -6,12 +6,12 @@ namespace SEG.Api.Seguridad.Middlewares
 {
     public class MiddlewareAutorizationPersonalizado
     {
-        private readonly RequestDelegate _next;
+        private readonly RequestDelegate _requestDelegate;
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
-        private readonly IApiResponse _apiResponse;
-        public MiddlewareAutorizationPersonalizado(RequestDelegate next, IServiceProvider serviceProvider, ISerializadorJsonServicio serializadorJsonServicio, IApiResponse apiResponse)
+        private readonly IApisResponse _apiResponse;
+        public MiddlewareAutorizationPersonalizado(RequestDelegate next, IServiceProvider serviceProvider, ISerializadorJsonServicio serializadorJsonServicio, IApisResponse apiResponse)
         {
-            _next = next;
+            _requestDelegate = next;
             _serializadorJsonServicio = serializadorJsonServicio;
             _apiResponse = apiResponse;
         }
@@ -25,7 +25,7 @@ namespace SEG.Api.Seguridad.Middlewares
                 var path = contexto.Request.Path.ToString().ToLower();
                 if (path.Contains("modificarclave"))
                 {
-                    await _next(contexto);
+                    await _requestDelegate(contexto);
                     return;
                 }
 
@@ -44,7 +44,7 @@ namespace SEG.Api.Seguridad.Middlewares
                     }
                 }
             }
-            await _next(contexto);
+            await _requestDelegate(contexto);
         }
     }
 }

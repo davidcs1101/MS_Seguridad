@@ -3,7 +3,7 @@ using SEG.Aplicacion.Servicios.Interfaces;
 
 namespace SEG.Aplicacion.Servicios.Implementaciones
 {
-    public class ApiResponse : IApiResponse
+    public class ApisResponse : IApisResponse
     {
         public ApiResponse<T> CrearRespuesta<T>(bool correcto, string mensaje, T? data = default)
         {

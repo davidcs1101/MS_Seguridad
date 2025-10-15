@@ -16,10 +16,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IGrupoRepositorio _grupoRepositorio;
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
-        private readonly IApiResponse _apiResponse;
+        private readonly IApisResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
 
-        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador)
+        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApisResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador)
         {
             _grupoRepositorio = grupoRepositorio;
             _mapper = mapper;

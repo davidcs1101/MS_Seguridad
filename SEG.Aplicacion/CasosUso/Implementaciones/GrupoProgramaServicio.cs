@@ -21,9 +21,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public readonly IEntidadValidador<SEG_GrupoPrograma> _grupoProgramaValidador;
         public readonly IUsuarioContextoServicio _usuarioContextoServicio;
         public readonly IMapper _mapper;
-        public readonly IApiResponse _apiResponse;
+        public readonly IApisResponse _apiResponse;
 
-        public GrupoProgramaServicio(IGrupoProgramaRepositorio grupoProgramaRepositorio, IProgramaRepositorio programaRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Programa> programaValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPrograma> grupoProgramaValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApiResponse apiResponseServicio)
+        public GrupoProgramaServicio(IGrupoProgramaRepositorio grupoProgramaRepositorio, IProgramaRepositorio programaRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Programa> programaValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPrograma> grupoProgramaValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApisResponse apiResponseServicio)
         {
             _grupoProgramaRepositorio = grupoProgramaRepositorio;
             _grupoRepositorio = grupoRepositorio;

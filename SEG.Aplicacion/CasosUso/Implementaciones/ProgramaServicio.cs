@@ -16,10 +16,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IProgramaRepositorio _programaRepositorio;
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
-        private readonly IApiResponse _apiResponse;
+        private readonly IApisResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Programa> _programaValidador;
 
-        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio)
+        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApisResponse apiResponseServicio)
         {
             _programaRepositorio = programaRepositorio;
             _mapper = mapper;
