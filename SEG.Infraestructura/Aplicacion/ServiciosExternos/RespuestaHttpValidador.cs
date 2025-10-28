@@ -1,9 +1,9 @@
-﻿using SEG.Infraestructura.Servicios.Interfaces;
+﻿using SEG.Aplicacion.ServiciosExternos;
 using SEG.Dominio.Excepciones;
 using SEG.Dtos;
 using System.Net.Http.Json;
 
-namespace SEG.Infraestructura.Servicios.Implementaciones
+namespace SEG.Infraestructura.Aplicacion.ServiciosExternos
 {
     public class RespuestaHttpValidador : IRespuestaHttpValidador
     {

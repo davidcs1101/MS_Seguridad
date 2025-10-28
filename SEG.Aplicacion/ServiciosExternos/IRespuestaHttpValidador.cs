@@ -1,4 +1,4 @@
-﻿namespace SEG.Infraestructura.Servicios.Interfaces
+﻿namespace SEG.Aplicacion.ServiciosExternos
 {
     public interface IRespuestaHttpValidador
     {

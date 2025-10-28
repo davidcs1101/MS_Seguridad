@@ -22,13 +22,12 @@ using Hangfire.MySql;
 using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Intraestructura.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Intraestructura.Dominio.Repositorio;
-using SEG.Infraestructura.Servicios.Interfaces;
-using SEG.Infraestructura.Servicios.Implementaciones;
 using SEG.Dtos.AppSettings;
 using SEG.Aplicacion.ServiciosExternos.config;
 using SEG.Infraestructura.Aplicacion.ServiciosExternos.Config;
 using SEG.Aplicacion.Servicios.Implementaciones.Cache;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
+using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -195,29 +194,30 @@ var urlMsEnvioCorreo = builder.Configuration["UrlMsEnvioCorreo"];
 var urlMsEmpresas = builder.Configuration["UrlMsEmpresas"];
 var urlMsDatosComunes = builder.Configuration["UrlMsDatosComunes"];
 
-builder.Services.AddHttpClient<IMSEnvioCorreosBackgroundServicio, MSEnvioCorreosBackgroundServicio>
-    (cliente =>
+builder.Services
+    .AddRefitClient<IMSEnvioCorreosBackgroundServicio>()
+    .ConfigureHttpClient(c =>
     {
-        cliente.BaseAddress = new Uri(urlMsEnvioCorreo);
-        cliente.DefaultRequestHeaders.Add("Accept", "application/json");
+        c.BaseAddress = new Uri(urlMsEnvioCorreo);
+        c.DefaultRequestHeaders.Add("Accept", "application/json");
     });
 
-builder.Services.AddHttpClient<IMSEmpresasContextoWebServicio, MSEmpresasContextoWebServicio>
-    (cliente =>
+builder.Services
+    .AddRefitClient<IMSEmpresasContextoWebServicio>()
+    .ConfigureHttpClient(c =>
     {
-        cliente.BaseAddress = new Uri(urlMsEmpresas);
-        cliente.DefaultRequestHeaders.Add("Accept", "application/json");
+        c.BaseAddress = new Uri(urlMsEmpresas);
+        c.DefaultRequestHeaders.Add("Accept", "application/json");
     })
     .AddHttpMessageHandler<MiddlewareManejadorTokens>();
 
-builder.Services.AddHttpClient<IMSDatosComunesBackgroundServicio, MSDatosComunesBackgroundServicio>
-    (cliente =>
+builder.Services
+    .AddRefitClient<IMSDatosComunesBackgroundServicio>()
+    .ConfigureHttpClient(c =>
     {
-        cliente.BaseAddress = new Uri(urlMsDatosComunes);
-        cliente.DefaultRequestHeaders.Add("Accept", "application/json");
+        c.BaseAddress = new Uri(urlMsDatosComunes);
+        c.DefaultRequestHeaders.Add("Accept", "application/json");
     });
-
-
 
 var app = builder.Build();
 

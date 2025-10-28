@@ -7,8 +7,14 @@ namespace SEG.Aplicacion.ServiciosExternos
     {
         [Post("/listasDetalles/obtenerPorCodigoListaYCodigoListaDetalle")]
         Task<HttpResponseMessage> ObtenerListaDetallePorCodigoListaYCodigoListaDetalleAsync([Body] CodigoDetalleRequest codigoDetalleRequest);
-        Task<HttpResponseMessage> ObtenerListaDetallePorCodigoConstanteYCodigoListaDetalleAsync(CodigoDetalleRequest codigoDetalleRequest);
-        Task<HttpResponseMessage> ListarListasDetallePorCodigoListaAsync(string codigoLista);
-        Task<HttpResponseMessage> ListarListasDetallePorCodigoConstanteAsync(string codigoConstante);
+
+        [Post("/listasDetalles/obtenerPorCodigoConstanteYCodigoListaDetalle")]
+        Task<HttpResponseMessage> ObtenerListaDetallePorCodigoConstanteYCodigoListaDetalleAsync([Body] CodigoDetalleRequest codigoDetalleRequest);
+
+        [Get("/listasDetalles/listarPorCodigoLista")]
+        Task<HttpResponseMessage> ListarListasDetallePorCodigoListaAsync([Query] string codigoLista);
+
+        [Get("/listasDetalles/listarPorCodigoConstante")]
+        Task<HttpResponseMessage> ListarListasDetallePorCodigoConstanteAsync([Query] string codigoConstante);
     }
 }
