@@ -7,21 +7,19 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
     public class MSEnvioCorreos : IMSEnvioCorreos
     {
         private readonly IMSEnvioCorreosBackgroundServicio _msEnvioCorreosBackgroundServicio;
-        private readonly ISerializadorJsonServicio _serializadorJsonServicio;
-        private readonly IRespuestaHttpValidador _respuestaHttpValidador;
+        private readonly IServicioComun _servicioComun;
 
-        public MSEnvioCorreos(IMSEnvioCorreosBackgroundServicio msEnvioCorreosBackgroundServicio, ISerializadorJsonServicio serializadorJsonServicio, IRespuestaHttpValidador respuestaHttpValidador)
+        public MSEnvioCorreos(IMSEnvioCorreosBackgroundServicio msEnvioCorreosBackgroundServicio,  IServicioComun servicioComun)
         {
             _msEnvioCorreosBackgroundServicio = msEnvioCorreosBackgroundServicio;
-            _serializadorJsonServicio = serializadorJsonServicio;
-            _respuestaHttpValidador = respuestaHttpValidador;
+            _servicioComun = servicioComun;
         }
 
         public async Task<bool> EnviarAsync(DatoCorreoRequest datoCorreoRequest) 
         {
-            var respuesta = await _msEnvioCorreosBackgroundServicio.EnviarCorreoAsync(datoCorreoRequest);
-            await _respuestaHttpValidador.ValidarRespuesta(respuesta, Utilidades.Textos.Generales.MENSAJE_ERROR_CONSUMO_SERVICIO);
-            return true;
+            return await _servicioComun.ObtenerRespuestaHttpAsync<DatoCorreoRequest, bool>(
+                funcionEjecutar: _msEnvioCorreosBackgroundServicio.EnviarCorreoAsync,
+                request: datoCorreoRequest);
         }
     }
 }

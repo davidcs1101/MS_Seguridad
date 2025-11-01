@@ -97,6 +97,9 @@ builder.Services.AddScoped<IUnidadDeTrabajo, UnidadDeTrabajoEF>();
 
 builder.Services.AddSingleton<ISerializadorJsonServicio, SerializadorJsonServicio>();
 
+builder.Services.AddScoped<IProcesadorTransacciones, ProcesadorTransacciones>();
+builder.Services.AddSingleton<IServicioComun, ServicioComun>();
+
 builder.Services.AddSingleton<IRespuestaHttpValidador, RespuestaHttpValidador>();
 
 builder.Services.AddScoped<IColaSolicitudServicio, ColaSolicitudServicio>();

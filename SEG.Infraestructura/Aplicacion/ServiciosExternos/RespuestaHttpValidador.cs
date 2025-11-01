@@ -11,13 +11,18 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos
             var detalleError = "";
             if (!respuesta.IsSuccessStatusCode)
             {
+                var error = new ApiResponse<string>();
                 detalleError = $"{mensaje} {respuesta.ReasonPhrase}. ";
-                if (respuesta.StatusCode == System.Net.HttpStatusCode.BadGateway)
-                    throw new SolicitudHttpException(detalleError);
-                var error = await respuesta.Content.ReadFromJsonAsync<ApiResponse<string>>();
-                if (error is not null && !string.IsNullOrWhiteSpace(error.Mensaje))
-                    detalleError += error.Mensaje;
-
+                try
+                {
+                    error = await respuesta.Content.ReadFromJsonAsync<ApiResponse<string>>();
+                    if (error is not null && !string.IsNullOrWhiteSpace(error.Mensaje))
+                        detalleError += $"{error.Mensaje}. ";
+                }
+                catch (Exception e)
+                {
+                    detalleError += e.Message;
+                }
                 throw new SolicitudHttpException(detalleError);
             }
         }

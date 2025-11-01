@@ -1,57 +1,33 @@
 ﻿using SEG.Dtos;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
+using Utilidades;
 
 namespace SEG.Aplicacion.Servicios.Implementaciones
 {
     public class MSDatosComunes : IMSDatosComunes
     {
         private readonly IMSDatosComunesBackgroundServicio _msDatosComunesBackgroundServicio;
-        private readonly ISerializadorJsonServicio _serializadorJsonServicio;
+        private readonly IServicioComun _servicioComun;
 
-        public MSDatosComunes(IMSDatosComunesBackgroundServicio msDatosComunesBackgroundServicio, ISerializadorJsonServicio serializadorJsonServicio)
+        public MSDatosComunes(IMSDatosComunesBackgroundServicio msDatosComunesBackgroundServicio, ISerializadorJsonServicio serializadorJsonServicio, IRespuestaHttpValidador respuestaHttpValidador, IServicioComun servicioComun)
         {
             _msDatosComunesBackgroundServicio = msDatosComunesBackgroundServicio;
-            _serializadorJsonServicio = serializadorJsonServicio;
-        }
-
-        public async Task<int> ObtenerIdListaDetallePorCodigoListaYCodigoListaDetalleAsync(CodigoDetalleRequest codigoListaIdDetalleRequest)
-        {
-            var respuesta = await _msDatosComunesBackgroundServicio.ObtenerListaDetallePorCodigoListaYCodigoListaDetalleAsync(codigoListaIdDetalleRequest);
-            var contenidoJson = await respuesta.Content.ReadAsStringAsync();
-            var resultado = _serializadorJsonServicio.Deserializar<ApiResponse<ListaDetalleDto?>>(contenidoJson);
-            if (resultado == null || resultado.Data == null)
-                return 0;
-
-            return resultado.Data.Id;
-        }
-        public async Task<int> ObtenerIdListaDetallePorCodigoConstanteYCodigoListaDetalleAsync(CodigoDetalleRequest codigoListaIdDetalleRequest) 
-        {
-            var respuesta = await _msDatosComunesBackgroundServicio.ObtenerListaDetallePorCodigoConstanteYCodigoListaDetalleAsync(codigoListaIdDetalleRequest);
-            var contenidoJson = await respuesta.Content.ReadAsStringAsync();
-            var resultado =  _serializadorJsonServicio.Deserializar<ApiResponse<ListaDetalleDto?>>(contenidoJson);
-            if (resultado == null || resultado.Data == null)
-                return 0;
-
-            return resultado.Data.Id;
+            _servicioComun = servicioComun;
         }
 
         public async Task<List<ListaDetalleDto?>> ListarListasDetallePorCodigoListaAsync(string codigoLista) 
         {
-            var respuesta = await _msDatosComunesBackgroundServicio.ListarListasDetallePorCodigoListaAsync(codigoLista);
-            var contenidoJson = await respuesta.Content.ReadAsStringAsync();
-            var resultado = _serializadorJsonServicio.Deserializar<ApiResponse<List<ListaDetalleDto?>>>(contenidoJson);
-
-            return resultado.Data;
+            return await _servicioComun.ObtenerRespuestaHttpAsync<string, List<ListaDetalleDto?>>(
+                funcionEjecutar: _msDatosComunesBackgroundServicio.ListarListasDetallePorCodigoListaAsync,
+                request: codigoLista);
         }
 
         public async Task<List<ListaDetalleDto?>> ListarListasDetallePorCodigoConstanteAsync(string codigoConstante)
         {
-            var respuesta = await _msDatosComunesBackgroundServicio.ListarListasDetallePorCodigoConstanteAsync(codigoConstante);
-            var contenidoJson = await respuesta.Content.ReadAsStringAsync();
-            var resultado = _serializadorJsonServicio.Deserializar<ApiResponse<List<ListaDetalleDto?>>>(contenidoJson);
-
-            return resultado.Data;
+            return await _servicioComun.ObtenerRespuestaHttpAsync<string, List<ListaDetalleDto?>>(
+                funcionEjecutar: _msDatosComunesBackgroundServicio.ListarListasDetallePorCodigoConstanteAsync,
+                request: codigoConstante);
         }
     }
 }
