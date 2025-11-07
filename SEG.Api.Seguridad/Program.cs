@@ -89,7 +89,6 @@ builder.Services.AddScoped<IUsuarioValidador, UsuarioValidador>();
 
 builder.Services.AddScoped<IConstructorTextosNotificacion, ConstructorTextosNotificacion>();
 builder.Services.AddScoped<IConstructorMensajesNotificacionCorreo, ConstructorMensajesNotificacionCorreo>();
-builder.Services.AddScoped<IMSEnvioCorreos, MSEnvioCorreos>();
 
 builder.Services.AddScoped<IColaSolicitudRepositorio, ColaSolicitudRepositorio>();
 
@@ -111,8 +110,9 @@ builder.Services.AddScoped<IUsuarioContextoServicio, UsuarioContextoServicio>();
 builder.Services.AddScoped(typeof(IEntidadValidador<>), typeof(EntidadValidador<>));
 
 //Servicio para gestionar sedes desde el micorservicio de empresas
-builder.Services.AddSingleton<IMSEmpresas, MSEmpresas>();
+builder.Services.AddScoped<IMSEmpresas, MSEmpresas>();
 builder.Services.AddSingleton<IMSDatosComunes, MSDatosComunes>();
+builder.Services.AddScoped<IMSEnvioCorreos, MSEnvioCorreos>();
 
 //Para cachear datos de otros microservicios
 builder.Services.AddSingleton<IDatosComunesListasCache, DatosComunesListasCache>();
