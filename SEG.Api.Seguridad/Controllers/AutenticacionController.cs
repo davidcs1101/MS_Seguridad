@@ -16,7 +16,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPost("autenticarUsuario")]
-        public async Task<ActionResult<ApiResponse<string>>> Autenticar(AutenticacionRequest autenticacionRequest)
+        public async Task<ActionResult<ApiResponse<AutenticacionResponse>>> Autenticar(AutenticacionRequest autenticacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -26,7 +26,7 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpPost("autenticarSede")]
         [Authorize]
-        public async Task<ActionResult<ApiResponse<string>>> Autenticar(int sedeId)
+        public async Task<ActionResult<ApiResponse<AutenticacionResponse>>> Autenticar(int sedeId)
         {
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);

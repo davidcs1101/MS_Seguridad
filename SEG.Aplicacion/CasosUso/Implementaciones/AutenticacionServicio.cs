@@ -41,7 +41,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _configuracionesJwt = configuracionesJwt;
         }
 
-        public async Task<ApiResponse<string>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
+        public async Task<ApiResponse<AutenticacionResponse>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
         {
             var usuario = await _usuarioRepositorio.ObtenerPorUsuarioAsync(autenticacionRequest.NombreUsuario);
             _usuarioValidador.ValidarLoguin(usuario, ProcesadorClaves.EncriptarClave(autenticacionRequest.Clave), Textos.Usuarios.MENSAJE_LOGIN_INCORRECTO);
@@ -50,7 +50,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, "", token);
         }
 
-        public async Task<ApiResponse<string>> AutenticarSedeAsync(int sedeId)
+        public async Task<ApiResponse<AutenticacionResponse>> AutenticarSedeAsync(int sedeId)
         {
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
@@ -61,7 +61,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, "", token);
         }
 
-        private  async Task<string> GenerarTokenAsync(SEG_Usuario usuario, int? grupoId, int? sedeId)
+        private  async Task<AutenticacionResponse> GenerarTokenAsync(SEG_Usuario usuario, int? grupoId, int? sedeId)
         {
             //Datos de configuracon para el Token
             var emisor = _configuracionesJwt.ObtenerEmisor();
@@ -90,6 +90,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             if (sedeId.HasValue)
             {
                 claims.Add(new Claim("SedeId", sedeId.ToString()));
+                tiempoExpiracion = Convert.ToInt32(_configuracionesJwt.ObtenerMinutosDuracionTokenAutenticacionSede());
             }
             #endregion
 
@@ -101,20 +102,23 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
              */
             if (!usuario.CambiarClave)
             {
-                tiempoExpiracion = Convert.ToInt32(_configuracionesJwt.ObtenerMinutosDuracionTokenAutenticacionSede());
                 claims.Add(new Claim("Accion", "CAMBIOCLAVEOK"));
             }
             #endregion
 
-            var token = new JwtSecurityToken(
+            var fechaExpiracion = DateTime.UtcNow.AddMinutes(tiempoExpiracion);
+
+            var tokenSeguridad = new JwtSecurityToken(
                 issuer : emisor,
                 audience: _configuracionesJwt.ObtenerAudienciasDestinoTexto(),
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(tiempoExpiracion),
+                expires: fechaExpiracion,
                 signingCredentials: credenciales);
-            token.Payload["aud"] = audienciasDestino;
+            tokenSeguridad.Payload["aud"] = audienciasDestino;
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var token = new JwtSecurityTokenHandler().WriteToken(tokenSeguridad);
+
+            return new AutenticacionResponse { Token = token, FechaExpiracion = fechaExpiracion };
         }
     }
 }

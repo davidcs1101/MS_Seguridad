@@ -117,6 +117,9 @@ builder.Services.AddSingleton<IMSDatosComunes, MSDatosComunes>();
 //Para cachear datos de otros microservicios
 builder.Services.AddSingleton<IDatosComunesListasCache, DatosComunesListasCache>();
 
+//Para cachear tokens de seguridad de acceso de usuarios
+builder.Services.AddMemoryCache();
+
 
 #region REG_Servicios de configuraciones Appsettings
 builder.Services.Configure<TrabajosColasSettings>(builder.Configuration.GetSection("TrabajosColas"));
@@ -192,6 +195,8 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddTransient<MiddlewareManejadorTokens>();
 
+builder.Services.AddTransient<MiddlewareManejadorTokensBackground>();
+
 //Configuracion para llamado de otros MicroServicios atraves de la Url Gateway
 var urlMsEnvioCorreo = builder.Configuration["UrlMsEnvioCorreo"];
 var urlMsEmpresas = builder.Configuration["UrlMsEmpresas"];
@@ -203,7 +208,8 @@ builder.Services
     {
         c.BaseAddress = new Uri(urlMsEnvioCorreo);
         c.DefaultRequestHeaders.Add("Accept", "application/json");
-    });
+    })
+    .AddHttpMessageHandler<MiddlewareManejadorTokensBackground>();
 
 builder.Services
     .AddRefitClient<IMSEmpresasContextoWebServicio>()

@@ -15,9 +15,9 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
             _servicioComun = servicioComun;
         }
 
-        public async Task<bool> EnviarAsync(DatoCorreoRequest datoCorreoRequest) 
+        public async Task<string> EnviarAsync(DatoCorreoRequest datoCorreoRequest) 
         {
-            return await _servicioComun.ObtenerRespuestaHttpAsync<DatoCorreoRequest, bool>(
+            return await _servicioComun.ObtenerRespuestaHttpAsync<DatoCorreoRequest, string>(
                 funcionEjecutar: _msEnvioCorreosBackgroundServicio.EnviarCorreoAsync,
                 request: datoCorreoRequest);
         }

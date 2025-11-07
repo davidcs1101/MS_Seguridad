@@ -4,6 +4,6 @@ namespace SEG.Aplicacion.Servicios.Interfaces
 {
     public interface IMSEnvioCorreos
     {
-        Task<bool> EnviarAsync(DatoCorreoRequest datoCorreoRequest);
+        Task<string> EnviarAsync(DatoCorreoRequest datoCorreoRequest);
     }
 }
