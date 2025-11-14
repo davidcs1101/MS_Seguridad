@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.Caching.Memory;
 using SEG.Dtos;
-using Utilidades;
 using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Aplicacion.ServiciosExternos.config;
 
 namespace SEG.Api.Seguridad.Middlewares
 {
@@ -11,12 +11,14 @@ namespace SEG.Api.Seguridad.Middlewares
         private readonly IConfiguration _configuration;
         private readonly IMemoryCache _cache;
         private readonly IAutenticacionServicio _autenticacionServicio;
+        private readonly IConfiguracionesTrabajosColas _configuracionesTrabajosColas;
 
-        public MiddlewareManejadorTokensBackground(IConfiguration configuration, IMemoryCache cache, IAutenticacionServicio autenticacionServicio)
+        public MiddlewareManejadorTokensBackground(IConfiguration configuration, IMemoryCache cache, IAutenticacionServicio autenticacionServicio, IConfiguracionesTrabajosColas configuracionesTrabajosColas)
         {
             _configuration = configuration;
             _cache = cache;
             _autenticacionServicio = autenticacionServicio;
+            _configuracionesTrabajosColas = configuracionesTrabajosColas;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -24,11 +26,7 @@ namespace SEG.Api.Seguridad.Middlewares
             // Intenta obtener el token desde caché
             if (!_cache.TryGetValue("Token", out string token))
             {
-                //token = await ObtenerTokenAsync(cancellationToken);
-                var usuario = _configuration["TrabajosColas:UsuarioIntegracion"];
-                var clave = _configuration["TrabajosColas:ClaveIntegracion"];
-                var autenticacionRequest = new AutenticacionRequest { NombreUsuario = usuario, Clave = clave };
-                var datosToken = await AutenticarUsuarioAsync(autenticacionRequest);
+                var datosToken = await AutenticarUsuarioAsync();
                 token = datosToken.Token;
 
                 //Calculamos el tiempo hasta la expiración
@@ -53,8 +51,13 @@ namespace SEG.Api.Seguridad.Middlewares
             return await base.SendAsync(request, cancellationToken);
         }
 
-        private async Task<AutenticacionResponse> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
+        private async Task<AutenticacionResponse> AutenticarUsuarioAsync()
         {
+            AutenticacionRequest autenticacionRequest = new AutenticacionRequest()
+            {
+                NombreUsuario = _configuracionesTrabajosColas.ObtenerUsuarioIntegracion(),
+                Clave = _configuracionesTrabajosColas.ObtenerClaveIntegracion()
+            };
             return (await _autenticacionServicio.AutenticarUsuarioAsync(autenticacionRequest)).Data!;
         }
 
