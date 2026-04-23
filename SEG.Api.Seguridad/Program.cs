@@ -174,7 +174,7 @@ permiso => permiso.RequireClaim("Programa", "USUARIOSSEDESGRUPOS")));
 builder.Services.AddDbContext<AppDbContext>
     (opciones => opciones
     .UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-    //ServerVersion.Parse("8.0.39-mysql")
+    //ServerVersion.Parse("8.0.44-mysql")
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
 

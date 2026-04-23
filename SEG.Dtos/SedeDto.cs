@@ -17,6 +17,6 @@
         public string? Celular { get; set; }
         public string? Email { get; set; }
         public int? NivelComplejidadId { get; set; }
-        public byte EsCentroDireccionamiento { get; set; }
+        public bool EsCentroDireccionamiento { get; set; }
     }
 }
