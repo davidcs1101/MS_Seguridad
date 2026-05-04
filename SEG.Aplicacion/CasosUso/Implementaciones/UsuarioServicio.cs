@@ -241,7 +241,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         {
             var solicitud = new SEG_ColaSolicitud
             {
-                Tipo = Textos.EventosColas.ENVIARCORREO,
+                Tipo = EventosColas.ENVIARCORREO,
                 Payload = _serializadorJsonServicio.Serializar(datoCorreoRequest),
                 Estado = EstadoCola.Pendiente,
                 Intentos = 0,

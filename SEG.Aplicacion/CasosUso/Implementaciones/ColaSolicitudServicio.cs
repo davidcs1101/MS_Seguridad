@@ -67,7 +67,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
                 switch (solicitudExiste.Tipo)
                 {
-                    case Textos.EventosColas.ENVIARCORREO:
+                    case EventosColas.ENVIARCORREO:
                         await _notificadorCorreo.EnviarAsync(_serializadorJsonServicio.Deserializar<DatoCorreoRequest>(solicitudExiste.Payload));
                         break;
                 }
