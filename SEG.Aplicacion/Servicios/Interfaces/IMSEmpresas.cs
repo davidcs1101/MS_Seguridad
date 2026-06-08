@@ -5,5 +5,6 @@ namespace SEG.Aplicacion.Servicios.Interfaces
     public interface IMSEmpresas
     {
         Task<bool> ValidarSedeExisteAsync(int id);
+        Task<SedeDto> ObtenerSedePorId(int sedeId);
     }
 }

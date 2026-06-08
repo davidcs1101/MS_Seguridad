@@ -18,10 +18,15 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
 
         public async Task<bool> ValidarSedeExisteAsync(int id) 
         {
-            var sede = await _servicioComun.ObtenerRespuestaHttpAsync<int, SedeDto>(
-                funcionEjecutar: _msEmpresasContextoWebServicio.ObtenerSedePorIdAsync,
-                request: id);
+            var sede = await ObtenerSedePorId(id);
             return sede.Id != 0;
+        }
+
+        public async Task<SedeDto> ObtenerSedePorId(int sedeId) 
+        {
+            return await _servicioComun.ObtenerRespuestaHttpAsync<int, SedeDto>(
+                funcionEjecutar: _msEmpresasContextoWebServicio.ObtenerSedePorIdAsync,
+                request: sedeId);
         }
     }
 }

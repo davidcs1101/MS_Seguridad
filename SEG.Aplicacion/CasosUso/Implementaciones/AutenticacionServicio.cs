@@ -26,9 +26,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioValidador _usuarioValidador;
         private readonly IEntidadValidador<SEG_UsuarioSedeGrupo> _usuarioSedeGrupoValidador;
         private readonly IConfiguracionesJwt _configuracionesJwt;
+        private readonly IMSEmpresas _msEmpresas;
 
         public AutenticacionServicio(IUsuarioRepositorio usuarioRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeRepositorio, IGrupoProgramaRepositorio grupoRepositorio, IConfiguration configuracion,
-            IUsuarioContextoServicio usuarioContextoServicio, IApisResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IConfiguracionesJwt configuracionesJwt)
+            IUsuarioContextoServicio usuarioContextoServicio, IApisResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IConfiguracionesJwt configuracionesJwt, IMSEmpresas msEmpresas)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _usuarioSedeRepositorio = usuarioSedeRepositorio;
@@ -39,6 +40,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _usuarioValidador = usuarioValidador;
             _usuarioSedeGrupoValidador = usuarioSedeGrupoValidador;
             _configuracionesJwt = configuracionesJwt;
+            _msEmpresas = msEmpresas;
         }
 
         public async Task<ApiResponse<AutenticacionResponse>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
@@ -46,22 +48,25 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var usuario = await _usuarioRepositorio.ObtenerPorUsuarioAsync(autenticacionRequest.NombreUsuario);
             _usuarioValidador.ValidarLoguin(usuario, ProcesadorClaves.EncriptarClave(autenticacionRequest.Clave), Textos.Usuarios.MENSAJE_LOGIN_INCORRECTO);
          
-            var token = await GenerarTokenAsync(usuario, null, null);
+            var token = await GenerarTokenAsync(usuario);
             return _apiResponse.CrearRespuesta(true, "", token);
         }
 
         public async Task<ApiResponse<AutenticacionResponse>> AutenticarSedeAsync(int sedeId)
         {
+            var sede = await _msEmpresas.ObtenerSedePorId(sedeId);
+
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
             var usuarioSede = await _usuarioSedeRepositorio.ObtenerUsuarioSedeAsync(usuarioId, sedeId);
             _usuarioSedeGrupoValidador.ValidarDatoNoEncontrado(usuarioSede, Textos.Usuarios.MENSAJE_LOGIN_SEDE_INCORRECTO);
-
-            var token = await GenerarTokenAsync(usuarioSede.Usuario, usuarioSede.GrupoId, usuarioSede.SedeId);
+            
+            var token = await GenerarTokenAsync(usuarioSede.Usuario, usuarioSede.GrupoId, usuarioSede.SedeId, sede.EmpresaId);
             return _apiResponse.CrearRespuesta(true, "", token);
         }
 
-        private  async Task<AutenticacionResponse> GenerarTokenAsync(SEG_Usuario usuario, int? grupoId, int? sedeId)
+        private  async Task<AutenticacionResponse> GenerarTokenAsync(SEG_Usuario usuario, 
+            int? grupoId = null, int? sedeId = null, int? empresaId = null)
         {
             //Datos de configuracon para el Token
             var emisor = _configuracionesJwt.ObtenerEmisor();
@@ -91,6 +96,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             {
                 claims.Add(new Claim("SedeId", sedeId.ToString()));
                 tiempoExpiracion = Convert.ToInt32(_configuracionesJwt.ObtenerMinutosDuracionTokenAutenticacionSede());
+            }
+            if (empresaId.HasValue)
+            {
+                claims.Add(new Claim("EmpresaId", empresaId.ToString()));
             }
             #endregion
 
