@@ -4,9 +4,9 @@ using SEG.Dominio.Entidades;
 
 namespace SEG.DataAccess.EntidadesConfig
 {
-    public class SEG_ProgramaConfig : IEntityTypeConfiguration<SEG_Programa>
+    public class SEG_AccionConfig : IEntityTypeConfiguration<SEG_Accion>
     {
-        public void Configure(EntityTypeBuilder<SEG_Programa> builder) 
+        public void Configure(EntityTypeBuilder<SEG_Accion> builder) 
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Codigo).HasColumnType("varchar(30)");
@@ -17,8 +17,8 @@ namespace SEG.DataAccess.EntidadesConfig
             builder.HasIndex(x => x.Codigo).IsUnique();
 
             builder.HasMany(x => x.Permisos)
-                .WithOne(x => x.Programa)
-                .HasForeignKey(x => x.ProgramaId)
+                .WithOne(x => x.Accion)
+                .HasForeignKey(x => x.AccionId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.UsuarioCreador)
