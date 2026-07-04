@@ -22,6 +22,13 @@ namespace SEG.DataAccess.Semilla
                 new SEG_Grupo { Id = 6, Codigo = "REFERENCIAYCONTRARREFERENCIA", Nombre = "USUARIOS DE REFERENCIA Y CONTRARREFERENCIA", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
                 );
 
+            builder.Entity<SEG_Accion>().HasData(
+                new SEG_Accion { Id = 1, Codigo = "CONSULTAR", Nombre = "CONSULTAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Accion { Id = 2, Codigo = "CREAR", Nombre = "CREAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Accion { Id = 3, Codigo = "MODIFICAR", Nombre = "MODIFICAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Accion { Id = 4, Codigo = "ELIMINAR", Nombre = "ELIMINAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
+                );
+
             builder.Entity<SEG_Programa>().HasData(
                 new SEG_Programa { Id = 1, Codigo = "USUARIOSSEDESGRUPOS", Nombre = "ASOCIACION DE USUARIOS SEDES GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Programa { Id = 2, Codigo = "CONTRARREFERENCIA", Nombre = "CONTRARREFERENCIA A PACIENTES", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },

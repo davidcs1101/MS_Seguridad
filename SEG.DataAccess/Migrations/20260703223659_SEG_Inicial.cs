@@ -89,6 +89,40 @@ namespace SEG.DataAccess.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "SEG_Acciones",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Codigo = table.Column<string>(type: "varchar(30)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Nombre = table.Column<string>(type: "varchar(250)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UsuarioCreadorId = table.Column<int>(type: "int", nullable: false),
+                    FechaCreado = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UsuarioModificadorId = table.Column<int>(type: "int", nullable: true),
+                    FechaModificado = table.Column<DateTime>(type: "datetime", nullable: true),
+                    EstadoActivo = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SEG_Acciones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SEG_Acciones_SEG_Usuarios_UsuarioCreadorId",
+                        column: x => x.UsuarioCreadorId,
+                        principalTable: "SEG_Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SEG_Acciones_SEG_Usuarios_UsuarioModificadorId",
+                        column: x => x.UsuarioModificadorId,
+                        principalTable: "SEG_Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "SEG_Grupos",
                 columns: table => new
                 {
@@ -245,22 +279,124 @@ namespace SEG.DataAccess.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "SEG_Permisos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ProgramaId = table.Column<int>(type: "int", nullable: false),
+                    AccionId = table.Column<int>(type: "int", nullable: false),
+                    Codigo = table.Column<string>(type: "varchar(30)", nullable: false, comment: "Código único del permiso.")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Nombre = table.Column<string>(type: "varchar(250)", nullable: true, comment: "Nombre descriptivo del permiso.")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UsuarioCreadorId = table.Column<int>(type: "int", nullable: false),
+                    FechaCreado = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UsuarioModificadorId = table.Column<int>(type: "int", nullable: true),
+                    FechaModificado = table.Column<DateTime>(type: "datetime", nullable: true),
+                    EstadoActivo = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SEG_Permisos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SEG_Permisos_SEG_Acciones_AccionId",
+                        column: x => x.AccionId,
+                        principalTable: "SEG_Acciones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SEG_Permisos_SEG_Programas_ProgramaId",
+                        column: x => x.ProgramaId,
+                        principalTable: "SEG_Programas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SEG_Permisos_SEG_Usuarios_UsuarioCreadorId",
+                        column: x => x.UsuarioCreadorId,
+                        principalTable: "SEG_Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SEG_Permisos_SEG_Usuarios_UsuarioModificadorId",
+                        column: x => x.UsuarioModificadorId,
+                        principalTable: "SEG_Usuarios",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "SEG_GruposPermisos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    GrupoId = table.Column<int>(type: "int", nullable: false),
+                    PermisoId = table.Column<int>(type: "int", nullable: false),
+                    UsuarioCreadorId = table.Column<int>(type: "int", nullable: false),
+                    FechaCreado = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UsuarioModificadorId = table.Column<int>(type: "int", nullable: true),
+                    FechaModificado = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    EstadoActivo = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SEG_GruposPermisos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SEG_GruposPermisos_SEG_Grupos_GrupoId",
+                        column: x => x.GrupoId,
+                        principalTable: "SEG_Grupos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SEG_GruposPermisos_SEG_Permisos_PermisoId",
+                        column: x => x.PermisoId,
+                        principalTable: "SEG_Permisos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SEG_GruposPermisos_SEG_Usuarios_UsuarioCreadorId",
+                        column: x => x.UsuarioCreadorId,
+                        principalTable: "SEG_Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SEG_GruposPermisos_SEG_Usuarios_UsuarioModificadorId",
+                        column: x => x.UsuarioModificadorId,
+                        principalTable: "SEG_Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.InsertData(
                 table: "SEG_Usuarios",
                 columns: new[] { "Id", "Apellido1", "Apellido2", "CambiarClave", "Clave", "Email", "EstadoActivo", "FechaCreado", "FechaModificado", "Identificacion", "Nombre1", "Nombre2", "NombreUsuario", "TipoIdentificacionId", "UsuarioCreadorId", "UsuarioModificadorId" },
-                values: new object[] { 1, "SISTEMA", "", true, "1feTCdMwhKKkOSWaM5+yXEI0ZrBPlq9pbnB4k4+JRUU=", "CORREO@GMAIL.COM", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2390), null, "ADMINISTRADOR", "ADMINISTRADOR", "", "ADMINISTRADOR", 1, 1, null });
+                values: new object[] { 1, "SISTEMA", "", true, "1feTCdMwhKKkOSWaM5+yXEI0ZrBPlq9pbnB4k4+JRUU=", "CORREO@GMAIL.COM", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(174), null, "ADMINISTRADOR", "ADMINISTRADOR", "", "ADMINISTRADOR", 1, 1, null });
+
+            migrationBuilder.InsertData(
+                table: "SEG_Acciones",
+                columns: new[] { "Id", "Codigo", "EstadoActivo", "FechaCreado", "FechaModificado", "Nombre", "UsuarioCreadorId", "UsuarioModificadorId" },
+                values: new object[,]
+                {
+                    { 1, "CONSULTAR", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(430), null, "CONSULTAR", 1, null },
+                    { 2, "CREAR", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(433), null, "CREAR", 1, null },
+                    { 3, "MODIFICAR", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(435), null, "MODIFICAR", 1, null },
+                    { 4, "ELIMINAR", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(437), null, "ELIMINAR", 1, null }
+                });
 
             migrationBuilder.InsertData(
                 table: "SEG_Grupos",
                 columns: new[] { "Id", "Codigo", "EstadoActivo", "FechaCreado", "FechaModificado", "Nombre", "UsuarioCreadorId", "UsuarioModificadorId" },
                 values: new object[,]
                 {
-                    { 1, "ADMINISTRADORSISTEMA", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2588), null, "ADMINISTRADOR SISTEMA", 1, null },
-                    { 2, "ADMINISTRADOREMPRESA", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2590), null, "ADMINISTRADOR DE EMPRESA", 1, null },
-                    { 3, "ADMINISTRADORSEDE", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2592), null, "ADMINISTRADOR DE SEDE", 1, null },
-                    { 4, "CONTRARREFERENCIA", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2594), null, "USUARIOS DE CONTRARREFERENCIA", 1, null },
-                    { 5, "REFERENCIA", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2596), null, "USUARIOS DE REFERENCIA", 1, null },
-                    { 6, "REFERENCIAYCONTRARREFERENCIA", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2598), null, "USUARIOS DE REFERENCIA Y CONTRARREFERENCIA", 1, null }
+                    { 1, "ADMINISTRADORSISTEMA", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(383), null, "ADMINISTRADOR SISTEMA", 1, null },
+                    { 2, "ADMINISTRADOREMPRESA", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(386), null, "ADMINISTRADOR DE EMPRESA", 1, null },
+                    { 3, "ADMINISTRADORSEDE", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(389), null, "ADMINISTRADOR DE SEDE", 1, null },
+                    { 4, "CONTRARREFERENCIA", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(391), null, "USUARIOS DE CONTRARREFERENCIA", 1, null },
+                    { 5, "REFERENCIA", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(393), null, "USUARIOS DE REFERENCIA", 1, null },
+                    { 6, "REFERENCIAYCONTRARREFERENCIA", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(396), null, "USUARIOS DE REFERENCIA Y CONTRARREFERENCIA", 1, null }
                 });
 
             migrationBuilder.InsertData(
@@ -268,18 +404,18 @@ namespace SEG.DataAccess.Migrations
                 columns: new[] { "Id", "Codigo", "EstadoActivo", "FechaCreado", "FechaModificado", "Nombre", "UsuarioCreadorId", "UsuarioModificadorId" },
                 values: new object[,]
                 {
-                    { 1, "USUARIOSSEDESGRUPOS", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2642), null, "ASOCIACION DE USUARIOS SEDES GRUPOS", 1, null },
-                    { 2, "CONTRARREFERENCIA", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2645), null, "CONTRARREFERENCIA A PACIENTES", 1, null },
-                    { 3, "MEDICOSSEDES", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2647), null, "MEDICOS POR SEDE", 1, null },
-                    { 4, "REFERENCIA", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2649), null, "REFERENCIA A PACIENTES", 1, null },
-                    { 5, "EMPRESAS", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2652), null, "EMPRESAS", 1, null },
-                    { 6, "SEDES", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2654), null, "SEDES", 1, null },
-                    { 7, "LISTAS", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2656), null, "MAESTRO DE LISTAS", 1, null },
-                    { 8, "DATOSCONSTANTES", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2658), null, "MAESTRO DE DATOS CONSTANTES", 1, null },
-                    { 9, "GRUPOS", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2660), null, "MAESTRO DE GRUPOS", 1, null },
-                    { 10, "PROGRAMAS", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2663), null, "MAESTRO DE PROGRAMAS", 1, null },
-                    { 11, "GRUPOSPROGRAMAS", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2665), null, "MAESTRO DE PROGRAMAS POR GRUPO", 1, null },
-                    { 12, "USUARIOS", true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2669), null, "MAESTRO DE USUARIOS", 1, null }
+                    { 1, "USUARIOSSEDESGRUPOS", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(467), null, "ASOCIACION DE USUARIOS SEDES GRUPOS", 1, null },
+                    { 2, "CONTRARREFERENCIA", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(470), null, "CONTRARREFERENCIA A PACIENTES", 1, null },
+                    { 3, "MEDICOSSEDES", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(472), null, "MEDICOS POR SEDE", 1, null },
+                    { 4, "REFERENCIA", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(474), null, "REFERENCIA A PACIENTES", 1, null },
+                    { 5, "EMPRESAS", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(476), null, "EMPRESAS", 1, null },
+                    { 6, "SEDES", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(479), null, "SEDES", 1, null },
+                    { 7, "LISTAS", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(481), null, "MAESTRO DE LISTAS", 1, null },
+                    { 8, "DATOSCONSTANTES", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(483), null, "MAESTRO DE DATOS CONSTANTES", 1, null },
+                    { 9, "GRUPOS", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(485), null, "MAESTRO DE GRUPOS", 1, null },
+                    { 10, "PROGRAMAS", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(487), null, "MAESTRO DE PROGRAMAS", 1, null },
+                    { 11, "GRUPOSPROGRAMAS", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(489), null, "MAESTRO DE PROGRAMAS POR GRUPO", 1, null },
+                    { 12, "USUARIOS", true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(491), null, "MAESTRO DE USUARIOS", 1, null }
                 });
 
             migrationBuilder.InsertData(
@@ -287,24 +423,40 @@ namespace SEG.DataAccess.Migrations
                 columns: new[] { "Id", "EstadoActivo", "FechaCreado", "FechaModificado", "GrupoId", "ProgramaId", "UsuarioCreadorId", "UsuarioModificadorId" },
                 values: new object[,]
                 {
-                    { 1, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2735), null, 1, 1, 1, null },
-                    { 2, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2737), null, 1, 2, 1, null },
-                    { 3, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2739), null, 1, 3, 1, null },
-                    { 4, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2741), null, 1, 4, 1, null },
-                    { 5, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2743), null, 1, 5, 1, null },
-                    { 6, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2744), null, 1, 6, 1, null },
-                    { 7, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2746), null, 1, 7, 1, null },
-                    { 8, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2865), null, 1, 8, 1, null },
-                    { 9, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2867), null, 1, 9, 1, null },
-                    { 10, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2869), null, 1, 10, 1, null },
-                    { 11, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2871), null, 1, 11, 1, null },
-                    { 12, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2873), null, 1, 12, 1, null }
+                    { 1, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(568), null, 1, 1, 1, null },
+                    { 2, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(570), null, 1, 2, 1, null },
+                    { 3, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(573), null, 1, 3, 1, null },
+                    { 4, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(575), null, 1, 4, 1, null },
+                    { 5, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(577), null, 1, 5, 1, null },
+                    { 6, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(579), null, 1, 6, 1, null },
+                    { 7, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(581), null, 1, 7, 1, null },
+                    { 8, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(583), null, 1, 8, 1, null },
+                    { 9, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(585), null, 1, 9, 1, null },
+                    { 10, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(587), null, 1, 10, 1, null },
+                    { 11, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(589), null, 1, 11, 1, null },
+                    { 12, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(591), null, 1, 12, 1, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "SEG_UsuariosSedesGrupos",
                 columns: new[] { "Id", "EstadoActivo", "FechaCreado", "FechaModificado", "GrupoId", "SedeId", "UsuarioCreadorId", "UsuarioId", "UsuarioModificadorId" },
-                values: new object[] { 1, true, new DateTime(2025, 9, 7, 9, 59, 56, 727, DateTimeKind.Local).AddTicks(2932), null, 1, 1, 1, 1, null });
+                values: new object[] { 1, true, new DateTime(2026, 7, 3, 17, 36, 57, 510, DateTimeKind.Local).AddTicks(627), null, 1, 1, 1, 1, null });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_Acciones_Codigo",
+                table: "SEG_Acciones",
+                column: "Codigo",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_Acciones_UsuarioCreadorId",
+                table: "SEG_Acciones",
+                column: "UsuarioCreadorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_Acciones_UsuarioModificadorId",
+                table: "SEG_Acciones",
+                column: "UsuarioModificadorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SEG_ColaSolicitudes_Estado",
@@ -333,6 +485,27 @@ namespace SEG.DataAccess.Migrations
                 column: "UsuarioModificadorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SEG_GruposPermisos_GrupoId_PermisoId",
+                table: "SEG_GruposPermisos",
+                columns: new[] { "GrupoId", "PermisoId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_GruposPermisos_PermisoId",
+                table: "SEG_GruposPermisos",
+                column: "PermisoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_GruposPermisos_UsuarioCreadorId",
+                table: "SEG_GruposPermisos",
+                column: "UsuarioCreadorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_GruposPermisos_UsuarioModificadorId",
+                table: "SEG_GruposPermisos",
+                column: "UsuarioModificadorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SEG_GruposProgramas_GrupoId_ProgramaId",
                 table: "SEG_GruposProgramas",
                 columns: new[] { "GrupoId", "ProgramaId" },
@@ -351,6 +524,33 @@ namespace SEG.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_SEG_GruposProgramas_UsuarioModificadorId",
                 table: "SEG_GruposProgramas",
+                column: "UsuarioModificadorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_Permisos_AccionId",
+                table: "SEG_Permisos",
+                column: "AccionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_Permisos_Codigo",
+                table: "SEG_Permisos",
+                column: "Codigo",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_Permisos_ProgramaId_AccionId",
+                table: "SEG_Permisos",
+                columns: new[] { "ProgramaId", "AccionId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_Permisos_UsuarioCreadorId",
+                table: "SEG_Permisos",
+                column: "UsuarioCreadorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SEG_Permisos_UsuarioModificadorId",
+                table: "SEG_Permisos",
                 column: "UsuarioModificadorId");
 
             migrationBuilder.CreateIndex(
@@ -426,16 +626,25 @@ namespace SEG.DataAccess.Migrations
                 name: "SEG_ColaSolicitudes");
 
             migrationBuilder.DropTable(
+                name: "SEG_GruposPermisos");
+
+            migrationBuilder.DropTable(
                 name: "SEG_GruposProgramas");
 
             migrationBuilder.DropTable(
                 name: "SEG_UsuariosSedesGrupos");
 
             migrationBuilder.DropTable(
-                name: "SEG_Programas");
+                name: "SEG_Permisos");
 
             migrationBuilder.DropTable(
                 name: "SEG_Grupos");
+
+            migrationBuilder.DropTable(
+                name: "SEG_Acciones");
+
+            migrationBuilder.DropTable(
+                name: "SEG_Programas");
 
             migrationBuilder.DropTable(
                 name: "SEG_Usuarios");

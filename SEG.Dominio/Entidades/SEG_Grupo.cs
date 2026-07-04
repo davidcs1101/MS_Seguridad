@@ -12,6 +12,7 @@ namespace SEG.Dominio.Entidades
         public string Codigo { get; set; } = null!;
         public string Nombre { get; set; } = null!;
         public List<SEG_GrupoPrograma> GruposProgramas { get; set; } = new List<SEG_GrupoPrograma>();
+        public List<SEG_GrupoPermiso> GruposPermisos { get; set; } = new List<SEG_GrupoPermiso>();
         public List<SEG_UsuarioSedeGrupo> UsuariosSedes { get; set; } = new List<SEG_UsuarioSedeGrupo>();
         public SEG_Usuario UsuarioCreador { get; set; } = null!;
         public SEG_Usuario? UsuarioModificador { get; set; }

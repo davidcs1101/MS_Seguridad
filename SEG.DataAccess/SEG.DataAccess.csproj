@@ -19,8 +19,4 @@
     <ProjectReference Include="..\SEG.Dominio\SEG.Dominio.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

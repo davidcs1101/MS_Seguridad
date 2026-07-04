@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using SEG.Dtos;
 using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Api.Seguridad.Middlewares.Permisos;
+using Utilidades.AtributosValidaciones.Seguridad;
 
 namespace SEG.Api.Seguridad.Controllers
 {
     [ApiController]
     [Route("api/grupos")]
-    [Authorize(policy: "GruposPermiso")]
+    [Authorize]
     public class GrupoController : Controller
     {
         private readonly IGrupoServicio _grupoServicio;
@@ -15,13 +17,14 @@ namespace SEG.Api.Seguridad.Controllers
         {
             _grupoServicio = grupoServicio; 
         }
-
+        [Permiso(Permisos.Grupos.CONSULTAR)]
         [HttpGet("obtenerPorId")]
         public async Task<ActionResult<ApiResponse<GrupoDto?>>> ObtenerPorId(int id)
         {
             return await _grupoServicio.ObtenerPorIdAsync(id);
         }
 
+        [Permiso(Permisos.Grupos.CONSULTAR)]
         [HttpGet("obtenerPorCodigo")]
         public async Task<ActionResult<ApiResponse<GrupoDto?>>> ObtenerPorCodigo(string codigo)
         {
@@ -29,13 +32,15 @@ namespace SEG.Api.Seguridad.Controllers
             
         }
 
+        [Permiso(Permisos.Grupos.LISTAR)]
         [HttpGet("listar")]
         public async Task<ActionResult<ApiResponse<List<GrupoDto>?>>> Listar()
         {
             return await _grupoServicio.ListarAsync();
             
         }
-
+        
+        [Permiso(Permisos.Grupos.CREAR)]
         [HttpPost("crear")]
         public async Task<ActionResult<ApiResponse<int>>> Crear(GrupoCreacionRequest grupoCreacionRequest) 
         {
@@ -46,6 +51,7 @@ namespace SEG.Api.Seguridad.Controllers
             
         }
 
+        [Permiso(Permisos.Grupos.MODIFICAR)]
         [HttpPut("modificar")]
         public async Task<ActionResult<ApiResponse<string>>> Modificar(GrupoModificacionRequest grupoModificacionRequest)
         {
@@ -55,6 +61,7 @@ namespace SEG.Api.Seguridad.Controllers
             return await _grupoServicio.ModificarAsync(grupoModificacionRequest);
         }
 
+        [Permiso(Permisos.Grupos.ELIMINAR)]
         [HttpDelete("eliminar")]
         public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id) 
         {

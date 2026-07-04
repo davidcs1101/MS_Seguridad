@@ -1,33 +1,35 @@
+using Hangfire;
+using Hangfire.MySql;
 using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using SEG.Dominio.Repositorio;
-using SEG.DataAccess;
-using SEG.Infraestructura.Aplicacion.ServiciosExternos;
-using SEG.Infraestructura.Dominio.Repositorio;
+using Refit;
+using SEG.Api.Seguridad.Middlewares;
+using SEG.Api.Seguridad.Middlewares.Permisos;
 using SEG.Aplicacion.CasosUso.Implementaciones;
 using SEG.Aplicacion.CasosUso.Interfaces;
-using SEG.Aplicacion.ServiciosExternos;
-using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.Servicios.Implementaciones;
-using SEG.Api.Seguridad.Middlewares;
-using SEG.Dominio.Servicios.Interfaces;
-using SEG.Dominio.Servicios.Implementaciones;
-using Hangfire;
-using Hangfire.MySql;
-using SEG.Dominio.Repositorio.UnidadTrabajo;
-using SEG.Intraestructura.Dominio.Repositorio.UnidadTrabajo;
-using SEG.Intraestructura.Dominio.Repositorio;
-using SEG.Dtos.AppSettings;
-using SEG.Aplicacion.ServiciosExternos.config;
-using SEG.Infraestructura.Aplicacion.ServiciosExternos.Config;
 using SEG.Aplicacion.Servicios.Implementaciones.Cache;
+using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
-using Refit;
+using SEG.Aplicacion.ServiciosExternos;
+using SEG.Aplicacion.ServiciosExternos.config;
+using SEG.DataAccess;
+using SEG.Dominio.Repositorio;
+using SEG.Dominio.Repositorio.UnidadTrabajo;
+using SEG.Dominio.Servicios.Implementaciones;
+using SEG.Dominio.Servicios.Interfaces;
+using SEG.Dtos.AppSettings;
+using SEG.Infraestructura.Aplicacion.ServiciosExternos;
+using SEG.Infraestructura.Aplicacion.ServiciosExternos.Config;
+using SEG.Infraestructura.Dominio.Repositorio;
+using SEG.Intraestructura.Dominio.Repositorio;
+using SEG.Intraestructura.Dominio.Repositorio.UnidadTrabajo;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -121,6 +123,10 @@ builder.Services.AddSingleton<IDatosComunesListasCache, DatosComunesListasCache>
 builder.Services.AddMemoryCache();
 
 
+builder.Services.AddSingleton<IAuthorizationHandler, PermisoManejadorAutorizacion>();
+builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
+
+
 #region REG_Servicios de configuraciones Appsettings
 builder.Services.Configure<TrabajosColasSettings>(builder.Configuration.GetSection("TrabajosColas"));
 builder.Services.AddSingleton<IConfiguracionesTrabajosColas, ConfiguracionesTrabajosColas>();
@@ -160,11 +166,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization(options => options.AddPolicy("UsuariosPermiso",permiso => permiso.RequireClaim("Programa", "USUARIOS")));
-builder.Services.AddAuthorization(options => options.AddPolicy("GruposPermiso",permiso => permiso.RequireClaim("Programa", "GRUPOS")));
-builder.Services.AddAuthorization(options => options.AddPolicy("ProgramasPermiso",permiso => permiso.RequireClaim("Programa", "PROGRAMAS")));
-builder.Services.AddAuthorization(options => options.AddPolicy("GruposProgramasPermiso",permiso => permiso.RequireClaim("Programa", "GRUPOSPROGRAMAS")));
-builder.Services.AddAuthorization(options => options.AddPolicy("UsuarioSedesGruposPermiso",permiso => permiso.RequireClaim("Programa", "USUARIOSSEDESGRUPOS")));
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Permiso", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.Requirements.Add(new PermisoRequirement());
+    });
+});
+
 
 builder.Services.AddDbContext<AppDbContext>
     (opciones => opciones

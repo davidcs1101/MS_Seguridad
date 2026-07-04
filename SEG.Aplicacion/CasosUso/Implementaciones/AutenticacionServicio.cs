@@ -82,25 +82,18 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 new Claim("UsuarioId", usuario.Id.ToString()),
                 new Claim(ClaimTypes.Name, usuario.NombreUsuario)
             };
+            
             if (grupoId.HasValue)
-            {
                 claims.Add(new Claim("GrupoId", grupoId.ToString()));
-                var programas = _grupoRepositorio.ListarProgramasPorGrupo(grupoId.Value)
-                    .Where(gp => gp.EstadoActivo);
-                foreach (var programa in programas)
-                {
-                    claims.Add(new Claim("Programa", programa.Programa.Codigo.ToUpper()));
-                }
-            }
+
             if (sedeId.HasValue)
             {
                 claims.Add(new Claim("SedeId", sedeId.ToString()));
                 tiempoExpiracion = Convert.ToInt32(_configuracionesJwt.ObtenerMinutosDuracionTokenAutenticacionSede());
             }
+
             if (empresaId.HasValue)
-            {
                 claims.Add(new Claim("EmpresaId", empresaId.ToString()));
-            }
             #endregion
 
 
@@ -110,10 +103,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             obligatorio para poder navegar en las opciones controladas por los permisos que aquí se adicionan.
              */
             if (!usuario.CambiarClave)
-            {
                 claims.Add(new Claim("Accion", "CAMBIOCLAVEOK"));
-            }
             #endregion
+
 
             var fechaExpiracion = DateTime.UtcNow.AddMinutes(tiempoExpiracion);
 

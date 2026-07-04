@@ -3,5 +3,6 @@
     public interface IUsuarioContextoServicio
     {
         int ObtenerUsuarioIdToken();
+        int ObtenerGrupoId();
     }
 }
