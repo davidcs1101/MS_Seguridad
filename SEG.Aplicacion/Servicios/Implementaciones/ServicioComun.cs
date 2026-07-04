@@ -25,5 +25,16 @@ namespace SEG.Aplicacion.Servicios.Interfaces
 
             return resultado.Data!;
         }
+
+        public async Task<T> ObtenerRespuestaHttpAsync<T>(
+            Func<Task<HttpResponseMessage>> funcionEjecutar)
+        {
+            var respuesta = await funcionEjecutar();
+            await _respuestaHttpValidador.ValidarRespuesta(respuesta, Utilidades.Textos.Generales.MENSAJE_ERROR_CONSUMO_SERVICIO);
+            var contenidoJson = await respuesta.Content.ReadAsStringAsync();
+            var resultado = _serializadorJsonServicio.Deserializar<ApiResponse<T?>>(contenidoJson);
+
+            return resultado.Data!;
+        }
     }
 }

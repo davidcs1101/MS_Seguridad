@@ -81,9 +81,16 @@ builder.Services.AddScoped<IGrupoRepositorio, GrupoRepositorio>();
 builder.Services.AddScoped<IGrupoServicio, GrupoServicio>();
 builder.Services.AddScoped<IProgramaRepositorio, ProgramaRepositorio>();
 builder.Services.AddScoped<IProgramaServicio, ProgramaServicio>();
+
 builder.Services.AddScoped<IGrupoProgramaRepositorio, GrupoProgramaRepositorio>();
 builder.Services.AddScoped<IGrupoProgramaServicio, GrupoProgramaServicio>();
+
+builder.Services.AddScoped<IGrupoPermisoRepositorio, GrupoPermisoRepositorio>();
+builder.Services.AddScoped<IPermisoRepositorio, PermisoRepositorio>();
+
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
+builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
+
 
 builder.Services.AddSingleton<IApisResponse, ApisResponse>();
 

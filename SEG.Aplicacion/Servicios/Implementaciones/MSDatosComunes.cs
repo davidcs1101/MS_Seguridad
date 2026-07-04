@@ -29,5 +29,12 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
                 funcionEjecutar: _msDatosComunesBackgroundServicio.ListarListasDetallePorCodigoConstanteAsync,
                 request: codigoConstante);
         }
+
+        public async Task<List<ListaDetalleDto?>> ListarListasDetalleAsync()
+        {
+            return await _servicioComun.ObtenerRespuestaHttpAsync<List<ListaDetalleDto?>>(
+                funcionEjecutar: _msDatosComunesBackgroundServicio.ListarListasDetalleAsync);
+        }
+
     }
 }

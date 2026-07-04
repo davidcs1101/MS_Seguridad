@@ -16,6 +16,11 @@ namespace SEG.Dominio.Servicios.Implementaciones
             if (usuario == null)
                 throw new DatoNoEncontradoException(mensaje);
         }
+        public void ValidarDatoActivo(bool estadoActivo, string mensaje)
+        {
+            if (!estadoActivo)
+                throw new DatoInactivoException(mensaje);
+        }
         public void ValidarEmailTieneOtroUsuario(SEG_Usuario? usuarioEmail, int idUsuario, string mensaje)
         {
             if (usuarioEmail != null)

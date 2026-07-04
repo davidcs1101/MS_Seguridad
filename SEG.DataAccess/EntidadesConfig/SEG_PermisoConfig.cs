@@ -10,7 +10,7 @@ namespace SEG.DataAccess.EntidadesConfig
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Codigo)
-                .HasColumnType("varchar(30)")
+                .HasColumnType("varchar(70)")
                 .HasComment("Código único del permiso.");
 
             builder.Property(x => x.Nombre)

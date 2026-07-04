@@ -6,5 +6,6 @@ namespace SEG.Aplicacion.Servicios.Interfaces
     {
         Task<List<ListaDetalleDto?>> ListarListasDetallePorCodigoListaAsync(string codigoLista);
         Task<List<ListaDetalleDto?>> ListarListasDetallePorCodigoConstanteAsync(string codigoConstante);
+        Task<List<ListaDetalleDto?>> ListarListasDetalleAsync();
     }
 }

@@ -14,5 +14,8 @@
         /// <returns>Retorna un tipo que se define dinamicamente en la llamada</returns>
         Task<T> ObtenerRespuestaHttpAsync<TRequest, T>
             (Func<TRequest, Task<HttpResponseMessage>> funcionEjecutar, TRequest request);
+
+        Task<T> ObtenerRespuestaHttpAsync<T>(
+            Func<Task<HttpResponseMessage>> funcionEjecutar);
     }
 }

@@ -16,5 +16,8 @@ namespace SEG.Aplicacion.ServiciosExternos
 
         [Get("/listasDetalles/listarPorCodigoConstante")]
         Task<HttpResponseMessage> ListarListasDetallePorCodigoConstanteAsync([Query] string codigoConstante);
+
+        [Get("/listasDetalles/listar")]
+        Task<HttpResponseMessage> ListarListasDetalleAsync();
     }
 }

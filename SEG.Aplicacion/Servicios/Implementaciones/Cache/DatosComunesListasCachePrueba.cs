@@ -1,0 +1,111 @@
+﻿using SEG.Aplicacion.Servicios.Interfaces;
+using SEG.Aplicacion.Servicios.Interfaces.Cache;
+using SEG.Dtos;
+using Utilidades;
+
+namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
+{
+    public class DatosComunesListasCachePrueba : IDatosComunesListasCachePrueba
+    {
+        private readonly object _lock = new();
+
+        private Dictionary<string, List<ListaDetalleDto>> _listas = new Dictionary<string, List<ListaDetalleDto>>();
+
+        private readonly IMSDatosComunes _msDatosComunes;
+        private readonly IApisResponse _apiResponse;
+
+        public DatosComunesListasCachePrueba(IMSDatosComunes msDatosComunes, IApisResponse apiResponse)
+        {
+            _msDatosComunes = msDatosComunes;
+            _apiResponse = apiResponse;
+        }
+
+        public async Task InicializarAsync()
+        {
+            await InicializarListasAsync();
+        }
+
+        public ApiResponse<string> Actualizar(List<ListaDetalleDto> listasDetalle)
+        {
+            if (!listasDetalle.Any())
+                return _apiResponse.CrearRespuesta(
+                    false,
+                    "La lista está vacía.",
+                    "");
+
+            var codigoLista = listasDetalle.First().CodigoLista;
+
+            lock (_lock)
+            {
+                _listas[codigoLista] = listasDetalle;
+            }
+
+            Logs.EscribirLog("i", $"{Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_ACTUALIZADA}: {codigoLista}");
+
+            return _apiResponse.CrearRespuesta(
+                true,
+                Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_ACTUALIZADA,
+                "");
+        }
+
+        public IReadOnlyList<ListaDetalleDto> ListarPorCodigoLista(string codigoLista)
+        {
+            lock (_lock)
+            {
+                if (_listas.TryGetValue(codigoLista, out var lista))
+                    return lista.AsReadOnly();
+
+                return Array.Empty<ListaDetalleDto>();
+            }
+        }
+
+        public ListaDetalleDto? ObtenerPorCodigoListaYId(string codigoLista, int id)
+        {
+            lock (_lock)
+            {
+                if (_listas.TryGetValue(codigoLista, out var lista))
+                    return lista.FirstOrDefault(x => x.Id == id);
+
+                return null;
+            }
+        }
+
+        public ListaDetalleDto? ObtenerPorCodigoListaYCodigoListaDetalle(string codigoLista, string codigoDetalle)
+        {
+            lock (_lock)
+            {
+                if (_listas.TryGetValue(codigoLista, out var lista))
+                    return lista.FirstOrDefault(x => x.Codigo == codigoDetalle);
+
+                return null;
+            }
+        }
+
+
+
+        private async Task InicializarListasAsync()
+        {
+            lock (_lock)
+            {
+                if (_listas.Count > 0)
+                    return;
+            }
+
+            var listas = await _msDatosComunes.ListarListasDetalleAsync();
+
+            var agrupadas = listas
+                .GroupBy(x => x.CodigoLista!)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.ToList());
+
+            lock (_lock)
+            {
+                if (_listas.Count == 0)
+                    _listas = agrupadas;
+            }
+
+            Logs.EscribirLog("i", Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_INICIALIZADA);
+        }
+    }
+}
