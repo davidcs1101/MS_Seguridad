@@ -8,9 +8,11 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
     public class DatosComunesListasCache : IDatosComunesListasCache
     {
         private readonly object _lock = new();
-        private List<ListaDetalleDto> _listaTiposIdentificacion = new();
+
+        private Dictionary<string, List<ListaDetalleDto>> _listas = new Dictionary<string, List<ListaDetalleDto>>();
+
         private readonly IMSDatosComunes _msDatosComunes;
-        private IApisResponse _apiResponse;
+        private readonly IApisResponse _apiResponse;
 
         public DatosComunesListasCache(IMSDatosComunes msDatosComunes, IApisResponse apiResponse)
         {
@@ -20,81 +22,90 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
 
         public async Task InicializarAsync()
         {
-            await InicializarListasTiposIdentificacionAsync();
+            await InicializarListasAsync();
         }
 
         public ApiResponse<string> Actualizar(List<ListaDetalleDto> listasDetalle)
         {
-            var codigoLista = listasDetalle.FirstOrDefault()?.CodigoLista;
-            switch (codigoLista)
+            if (!listasDetalle.Any())
+                return _apiResponse.CrearRespuesta(
+                    false,
+                    "La lista está vacía.",
+                    "");
+
+            var codigoLista = listasDetalle.First().CodigoLista;
+
+            lock (_lock)
             {
-                case CodigosListas.TIPOSIDENTIFICACION:
-                    lock (_lock)
-                        _listaTiposIdentificacion = listasDetalle.ToList();
-                    break;
+                _listas[codigoLista] = listasDetalle;
             }
 
-            var mensaje = Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_ACTUALIZADA;
-            Logs.EscribirLog("i", $"{mensaje}: {codigoLista}");
-            return _apiResponse.CrearRespuesta(true, mensaje, "");
+            Logs.EscribirLog("i", $"{Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_ACTUALIZADA}: {codigoLista}");
+
+            return _apiResponse.CrearRespuesta(
+                true,
+                Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_ACTUALIZADA,
+                "");
         }
 
         public IReadOnlyList<ListaDetalleDto> ListarPorCodigoLista(string codigoLista)
         {
             lock (_lock)
             {
-                return codigoLista switch
-                {
-                    CodigosListas.TIPOSIDENTIFICACION => _listaTiposIdentificacion.AsReadOnly(),
-                    _ => Array.Empty<ListaDetalleDto>()
-                };
+                if (_listas.TryGetValue(codigoLista, out var lista))
+                    return lista.AsReadOnly();
+
+                return Array.Empty<ListaDetalleDto>();
             }
         }
 
-        public ListaDetalleDto? ObtenerPorCodigoListaYId(string codigoLista,int id)
-        {
-            switch (codigoLista)
-            {
-                case CodigosListas.TIPOSIDENTIFICACION:
-                    lock (_lock)
-                        return _listaTiposIdentificacion.FirstOrDefault(t => t.Id == id);
-                default:
-                    return null;
-            }
-        }
-
-        public ListaDetalleDto? ObtenerPorCodigoListaYCodigoListaDetalle(string codigoLista,string codigoDetalle)
-        {
-            switch (codigoLista) {
-                case CodigosListas.TIPOSIDENTIFICACION:
-                    lock (_lock)
-                        return _listaTiposIdentificacion.FirstOrDefault(t => t.Codigo == codigoDetalle);
-                default:
-                    return null;
-            }
-        }
-
-
-
-        private async Task InicializarListasTiposIdentificacionAsync()
+        public ListaDetalleDto? ObtenerPorCodigoListaYId(string codigoLista, int id)
         {
             lock (_lock)
             {
-                if (_listaTiposIdentificacion.Count > 0)
+                if (_listas.TryGetValue(codigoLista, out var lista))
+                    return lista.FirstOrDefault(x => x.Id == id);
+
+                return null;
+            }
+        }
+
+        public ListaDetalleDto? ObtenerPorCodigoListaYCodigoListaDetalle(string codigoLista, string codigoDetalle)
+        {
+            lock (_lock)
+            {
+                if (_listas.TryGetValue(codigoLista, out var lista))
+                    return lista.FirstOrDefault(x => x.Codigo == codigoDetalle);
+
+                return null;
+            }
+        }
+
+
+
+        private async Task InicializarListasAsync()
+        {
+            lock (_lock)
+            {
+                if (_listas.Count > 0)
                     return;
             }
-            var lista = await ObtenerListasDetallePorCodigoListaAsync(CodigosListas.TIPOSIDENTIFICACION);
+
+            var listas = await _msDatosComunes.ListarListasDetalleAsync();
+
+            var agrupadas = listas
+                .GroupBy(x => x.CodigoLista!)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.ToList());
+
             lock (_lock)
             {
-                if (_listaTiposIdentificacion.Count == 0) // segundo chequeo
-                    _listaTiposIdentificacion = lista;
+                if (_listas.Count == 0)
+                    _listas = agrupadas;
             }
-            Logs.EscribirLog("i", $"{Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_INICIALIZADA}: {CodigosListas.TIPOSIDENTIFICACION}");
-        }
 
-        private async Task<List<ListaDetalleDto?>> ObtenerListasDetallePorCodigoListaAsync(string codigoLista)
-        {
-            return await _msDatosComunes.ListarListasDetallePorCodigoListaAsync(codigoLista);
+            Logs.EscribirLog("i", Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_INICIALIZADA);
         }
     }
 }

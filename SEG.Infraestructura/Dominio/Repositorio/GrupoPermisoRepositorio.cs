@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEG.DataAccess;
 using SEG.Dominio.Entidades;
+using SEG.Dominio.Entidades.ModelosVistas;
 using SEG.Dominio.Repositorio;
 
 namespace SEG.Infraestructura.Dominio.Repositorio
@@ -56,6 +57,24 @@ namespace SEG.Infraestructura.Dominio.Repositorio
                 .Include(gp => gp.Permiso)
                 .Include(p => p.UsuarioCreador)
                 .Include(p => p.UsuarioModificador);
+        }
+
+        public IQueryable<AutorizacionMV> ListarPermisosCache()
+        {
+            return _context.SEG_GruposPermisos
+                .AsNoTracking()
+                .Select(x => new AutorizacionMV
+                {
+                    Id = x.Id,
+                    CodigoPrograma = x.Permiso.Programa.Codigo,
+                    EstadoPrograma = x.Permiso.Programa.EstadoActivo,
+
+                    CodigoGrupo = x.Grupo.Codigo,
+                    EstadoGrupo = x.Grupo.EstadoActivo,
+
+                    CodigoPermiso = x.Permiso.Codigo,
+                    EstadoPermiso = x.Permiso.EstadoActivo
+                });
         }
     }
 }

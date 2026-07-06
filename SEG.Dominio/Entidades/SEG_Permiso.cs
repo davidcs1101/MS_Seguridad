@@ -8,7 +8,7 @@
         public SEG_Accion Accion { get; set; } = null!;
         public int AccionId { get; set; }
         public string Codigo { get; set; } = null!;
-        public string? Nombre { get; set; }
+        public string Nombre { get; set; } = null!;
 
         public List<SEG_GrupoPermiso> GruposPermisos { get; set; } = new();
 

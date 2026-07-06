@@ -8,6 +8,7 @@ using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
+using SEG.Aplicacion.Servicios.Interfaces.Cache;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -18,14 +19,18 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApisResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
+        private readonly IAutorizacionServicio _autorizacionServicio;
+        private readonly ISeguridadPermisosCache _seguridadPermisosCache;
 
-        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApisResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador)
+        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApisResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador, IAutorizacionServicio autorizacionServicio, ISeguridadPermisosCache seguridadPermisosCache)
         {
             _grupoRepositorio = grupoRepositorio;
             _mapper = mapper;
             _usuarioContextoServicio = usuarioContextoServicio;
             _apiResponse = apiResponseServicio;
             _grupoValidador = grupoValidador;
+            _autorizacionServicio = autorizacionServicio;
+            _seguridadPermisosCache = seguridadPermisosCache;
         }
 
         public async Task<ApiResponse<int>> CrearAsync(GrupoCreacionRequest grupoCreacionRequest)

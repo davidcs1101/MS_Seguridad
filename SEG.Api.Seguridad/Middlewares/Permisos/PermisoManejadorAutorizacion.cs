@@ -1,16 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using SEG.Aplicacion.ServiciosExternos;
+using System.Runtime.InteropServices;
 namespace SEG.Api.Seguridad.Middlewares.Permisos
 {
     public class PermisoManejadorAutorizacion : AuthorizationHandler<PermisoRequirement>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ISeguridadPermisosCache _permisosCache;
 
         public PermisoManejadorAutorizacion(
-                 IHttpContextAccessor httpContextAccessor)
+                 IHttpContextAccessor httpContextAccessor, ISeguridadPermisosCache permisosCache)
         {
             _httpContextAccessor = httpContextAccessor;
+            _permisosCache = permisosCache;
         }
 
         protected override async Task HandleRequirementAsync(
@@ -29,19 +33,13 @@ namespace SEG.Api.Seguridad.Middlewares.Permisos
 
             var codigoPermiso = permiso.Permiso;
 
-            // Resolver servicios Scoped de la petición actual
-            var autorizacionServicio = _httpContextAccessor.HttpContext!
-                .RequestServices
-                .GetRequiredService<IAutorizacionServicio>();
-
             var usuarioContextoServicio = _httpContextAccessor.HttpContext!
                 .RequestServices
                 .GetRequiredService<IUsuarioContextoServicio>();
 
-            var grupoId = usuarioContextoServicio.ObtenerGrupoId();
+            var codigoGrupo = usuarioContextoServicio.ObtenerCodigoGrupo();
 
-            var autorizado = await autorizacionServicio
-                .TienePermisoAsync(grupoId, codigoPermiso);
+            var autorizado = _permisosCache.TienePermiso(codigoGrupo, codigoPermiso);
 
             if (autorizado)
                 context.Succeed(requirement);

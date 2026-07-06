@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SEG.Dominio.Entidades;
+using SEG.Dominio.Entidades.ModelosVistas;
 using SEG.Dtos;
 
 namespace SEG.Infraestructura.Mapeos
@@ -25,6 +26,8 @@ namespace SEG.Infraestructura.Mapeos
 
             CreateMap<GrupoProgramaCreacionRequest, SEG_GrupoPrograma>();
             CreateMap<SEG_GrupoPrograma, GrupoProgramaDto>();
+
+            CreateMap<AutorizacionMV, AutorizacionDto>();
         }
     }
 }

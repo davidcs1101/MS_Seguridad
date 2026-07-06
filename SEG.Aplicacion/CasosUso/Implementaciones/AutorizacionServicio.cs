@@ -1,41 +1,45 @@
-﻿using SEG.Aplicacion.CasosUso.Interfaces;
-using SEG.Dominio.Entidades;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Repositorio;
-using SEG.Dominio.Servicios.Implementaciones;
-using SEG.Dominio.Servicios.Interfaces;
-using Utilidades;
+using SEG.Dtos;
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
     public class AutorizacionServicio : IAutorizacionServicio
     {
-        private readonly IGrupoRepositorio _grupoRepositorio;
-        private readonly IPermisoRepositorio _permisoRepositorio;
-        private readonly IEntidadValidador<SEG_Permiso> _permisoValidador;
         private readonly IGrupoPermisoRepositorio _grupoPermisoRepositorio;
-        private readonly IEntidadValidador<SEG_GrupoPermiso> _grupoPermisoValidador;
+        private readonly IApisResponse _apiResponse;
+        private readonly IMapper _mapper;
 
-        public AutorizacionServicio(IGrupoRepositorio grupoRepositorio, IPermisoRepositorio permisoRepositorio, IGrupoPermisoRepositorio grupoPermisoRepositorio, IEntidadValidador<SEG_Permiso> permisoValidador, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador)
+        public AutorizacionServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IApisResponse apiResponse, IMapper mapper)
         {
-            _grupoRepositorio = grupoRepositorio;
-            _permisoRepositorio = permisoRepositorio;
             _grupoPermisoRepositorio = grupoPermisoRepositorio;
-            _permisoValidador = permisoValidador;
-            _grupoPermisoValidador = grupoPermisoValidador;
+            _apiResponse = apiResponse;
+            _mapper = mapper;
         }
 
-        public async Task<bool> TienePermisoAsync(int grupoId, string codigoPermiso)
+        public async Task<ApiResponse<List<AutorizacionDto>?>> ObtenerCatalogoAutorizacionAsync()
         {
-            var permisoExiste = await _permisoRepositorio.ObtenerPorCodigoAsync(codigoPermiso);
-            _permisoValidador.ValidarDatoNoEncontrado(permisoExiste, Textos.Permisos.MENSAJE_PERMISO_NO_EXISTE_CODIGO(codigoPermiso));
-            _permisoValidador.ValidarDatoActivo(permisoExiste!.EstadoActivo, Textos.Permisos.MENSAJE_PERMISO_INACTIVO(codigoPermiso));
+            var autorizaciones = await _grupoPermisoRepositorio
+                .ListarPermisosCache()
+                .ToListAsync();
 
-            var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerGrupoPermisoAsync(grupoId, permisoExiste!.Id);
-            _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
-            //_grupoPermisoValidador.ValidarDatoActivo(grupoPermisoExiste!.EstadoActivo, Textos.Grupos.MENSAJE_GRUPO_INACTIVO);
+            var autorizacionesDto = _mapper.Map<List<AutorizacionDto>>(autorizaciones);
+            return _apiResponse.CrearRespuesta<List<AutorizacionDto>?>(
+                true,
+                "",
+                autorizacionesDto);
+        }
 
-            //return _apiResponse.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
+        public async Task<List<AutorizacionDto>> ListarCatalogoAutorizacionAsync()
+        {
+            var autorizaciones = await _grupoPermisoRepositorio
+                .ListarPermisosCache()
+                .ToListAsync();
 
-            return true;
+            var autorizacionesDto = _mapper.Map<List<AutorizacionDto>>(autorizaciones);
+            return autorizacionesDto;
         }
     }
 }

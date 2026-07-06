@@ -26,11 +26,12 @@ namespace SEG.DataAccess.Semilla
                 new SEG_Accion { Id = 1, Codigo = "CONSULTAR", Nombre = "CONSULTAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Accion { Id = 2, Codigo = "CREAR", Nombre = "CREAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Accion { Id = 3, Codigo = "MODIFICAR", Nombre = "MODIFICAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_Accion { Id = 4, Codigo = "ELIMINAR", Nombre = "ELIMINAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
+                new SEG_Accion { Id = 4, Codigo = "ELIMINAR", Nombre = "ELIMINAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Accion { Id = 5, Codigo = "LISTAR", Nombre = "LISTAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
                 );
 
             builder.Entity<SEG_Programa>().HasData(
-                new SEG_Programa { Id = 1, Codigo = "USUARIOSSEDESGRUPOS", Nombre = "ASOCIACION DE USUARIOS SEDES GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Programa { Id = 1, Codigo = "GRUPOS", Nombre = "MAESTRO DE GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Programa { Id = 2, Codigo = "CONTRARREFERENCIA", Nombre = "CONTRARREFERENCIA A PACIENTES", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Programa { Id = 3, Codigo = "MEDICOSSEDES", Nombre = "MEDICOS POR SEDE", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Programa { Id = 4, Codigo = "REFERENCIA", Nombre = "REFERENCIA A PACIENTES", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
@@ -38,25 +39,41 @@ namespace SEG.DataAccess.Semilla
                 new SEG_Programa { Id = 6, Codigo = "SEDES", Nombre = "SEDES", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Programa { Id = 7, Codigo = "LISTAS", Nombre = "MAESTRO DE LISTAS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Programa { Id = 8, Codigo = "DATOSCONSTANTES", Nombre = "MAESTRO DE DATOS CONSTANTES", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_Programa { Id = 9, Codigo = "GRUPOS", Nombre = "MAESTRO DE GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Programa { Id = 9, Codigo = "USUARIOSSEDESGRUPOS", Nombre = "ASOCIACION DE USUARIOS SEDES GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Programa { Id = 10, Codigo = "PROGRAMAS", Nombre = "MAESTRO DE PROGRAMAS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Programa { Id = 11, Codigo = "GRUPOSPROGRAMAS", Nombre = "MAESTRO DE PROGRAMAS POR GRUPO", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Programa { Id = 12, Codigo = "USUARIOS", Nombre = "MAESTRO DE USUARIOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
                 );
 
-            builder.Entity<SEG_GrupoPrograma>().HasData(
-                new SEG_GrupoPrograma { Id = 1, GrupoId = 1, ProgramaId = 1, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 2, GrupoId = 1, ProgramaId = 2, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 3, GrupoId = 1, ProgramaId = 3, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 4, GrupoId = 1, ProgramaId = 4, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 5, GrupoId = 1, ProgramaId = 5, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 6, GrupoId = 1, ProgramaId = 6, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 7, GrupoId = 1, ProgramaId = 7, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 8, GrupoId = 1, ProgramaId = 8, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 9, GrupoId = 1, ProgramaId = 9, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 10, GrupoId = 1, ProgramaId = 10, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 11, GrupoId = 1, ProgramaId = 11, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPrograma { Id = 12, GrupoId = 1, ProgramaId = 12, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
+            builder.Entity<SEG_Permiso>().HasData(
+                new SEG_Permiso { Id = 1, ProgramaId = 1, AccionId = 1, Codigo = "GRUPO.CONSULTAR", Nombre = "CONSULTAR GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Permiso { Id = 2, ProgramaId = 1, AccionId = 2, Codigo = "GRUPO.CREAR", Nombre = "CREAR GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Permiso { Id = 3, ProgramaId = 1, AccionId = 3, Codigo = "GRUPO.MODIFICAR", Nombre = "MODIFICAR GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Permiso { Id = 4, ProgramaId = 1, AccionId = 4, Codigo = "GRUPO.ELIMINAR", Nombre = "ELIMINAR GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Permiso { Id = 5, ProgramaId = 1, AccionId = 5, Codigo = "GRUPO.LISTAR", Nombre = "LISTAR GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
+                );
+
+            //builder.Entity<SEG_GrupoPrograma>().HasData(
+            //    new SEG_GrupoPrograma { Id = 1, GrupoId = 1, ProgramaId = 1, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 2, GrupoId = 1, ProgramaId = 2, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 3, GrupoId = 1, ProgramaId = 3, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 4, GrupoId = 1, ProgramaId = 4, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 5, GrupoId = 1, ProgramaId = 5, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 6, GrupoId = 1, ProgramaId = 6, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 7, GrupoId = 1, ProgramaId = 7, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 8, GrupoId = 1, ProgramaId = 8, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 9, GrupoId = 1, ProgramaId = 9, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 10, GrupoId = 1, ProgramaId = 10, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 11, GrupoId = 1, ProgramaId = 11, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+            //    new SEG_GrupoPrograma { Id = 12, GrupoId = 1, ProgramaId = 12, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
+            //    );
+
+            builder.Entity<SEG_GrupoPermiso>().HasData(
+                new SEG_GrupoPermiso { Id = 1, GrupoId = 1, PermisoId = 1, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_GrupoPermiso { Id = 2, GrupoId = 1, PermisoId = 2, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_GrupoPermiso { Id = 3, GrupoId = 1, PermisoId = 3, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_GrupoPermiso { Id = 4, GrupoId = 1, PermisoId = 4, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_GrupoPermiso { Id = 5, GrupoId = 1, PermisoId = 5, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
                 );
 
             builder.Entity<SEG_UsuarioSedeGrupo>().HasData(

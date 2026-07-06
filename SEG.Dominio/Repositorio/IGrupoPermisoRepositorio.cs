@@ -1,5 +1,5 @@
 ﻿using SEG.Dominio.Entidades;
-
+using SEG.Dominio.Entidades.ModelosVistas;
 namespace SEG.Dominio.Repositorio
 {
     public interface IGrupoPermisoRepositorio
@@ -11,5 +11,7 @@ namespace SEG.Dominio.Repositorio
         Task<SEG_GrupoPermiso?> ObtenerPorIdAsync(int id);
         IQueryable<SEG_GrupoPermiso> ListarPermisosPorGrupo(int grupoId);
         IQueryable<SEG_GrupoPermiso> Listar();
+
+        IQueryable<AutorizacionMV> ListarPermisosCache();
     }
 }

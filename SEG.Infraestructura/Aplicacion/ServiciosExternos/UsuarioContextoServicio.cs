@@ -25,14 +25,14 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos
             return Convert.ToInt32(usuarioIdClaim);
         }
 
-        public Int32 ObtenerGrupoId()
+        public string ObtenerCodigoGrupo()
         {
-            // Obtener el 'GrupoId' desde el token JWT en el contexto HTTP
-            var grupoIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("GrupoId")?.Value;
-            if (string.IsNullOrEmpty(grupoIdClaim))
-                throw new LoguinException(Textos.Generales.MENSAJE_TOKEN_SIN_GRUPOID);
+            // Obtener el 'CodigoGrupo' desde el token JWT en el contexto HTTP
+            var codigoGrupoClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("CodigoGrupo")?.Value;
+            if (string.IsNullOrEmpty(codigoGrupoClaim))
+                throw new LoguinException(Textos.Generales.MENSAJE_TOKEN_SIN_GRUPO);
 
-            return Convert.ToInt32(grupoIdClaim);
+            return codigoGrupoClaim;
         }
     }
 }

@@ -1,7 +1,10 @@
-﻿namespace SEG.Aplicacion.CasosUso.Interfaces
+﻿using SEG.Dtos;
+
+namespace SEG.Aplicacion.CasosUso.Interfaces
 {
     public interface IAutorizacionServicio
     {
-        Task<bool> TienePermisoAsync(int grupoId, string codigoPermiso);
+        Task<ApiResponse<List<AutorizacionDto>?>> ObtenerCatalogoAutorizacionAsync();
+        Task<List<AutorizacionDto>> ListarCatalogoAutorizacionAsync();
     }
 }

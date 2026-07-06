@@ -19,7 +19,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly IUsuarioSedeGrupoRepositorio _usuarioSedeRepositorio;
-        private readonly IGrupoProgramaRepositorio _grupoRepositorio;
+        private readonly IGrupoRepositorio _grupoRepositorio;
         private readonly IConfiguration _configuracion;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApisResponse _apiResponse;
@@ -28,7 +28,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IConfiguracionesJwt _configuracionesJwt;
         private readonly IMSEmpresas _msEmpresas;
 
-        public AutenticacionServicio(IUsuarioRepositorio usuarioRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeRepositorio, IGrupoProgramaRepositorio grupoRepositorio, IConfiguration configuracion,
+        public AutenticacionServicio(IUsuarioRepositorio usuarioRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeRepositorio, IGrupoRepositorio grupoRepositorio, IConfiguration configuracion,
             IUsuarioContextoServicio usuarioContextoServicio, IApisResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IConfiguracionesJwt configuracionesJwt, IMSEmpresas msEmpresas)
         {
             _usuarioRepositorio = usuarioRepositorio;
@@ -61,12 +61,14 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var usuarioSede = await _usuarioSedeRepositorio.ObtenerUsuarioSedeAsync(usuarioId, sedeId);
             _usuarioSedeGrupoValidador.ValidarDatoNoEncontrado(usuarioSede, Textos.Usuarios.MENSAJE_LOGIN_SEDE_INCORRECTO);
             
-            var token = await GenerarTokenAsync(usuarioSede.Usuario, usuarioSede.GrupoId, usuarioSede.SedeId, sede.EmpresaId);
+            var grupo = await _grupoRepositorio.ObtenerPorIdAsync(usuarioSede.GrupoId);
+
+            var token = await GenerarTokenAsync(usuarioSede.Usuario, grupo!.Codigo, usuarioSede.SedeId, sede.EmpresaId);
             return _apiResponse.CrearRespuesta(true, "", token);
         }
 
         private  async Task<AutenticacionResponse> GenerarTokenAsync(SEG_Usuario usuario, 
-            int? grupoId = null, int? sedeId = null, int? empresaId = null)
+            string? codigoGrupo = null, int? sedeId = null, int? empresaId = null)
         {
             //Datos de configuracon para el Token
             var emisor = _configuracionesJwt.ObtenerEmisor();
@@ -83,8 +85,8 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 new Claim(ClaimTypes.Name, usuario.NombreUsuario)
             };
             
-            if (grupoId.HasValue)
-                claims.Add(new Claim("GrupoId", grupoId.ToString()));
+            if (codigoGrupo != null)
+                claims.Add(new Claim("CodigoGrupo", codigoGrupo));
 
             if (sedeId.HasValue)
             {

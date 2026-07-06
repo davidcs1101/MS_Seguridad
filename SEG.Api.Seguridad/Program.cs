@@ -125,6 +125,7 @@ builder.Services.AddScoped<IMSEnvioCorreos, MSEnvioCorreos>();
 
 //Para cachear datos de otros microservicios
 builder.Services.AddSingleton<IDatosComunesListasCache, DatosComunesListasCache>();
+builder.Services.AddSingleton<ISeguridadPermisosCache, SeguridadPermisosCache>();
 
 //Para cachear tokens de seguridad de acceso de usuarios
 builder.Services.AddMemoryCache();
@@ -255,6 +256,10 @@ RecurringJob.AddOrUpdate<IColaSolicitudServicio>("procesador_solicitudes", x => 
 // Aquí encolas el trabajo al arrancar la app
 BackgroundJob.Enqueue<IDatosComunesListasCache>(x => x.InicializarAsync());
 RecurringJob.AddOrUpdate<IDatosComunesListasCache>("inicializar_listas_identificacion", x => x.InicializarAsync(),
+    configuracionTrabajosColas.ObtenerProcesarColaSolicitudesCron());
+
+BackgroundJob.Enqueue<ISeguridadPermisosCache>(x => x.InicializarAsync());
+RecurringJob.AddOrUpdate<ISeguridadPermisosCache>("inicializar_permisos", x => x.InicializarAsync(),
     configuracionTrabajosColas.ObtenerProcesarColaSolicitudesCron());
 
 
