@@ -12,6 +12,7 @@ using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos.config;
+using Utilidades.Seguridad;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -82,21 +83,21 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             #region REG_Adicionamos Claims específicos del usuario
             var claims = new List<Claim>
             {
-                new Claim("UsuarioId", usuario.Id.ToString()),
+                new Claim(Claims.UsuarioId, usuario.Id.ToString()),
                 new Claim(ClaimTypes.Name, usuario.NombreUsuario)
             };
             
-            if (codigoGrupo != null)
-                claims.Add(new Claim("CodigoGrupo", codigoGrupo));
+            if (!string.IsNullOrWhiteSpace(codigoGrupo))
+                claims.Add(new Claim(Claims.CodigoGrupo, codigoGrupo));
 
             if (sedeId.HasValue)
             {
-                claims.Add(new Claim("SedeId", sedeId.ToString()!));
+                claims.Add(new Claim(Claims.SedeId, sedeId.ToString()!));
                 tiempoExpiracion = Convert.ToInt32(_configuracionesJwt.MinutosDuracionTokenAutenticacionSede);
             }
 
             if (empresaId.HasValue)
-                claims.Add(new Claim("EmpresaId", empresaId.ToString()!));
+                claims.Add(new Claim(Claims.EmpresaId, empresaId.ToString()!));
             #endregion
 
 
@@ -106,7 +107,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             obligatorio para poder navegar en las opciones controladas por los permisos que aquí se adicionan.
              */
             if (!usuario.CambiarClave)
-                claims.Add(new Claim("Accion", "CAMBIOCLAVEOK"));
+                claims.Add(new Claim(Claims.Accion, ValorClaims.CAMBIOCLAVEOK));
             #endregion
 
 

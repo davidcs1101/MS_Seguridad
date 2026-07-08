@@ -1,6 +1,7 @@
 ﻿using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using Utilidades;
+using Utilidades.Seguridad;
 
 namespace SEG.Api.Seguridad.Middlewares
 {
@@ -30,10 +31,10 @@ namespace SEG.Api.Seguridad.Middlewares
                 }
 
                 //Si No contiene SedeId, Es un Token de usuario (Login Inicial)
-                if (!contexto.User.HasClaim(c => c.Type == "SedeId"))
+                if (!contexto.User.HasClaim(c => c.Type == Claims.SedeId))
                 {
                     //Si el usuario no ha realizado su cambio de clave, DENEGAMOS el acceso
-                    if (!contexto.User.HasClaim(c => c.Type == "Accion" && c.Value == "CAMBIOCLAVEOK"))
+                    if (!contexto.User.HasClaim(c => c.Type == Claims.Accion && c.Value == ValorClaims.CAMBIOCLAVEOK))
                     {
                         contexto.Response.ContentType = "application/json";
 

@@ -43,9 +43,6 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var id = await _grupoRepositorio.CrearAsync(grupo);
 
-            // Llamada para actualizar la sincronización de permisos después de crear un grupo
-            await _autorizacionSincronizacion.SincronizarPermisosAsync();
-
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
 
         }

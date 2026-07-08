@@ -1,21 +1,23 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SEG.Aplicacion.Servicios.Implementaciones;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using SEG.Dtos;
+using Utilidades.Seguridad;
 
 namespace SEG.Api.Seguridad.Controllers
 {
     [ApiController]
     [Route("api/cache")]
-    [Authorize]
+    [Authorize(Policy = Politicas.Sistema)]
     public class CacheController : Controller
     {
         private readonly IDatosComunesListasCache _datosComunesListasCache;
+        private readonly ISeguridadPermisosCache _seguridadPermisosCache;
 
-        public CacheController(IDatosComunesListasCache datosComunesListasCache)
+        public CacheController(IDatosComunesListasCache datosComunesListasCache, ISeguridadPermisosCache seguridadPermisosCache)
         {
             _datosComunesListasCache = datosComunesListasCache;
+            _seguridadPermisosCache = seguridadPermisosCache;
         }
 
         [HttpPost("actualizarDatosComunesListas")]
@@ -25,6 +27,13 @@ namespace SEG.Api.Seguridad.Controllers
                 return BadRequest();
 
             return _datosComunesListasCache.Actualizar(listaDetalle);
+        }
+
+        [HttpPost("refrescarPermisos")]
+        public async Task<IActionResult> RefrescarPermisos()
+        {
+            await _seguridadPermisosCache.RefrescarAsync();
+            return Ok();
         }
     }
 }

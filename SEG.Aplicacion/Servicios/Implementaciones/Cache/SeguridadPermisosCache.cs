@@ -3,6 +3,7 @@ using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using SEG.Dtos;
+using System.Runtime.InteropServices;
 using Utilidades;
 
 namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
@@ -28,7 +29,7 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
         public ApiResponse<string> Actualizar(List<AutorizacionDto> autorizaciones)
         {
             var permisos = autorizaciones
-                .Where(x => x.EstadoGrupo && x.EstadoPermiso)
+                .Where(x => x.EstadoPrograma && x.EstadoGrupo && x.EstadoPermiso && x.EstadoGrupoPermiso)
                 .GroupBy(x => x.CodigoGrupo)
                 .ToDictionary(
                     g => g.Key,
@@ -41,14 +42,8 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
                 _permisos = permisos;
             }
 
-            Logs.EscribirLog(
-                "i",
-                "Cache de permisos actualizada.");
-
-            return _apiResponse.CrearRespuesta(
-                true,
-                "Cache de permisos actualizada.",
-                "");
+            Logs.EscribirLog("i","Cache de permisos actualizada.");
+            return _apiResponse.CrearRespuesta(true,"Cache de permisos actualizada.","");
         }
 
         public bool TienePermiso(string codigoGrupo,string codigoPermiso)
@@ -62,6 +57,12 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
             }
         }
 
+        public async Task RefrescarAsync()
+        {
+            await ObtenerListaCatalogosAutorizacionAsync();
+        }
+
+
 
         private async Task InicializarPermisosAsync()
         {
@@ -71,16 +72,17 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
                     return;
             }
 
+            await ObtenerListaCatalogosAutorizacionAsync();
+        }
+        private async Task ObtenerListaCatalogosAutorizacionAsync() 
+        {
             using var scope = _scopeFactory.CreateScope();
             var autorizacionServicio = scope.ServiceProvider.GetRequiredService<IAutorizacionServicio>();
 
             var autorizaciones = await autorizacionServicio.ListarCatalogoAutorizacionAsync();
 
             Actualizar(autorizaciones);
-
-            Logs.EscribirLog(
-                "i",
-                "Cache de permisos inicializada.");
+            Logs.EscribirLog("i","Cache de permisos inicializada.");
         }
 
     }

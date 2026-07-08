@@ -9,5 +9,7 @@
         public bool EstadoGrupo { get; set; }
         public string CodigoPermiso { get; set; } = null!;
         public bool EstadoPermiso { get; set; }
+
+        public bool EstadoGrupoPermiso { get; set; }
     }
 }

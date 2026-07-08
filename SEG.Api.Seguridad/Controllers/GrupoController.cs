@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SEG.Dtos;
 using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Api.Seguridad.Middlewares.Permisos;
-using Utilidades.AtributosValidaciones.Seguridad;
+using Utilidades.Seguridad;
 
 namespace SEG.Api.Seguridad.Controllers
 {
@@ -17,31 +17,32 @@ namespace SEG.Api.Seguridad.Controllers
         {
             _grupoServicio = grupoServicio; 
         }
-        [Permiso(Permisos.Grupos.CONSULTAR)]
+
         [HttpGet("obtenerPorId")]
+        [Permiso(Permisos.Grupos.CONSULTAR)]
         public async Task<ActionResult<ApiResponse<GrupoDto?>>> ObtenerPorId(int id)
         {
             return await _grupoServicio.ObtenerPorIdAsync(id);
         }
 
-        [Permiso(Permisos.Grupos.CONSULTAR)]
         [HttpGet("obtenerPorCodigo")]
+        [Permiso(Permisos.Grupos.CONSULTAR)]
         public async Task<ActionResult<ApiResponse<GrupoDto?>>> ObtenerPorCodigo(string codigo)
         {
             return await _grupoServicio.ObtenerPorCodigoAsync(codigo);
             
         }
 
-        [Permiso(Permisos.Grupos.LISTAR)]
         [HttpGet("listar")]
+        [Permiso(Permisos.Grupos.LISTAR)]
         public async Task<ActionResult<ApiResponse<List<GrupoDto>?>>> Listar()
         {
             return await _grupoServicio.ListarAsync();
             
         }
         
-        [Permiso(Permisos.Grupos.CREAR)]
         [HttpPost("crear")]
+        [Permiso(Permisos.Grupos.CREAR)]
         public async Task<ActionResult<ApiResponse<int>>> Crear(GrupoCreacionRequest grupoCreacionRequest) 
         {
             if (!ModelState.IsValid)
@@ -51,8 +52,8 @@ namespace SEG.Api.Seguridad.Controllers
             
         }
 
-        [Permiso(Permisos.Grupos.MODIFICAR)]
         [HttpPut("modificar")]
+        [Permiso(Permisos.Grupos.MODIFICAR)]
         public async Task<ActionResult<ApiResponse<string>>> Modificar(GrupoModificacionRequest grupoModificacionRequest)
         {
             if (!ModelState.IsValid)
@@ -61,8 +62,8 @@ namespace SEG.Api.Seguridad.Controllers
             return await _grupoServicio.ModificarAsync(grupoModificacionRequest);
         }
 
-        [Permiso(Permisos.Grupos.ELIMINAR)]
         [HttpDelete("eliminar")]
+        [Permiso(Permisos.Grupos.ELIMINAR)]
         public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id) 
         {
             return await _grupoServicio.EliminarAsync(id);

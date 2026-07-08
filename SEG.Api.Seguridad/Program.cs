@@ -30,6 +30,7 @@ using SEG.Infraestructura.Dominio.Repositorio;
 using SEG.Intraestructura.Dominio.Repositorio;
 using SEG.Intraestructura.Dominio.Repositorio.UnidadTrabajo;
 using System.Text;
+using Utilidades.Seguridad;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -176,14 +177,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
+#region REG_Politicas de Autorizacion
+
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Permiso", policy =>
+    //Para política basada en permisos.
+    options.AddPolicy(Politicas.Permiso, policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.Requirements.Add(new PermisoRequirement());
     });
+
+    //Para política basada en el claim "CodigoGrupo" con valor "ADMINISTRADORSISTEMA"
+    options.AddPolicy(Politicas.Sistema, policy =>
+    {
+        policy.RequireClaim(Claims.CodigoGrupo, Grupos.ADMINISTRADORSISTEMA);
+    });
 });
+
+#endregion
 
 
 builder.Services.AddDbContext<AppDbContext>

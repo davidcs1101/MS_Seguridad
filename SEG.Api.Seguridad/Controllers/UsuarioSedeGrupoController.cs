@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using SEG.Dtos;
 using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Api.Seguridad.Middlewares.Permisos;
+using Utilidades.Seguridad;
 
 namespace SEG.Api.Seguridad.Controllers
 {
     [ApiController]
     [Route("api/usuariosSedesGrupos")]
+    [Authorize]
     public class UsuarioSedeGrupoController : Controller
     {
         private readonly IUsuarioSedeGrupoServicio _usuarioSedeGrupoServicio;
@@ -16,14 +19,13 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpGet("listarPorUsuarioIdLogueado")]
-        [Authorize]
         public async Task<ActionResult<ApiResponse<List<UsuarioSedeGrupoDto>?>>> ListarPorUsuarioIdLogueado()
         {
             return await _usuarioSedeGrupoServicio.ListarPorUsuarioIdLogueadoAsync();
         }
 
         [HttpPost("crear")]
-        [Authorize(policy: "UsuarioSedesGruposPermiso")]
+        [Permiso(Permisos.UsuariosSedesGrupos.CREAR)]
         public async Task<ActionResult<ApiResponse<int>>> Crear(UsuarioSedeGrupoCreacionRequest usuarioSedeGrupoCreacionRequest) 
         {
             if (!ModelState.IsValid)
@@ -33,7 +35,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPut("modificar")]
-        [Authorize(policy: "UsuarioSedesGruposPermiso")]
+        [Permiso(Permisos.UsuariosSedesGrupos.MODIFICAR)]
         public async Task<ActionResult<ApiResponse<string>>> Modificar(UsuarioSedeGrupoModificacionRequest usuarioSedeGrupoModificacionRequest)
         {
             if (!ModelState.IsValid)
@@ -43,7 +45,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpDelete("eliminar")]
-        [Authorize(policy: "UsuarioSedesGruposPermiso")]
+        [Permiso(Permisos.UsuariosSedesGrupos.ELIMINAR)]
         public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id) 
         {
             return await _usuarioSedeGrupoServicio.EliminarAsync(id);

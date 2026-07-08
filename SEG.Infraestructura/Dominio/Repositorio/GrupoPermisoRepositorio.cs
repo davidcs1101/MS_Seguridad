@@ -73,7 +73,9 @@ namespace SEG.Infraestructura.Dominio.Repositorio
                     EstadoGrupo = x.Grupo.EstadoActivo,
 
                     CodigoPermiso = x.Permiso.Codigo,
-                    EstadoPermiso = x.Permiso.EstadoActivo
+                    EstadoPermiso = x.Permiso.EstadoActivo,
+
+                    EstadoGrupoPermiso = x.EstadoActivo
                 });
         }
     }

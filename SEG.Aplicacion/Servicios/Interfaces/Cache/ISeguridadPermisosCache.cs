@@ -6,5 +6,6 @@ namespace SEG.Aplicacion.Servicios.Interfaces.Cache
         Task InicializarAsync();
         ApiResponse<string> Actualizar(List<AutorizacionDto> autorizaciones);
         bool TienePermiso(string codigoGrupo, string codigoPermiso);
+        Task RefrescarAsync();
     }
 }
