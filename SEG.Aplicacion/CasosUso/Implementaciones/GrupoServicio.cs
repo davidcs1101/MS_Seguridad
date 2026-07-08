@@ -17,20 +17,18 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IGrupoRepositorio _grupoRepositorio;
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
-        private readonly IApisResponse _apiResponse;
+        private readonly IApiResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
-        private readonly IAutorizacionServicio _autorizacionServicio;
-        private readonly ISeguridadPermisosCache _seguridadPermisosCache;
+        private readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
 
-        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApisResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador, IAutorizacionServicio autorizacionServicio, ISeguridadPermisosCache seguridadPermisosCache)
+        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador, IAutorizacionSincronizacion autorizacionSincronizacion)
         {
             _grupoRepositorio = grupoRepositorio;
             _mapper = mapper;
             _usuarioContextoServicio = usuarioContextoServicio;
             _apiResponse = apiResponseServicio;
             _grupoValidador = grupoValidador;
-            _autorizacionServicio = autorizacionServicio;
-            _seguridadPermisosCache = seguridadPermisosCache;
+            _autorizacionSincronizacion = autorizacionSincronizacion;
         }
 
         public async Task<ApiResponse<int>> CrearAsync(GrupoCreacionRequest grupoCreacionRequest)
@@ -44,6 +42,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             grupo.UsuarioCreadorId = usuarioId;
 
             var id = await _grupoRepositorio.CrearAsync(grupo);
+
+            // Llamada para actualizar la sincronización de permisos después de crear un grupo
+            await _autorizacionSincronizacion.SincronizarPermisosAsync();
 
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
 
@@ -61,6 +62,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             grupoExiste.UsuarioModificadorId = usuarioId;
 
             await _grupoRepositorio.ModificarAsync(grupoExiste);
+
+            // Llamada para actualizar la sincronización de permisos después de crear un grupo
+            await _autorizacionSincronizacion.SincronizarPermisosAsync();
 
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO,"");
         }

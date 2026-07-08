@@ -8,8 +8,8 @@ namespace SEG.Api.Seguridad.Middlewares
     {
         private readonly RequestDelegate _requestDelegate;
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
-        private readonly IApisResponse _apiResponse;
-        public MiddlewareAutorizationPersonalizado(RequestDelegate next, IServiceProvider serviceProvider, ISerializadorJsonServicio serializadorJsonServicio, IApisResponse apiResponse)
+        private readonly IApiResponse _apiResponse;
+        public MiddlewareAutorizationPersonalizado(RequestDelegate next, IServiceProvider serviceProvider, ISerializadorJsonServicio serializadorJsonServicio, IApiResponse apiResponse)
         {
             _requestDelegate = next;
             _serializadorJsonServicio = serializadorJsonServicio;

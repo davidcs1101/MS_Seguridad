@@ -15,7 +15,6 @@ namespace SEG.Intraestructura.Dominio.Repositorio
 
         public void MarcarCrear(SEG_ColaSolicitud colaSolicitud)
         {
-
             _context.SEG_ColaSolicitudes.Add(colaSolicitud);
         }
 
@@ -33,6 +32,13 @@ namespace SEG.Intraestructura.Dominio.Repositorio
         public IQueryable<SEG_ColaSolicitud> Listar()
         {
             return _context.SEG_ColaSolicitudes;
+        }
+
+        public async Task<int> CrearAsync(SEG_ColaSolicitud colaSolicitud)
+        {
+            _context.SEG_ColaSolicitudes.Add(colaSolicitud);
+            await _context.SaveChangesAsync();
+            return colaSolicitud.Id;
         }
     }
 }

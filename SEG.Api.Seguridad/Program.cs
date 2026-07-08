@@ -92,7 +92,7 @@ builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
 
 
-builder.Services.AddSingleton<IApisResponse, ApisResponse>();
+builder.Services.AddSingleton<SEG.Aplicacion.Servicios.Interfaces.IApiResponse, ApisResponse>();
 
 builder.Services.AddScoped<IUsuarioValidador, UsuarioValidador>();
 
@@ -133,14 +133,16 @@ builder.Services.AddMemoryCache();
 
 builder.Services.AddSingleton<IAuthorizationHandler, PermisoManejadorAutorizacion>();
 builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
+builder.Services.AddScoped<IAutorizacionSincronizacion, AutorizacionSincronizacion>();
 
 
 #region REG_Servicios de configuraciones Appsettings
-builder.Services.Configure<TrabajosColasSettings>(builder.Configuration.GetSection("TrabajosColas"));
-builder.Services.AddSingleton<IConfiguracionesTrabajosColas, ConfiguracionesTrabajosColas>();
 
+builder.Services.Configure<TrabajosColasSettings>(builder.Configuration.GetSection("TrabajosColas"));
 builder.Services.Configure<JWTSettings>(builder.Configuration.GetSection("JWT"));
-builder.Services.AddSingleton<IConfiguracionesJwt, ConfiguracionesJwt>();
+builder.Services.Configure<EventosNotificarSettings>(builder.Configuration.GetSection("EventosNotificar"));
+builder.Services.AddSingleton<IAppSettings, AppSettings>();
+
 #endregion
 
 
@@ -247,20 +249,19 @@ var app = builder.Build();
 app.UseHangfireDashboard("/hangfire");
 
 //Configuracion para la tarea Job en segundo plano que rastrea las solicitudes pendientes de procesar.
-var configuracionTrabajosColas = app.Services.GetRequiredService<IConfiguracionesTrabajosColas>();
+var configuracionTrabajosColas = app.Services.GetRequiredService<IAppSettings>().ObtenerTrabajosColasSettings();
 RecurringJob.AddOrUpdate<IColaSolicitudServicio>("procesador_solicitudes", x => x.ProcesarColaSolicitudesAsync(),
-    configuracionTrabajosColas.ObtenerProcesarColaSolicitudesCron());
-
+    configuracionTrabajosColas.ProcesarColaSolicitudesCron);
 
 
 // Aquí encolas el trabajo al arrancar la app
 BackgroundJob.Enqueue<IDatosComunesListasCache>(x => x.InicializarAsync());
 RecurringJob.AddOrUpdate<IDatosComunesListasCache>("inicializar_listas_identificacion", x => x.InicializarAsync(),
-    configuracionTrabajosColas.ObtenerProcesarColaSolicitudesCron());
+    configuracionTrabajosColas.ProcesarColaSolicitudesCron);
 
 BackgroundJob.Enqueue<ISeguridadPermisosCache>(x => x.InicializarAsync());
 RecurringJob.AddOrUpdate<ISeguridadPermisosCache>("inicializar_permisos", x => x.InicializarAsync(),
-    configuracionTrabajosColas.ObtenerProcesarColaSolicitudesCron());
+    configuracionTrabajosColas.ProcesarColaSolicitudesCron);
 
 
 // Configure the HTTP request pipeline.

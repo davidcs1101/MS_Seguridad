@@ -21,7 +21,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IMapper _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IUsuarioValidador _usuarioValidador;
-        private readonly IApisResponse _apiResponse;
+        private readonly IApiResponse _apiResponse;
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
         private readonly IGrupoRepositorio _grupoRepositorio;
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
@@ -35,7 +35,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IProcesadorTransacciones _procesadorTransacciones;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApisResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IDatosComunesListasCache datosComunesListasCache, IEntidadValidador<ListaDetalleDto> listaDetalleDtoValidador, IProcesadorTransacciones procesadorTransacciones)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IDatosComunesListasCache datosComunesListasCache, IEntidadValidador<ListaDetalleDto> listaDetalleDtoValidador, IProcesadorTransacciones procesadorTransacciones)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;
@@ -244,8 +244,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 Tipo = EventosColas.ENVIARCORREO,
                 Payload = _serializadorJsonServicio.Serializar(datoCorreoRequest),
                 Estado = EstadoCola.Pendiente,
-                Intentos = 0,
-                FechaCreado = DateTime.Now
+                Intentos = 0
             };
             _colaSolicitudRepositorio.MarcarCrear(solicitud);
             return solicitud;

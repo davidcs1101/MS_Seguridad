@@ -8,5 +8,6 @@ namespace SEG.Dominio.Repositorio
         void MarcarModificar(SEG_ColaSolicitud colaSolicitud);
         Task<SEG_ColaSolicitud?> ObtenerPorIdAsync(int id);
         IQueryable<SEG_ColaSolicitud> Listar();
+        Task<int> CrearAsync(SEG_ColaSolicitud colaSolicitud);
     }
 }

@@ -22,14 +22,14 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IGrupoRepositorio _grupoRepositorio;
         private readonly IConfiguration _configuracion;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
-        private readonly IApisResponse _apiResponse;
+        private readonly IApiResponse _apiResponse;
         private readonly IUsuarioValidador _usuarioValidador;
         private readonly IEntidadValidador<SEG_UsuarioSedeGrupo> _usuarioSedeGrupoValidador;
-        private readonly IConfiguracionesJwt _configuracionesJwt;
+        private readonly IAppSettings _appsettings;
         private readonly IMSEmpresas _msEmpresas;
 
         public AutenticacionServicio(IUsuarioRepositorio usuarioRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeRepositorio, IGrupoRepositorio grupoRepositorio, IConfiguration configuracion,
-            IUsuarioContextoServicio usuarioContextoServicio, IApisResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IConfiguracionesJwt configuracionesJwt, IMSEmpresas msEmpresas)
+            IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IMSEmpresas msEmpresas, IAppSettings appsettings)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _usuarioSedeRepositorio = usuarioSedeRepositorio;
@@ -39,8 +39,8 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _apiResponse = apiResponseServicio;
             _usuarioValidador = usuarioValidador;
             _usuarioSedeGrupoValidador = usuarioSedeGrupoValidador;
-            _configuracionesJwt = configuracionesJwt;
             _msEmpresas = msEmpresas;
+            _appsettings = appsettings;
         }
 
         public async Task<ApiResponse<AutenticacionResponse>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
@@ -71,10 +71,11 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             string? codigoGrupo = null, int? sedeId = null, int? empresaId = null)
         {
             //Datos de configuracon para el Token
-            var emisor = _configuracionesJwt.ObtenerEmisor();
-            var audienciasDestino = _configuracionesJwt.ObtenerAudienciasDestino();
-            int tiempoExpiracion = _configuracionesJwt.ObtenerMinutosDuracionTokenAutenticacionUsuario();
-            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuracionesJwt.ObtenerLlave()));
+            var _configuracionesJwt = _appsettings.ObtenerJWT();
+            var emisor = _configuracionesJwt.Emisor;
+            var audienciasDestino = _configuracionesJwt.AudienciasDestino;
+            int tiempoExpiracion = _configuracionesJwt.MinutosDuracionTokenAutenticacionUsuario;
+            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuracionesJwt.Llave));
             var credenciales = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
 
 
@@ -90,12 +91,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             if (sedeId.HasValue)
             {
-                claims.Add(new Claim("SedeId", sedeId.ToString()));
-                tiempoExpiracion = Convert.ToInt32(_configuracionesJwt.ObtenerMinutosDuracionTokenAutenticacionSede());
+                claims.Add(new Claim("SedeId", sedeId.ToString()!));
+                tiempoExpiracion = Convert.ToInt32(_configuracionesJwt.MinutosDuracionTokenAutenticacionSede);
             }
 
             if (empresaId.HasValue)
-                claims.Add(new Claim("EmpresaId", empresaId.ToString()));
+                claims.Add(new Claim("EmpresaId", empresaId.ToString()!));
             #endregion
 
 
@@ -113,7 +114,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var tokenSeguridad = new JwtSecurityToken(
                 issuer : emisor,
-                audience: _configuracionesJwt.ObtenerAudienciasDestinoTexto(),
+                audience: _appsettings.ObtenerAudienciasDestinoTexto(),
                 claims: claims,
                 expires: fechaExpiracion,
                 signingCredentials: credenciales);

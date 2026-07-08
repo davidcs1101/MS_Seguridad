@@ -12,9 +12,9 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
         private Dictionary<string, List<ListaDetalleDto>> _listas = new Dictionary<string, List<ListaDetalleDto>>();
 
         private readonly IMSDatosComunes _msDatosComunes;
-        private readonly IApisResponse _apiResponse;
+        private readonly IApiResponse _apiResponse;
 
-        public DatosComunesListasCache(IMSDatosComunes msDatosComunes, IApisResponse apiResponse)
+        public DatosComunesListasCache(IMSDatosComunes msDatosComunes, IApiResponse apiResponse)
         {
             _msDatosComunes = msDatosComunes;
             _apiResponse = apiResponse;

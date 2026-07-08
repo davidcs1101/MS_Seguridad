@@ -19,22 +19,24 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IMSEnvioCorreos _notificadorCorreo;
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IEntidadValidador<SEG_ColaSolicitud> _colaSolicitudValidador;
-        private readonly IConfiguracionesTrabajosColas _configuracionesTrabajosColas;
+        private readonly IAppSettings _appSettings;
 
-        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IMSEnvioCorreos notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IConfiguracionesTrabajosColas configuracionesTrabajosColas)
+        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IMSEnvioCorreos notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings)
         {
             _unidadDeTrabajo = unidadTrabajo;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
             _notificadorCorreo = notificadorCorreo;
             _serializadorJsonServicio = serializadorJsonServicio;
             _colaSolicitudValidador = colaSolicitudValidador;
-            _configuracionesTrabajosColas = configuracionesTrabajosColas;
+            _appSettings = appSettings;
         }
 
         public async Task ProcesarColaSolicitudesAsync()
         {
-            var pendientes = _colaSolicitudRepositorio.Listar().Where(c => c.Estado == EstadoCola.Pendiente).OrderBy(c => c.Id)
-                .Take(_configuracionesTrabajosColas.ObtenerCantidadRegistrosProcesarIteracion()).ToList();
+            var cantidadRegistrosProcesar = _appSettings.ObtenerTrabajosColasSettings().CantidadRegistrosProcesarIteracion;
+            var pendientes = _colaSolicitudRepositorio.Listar().
+                Where(c => c.Estado == EstadoCola.Pendiente).OrderBy(c => c.Id)
+                .Take(cantidadRegistrosProcesar).ToList();
 
             foreach (var solicitud in pendientes)
             {
@@ -45,7 +47,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public async Task ProcesarPorColaSolicitudIdAsync(int id, bool validarEstadoPendiente = false)
         {
             await using var transaccion = await _unidadDeTrabajo.IniciarTransaccionAsync();
-
+            var cantidadIntentos = _appSettings.ObtenerTrabajosColasSettings().CantidadIntentosPorRegistroEnCola;
             var solicitudExiste = await _colaSolicitudRepositorio.ObtenerPorIdAsync(id);
             _colaSolicitudValidador.ValidarDatoNoEncontrado(solicitudExiste, Textos.ColasSolicitudes.MENSAJE_COLASOLICITUD_NO_EXISTE_ID);
 
@@ -78,7 +80,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             catch (Exception ex)
             {
                 solicitudExiste.Intentos++;
-                solicitudExiste.Estado = solicitudExiste.Intentos >= _configuracionesTrabajosColas.ObtenerCantidadIntentosPorRegistroEnCola() ? EstadoCola.Fallido : EstadoCola.Pendiente;
+                solicitudExiste.Estado = solicitudExiste.Intentos >= cantidadIntentos ? EstadoCola.Fallido : EstadoCola.Pendiente;
                 solicitudExiste.ErrorMensaje = ex.Message;
                 Logs.EscribirLog("e", $"{Textos.ColasSolicitudes.MENSAJE_COLASOLICITUD_ERROR_PROCESO} : {solicitudExiste.Id}", ex);
             }

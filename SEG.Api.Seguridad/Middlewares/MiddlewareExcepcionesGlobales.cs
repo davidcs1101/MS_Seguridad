@@ -11,9 +11,9 @@ namespace SEG.Api.Seguridad.Middlewares
     {
         private readonly RequestDelegate _requestDelegate;
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
-        private readonly IApisResponse _apiResponse;
+        private readonly IApiResponse _apiResponse;
 
-        public MiddlewareExcepcionesGlobales(RequestDelegate requestDelegate, ISerializadorJsonServicio serializadorJsonServicio, IApisResponse apiResponse)
+        public MiddlewareExcepcionesGlobales(RequestDelegate requestDelegate, ISerializadorJsonServicio serializadorJsonServicio, IApiResponse apiResponse)
         {
             _requestDelegate = requestDelegate;
             _serializadorJsonServicio = serializadorJsonServicio;

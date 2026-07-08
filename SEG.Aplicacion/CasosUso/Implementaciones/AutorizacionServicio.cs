@@ -9,10 +9,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
     public class AutorizacionServicio : IAutorizacionServicio
     {
         private readonly IGrupoPermisoRepositorio _grupoPermisoRepositorio;
-        private readonly IApisResponse _apiResponse;
+        private readonly IApiResponse _apiResponse;
         private readonly IMapper _mapper;
 
-        public AutorizacionServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IApisResponse apiResponse, IMapper mapper)
+        public AutorizacionServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IApiResponse apiResponse, IMapper mapper)
         {
             _grupoPermisoRepositorio = grupoPermisoRepositorio;
             _apiResponse = apiResponse;

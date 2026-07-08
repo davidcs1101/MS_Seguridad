@@ -22,9 +22,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public readonly IEntidadValidador<SEG_GrupoPermiso> _grupoPermisoValidador;
         public readonly IUsuarioContextoServicio _usuarioContextoServicio;
         public readonly IMapper _mapper;
-        public readonly IApisResponse _apiResponse;
+        public readonly IApiResponse _apiResponse;
 
-        public GrupoPermisoServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IPermisoRepositorio permisoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Permiso> permisoValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApisResponse apiResponseServicio)
+        public GrupoPermisoServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IPermisoRepositorio permisoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Permiso> permisoValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApiResponse apiResponseServicio)
         {
             _grupoPermisoRepositorio = grupoPermisoRepositorio;
             _permisoRepositorio = permisoRepositorio;

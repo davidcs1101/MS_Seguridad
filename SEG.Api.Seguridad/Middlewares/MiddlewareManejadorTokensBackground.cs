@@ -11,14 +11,14 @@ namespace SEG.Api.Seguridad.Middlewares
         private readonly IConfiguration _configuration;
         private readonly IMemoryCache _cache;
         private readonly IAutenticacionServicio _autenticacionServicio;
-        private readonly IConfiguracionesTrabajosColas _configuracionesTrabajosColas;
+        private readonly IAppSettings _appSettings;
 
-        public MiddlewareManejadorTokensBackground(IConfiguration configuration, IMemoryCache cache, IAutenticacionServicio autenticacionServicio, IConfiguracionesTrabajosColas configuracionesTrabajosColas)
+        public MiddlewareManejadorTokensBackground(IConfiguration configuration, IMemoryCache cache, IAutenticacionServicio autenticacionServicio, IAppSettings appSettings)
         {
             _configuration = configuration;
             _cache = cache;
             _autenticacionServicio = autenticacionServicio;
-            _configuracionesTrabajosColas = configuracionesTrabajosColas;
+            _appSettings = appSettings;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -53,10 +53,11 @@ namespace SEG.Api.Seguridad.Middlewares
 
         private async Task<AutenticacionResponse> AutenticarUsuarioAsync()
         {
+            var configTrabajosColas = _appSettings.ObtenerTrabajosColasSettings();
             AutenticacionRequest autenticacionRequest = new AutenticacionRequest()
             {
-                NombreUsuario = _configuracionesTrabajosColas.ObtenerUsuarioIntegracion(),
-                Clave = _configuracionesTrabajosColas.ObtenerClaveIntegracion()
+                NombreUsuario = configTrabajosColas.UsuarioIntegracion,
+                Clave = configTrabajosColas.ClaveIntegracion
             };
             return (await _autenticacionServicio.AutenticarUsuarioAsync(autenticacionRequest)).Data!;
         }

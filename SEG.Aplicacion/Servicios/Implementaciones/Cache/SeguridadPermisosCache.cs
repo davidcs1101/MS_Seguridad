@@ -12,9 +12,9 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
         private readonly object _lock = new();
         private readonly IServiceScopeFactory _scopeFactory;
         private Dictionary<string, HashSet<string>> _permisos = new Dictionary<string, HashSet<string>>();
-        private readonly IApisResponse _apiResponse;
+        private readonly IApiResponse _apiResponse;
 
-        public SeguridadPermisosCache(IApisResponse apiResponse, IServiceScopeFactory scopeFactory)
+        public SeguridadPermisosCache(IApiResponse apiResponse, IServiceScopeFactory scopeFactory)
         {
             _apiResponse = apiResponse;
             _scopeFactory = scopeFactory;
