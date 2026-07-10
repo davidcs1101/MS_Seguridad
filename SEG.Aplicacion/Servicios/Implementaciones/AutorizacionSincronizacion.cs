@@ -37,10 +37,11 @@ namespace SEG.Aplicacion.Servicios.Interfaces
             _permisosCache.Actualizar(permisos);
 
             var urls = _appSettings.ObtenerEventosNotificarActualizarPermisos();
-            var colas = await this.AgregarColaSolicitud(permisos, urls);
+            if (urls.Count > 0)
+                await this.AgregarColaSolicitud(urls!);
         }
 
-        private async Task<List<SEG_ColaSolicitud>> AgregarColaSolicitud(List<AutorizacionDto> permisos, List<string> urls)
+        private async Task<List<SEG_ColaSolicitud>> AgregarColaSolicitud(List<string> urls)
         {
             var colas = new List<SEG_ColaSolicitud>();
             foreach (var url in urls)
@@ -49,7 +50,7 @@ namespace SEG.Aplicacion.Servicios.Interfaces
                 {
                     Tipo = EventosColas.PERMISOSACTUALIZADOS,
                     UrlDestino = url,
-                    Payload = _serializadorJsonServicio.Serializar(permisos),
+                    Payload = "",
                     Estado = EstadoCola.Pendiente,
                     Intentos = 0
                 };

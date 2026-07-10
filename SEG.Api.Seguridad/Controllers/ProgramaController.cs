@@ -32,6 +32,13 @@ namespace SEG.Api.Seguridad.Controllers
             return await _programaServicio.ObtenerPorCodigoAsync(codigo);
         }
 
+        [HttpGet("listar")]
+        [Permiso(Permisos.Programas.LISTAR)]
+        public async Task<ActionResult<ApiResponse<List<ProgramaDto>?>>> Listar()
+        {
+            return await _programaServicio.ListarAsync();
+        }
+
         [HttpPost("crear")]
         [Permiso(Permisos.Programas.CREAR)]
         public async Task<ActionResult<ApiResponse<int>>> Crear(ProgramaCreacionRequest programaCreacionRequest)
@@ -57,13 +64,6 @@ namespace SEG.Api.Seguridad.Controllers
         public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id)
         {
             return await _programaServicio.EliminarAsync(id);
-        }
-
-        [HttpGet("listar")]
-        [Permiso(Permisos.Programas.LISTAR)]
-        public async Task<ActionResult<ApiResponse<List<ProgramaDto>?>>> Listar()
-        {
-            return await _programaServicio.ListarAsync();
         }
     }
 }

@@ -20,8 +20,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IEntidadValidador<SEG_ColaSolicitud> _colaSolicitudValidador;
         private readonly IAppSettings _appSettings;
+        private readonly IPublicadorEventosBackgroundServicio _publicadorEventosBackgroundServicio;
 
-        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IMSEnvioCorreos notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings)
+        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IMSEnvioCorreos notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IPublicadorEventosBackgroundServicio publicadorEventosBackgroundServicio)
         {
             _unidadDeTrabajo = unidadTrabajo;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
@@ -29,6 +30,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _serializadorJsonServicio = serializadorJsonServicio;
             _colaSolicitudValidador = colaSolicitudValidador;
             _appSettings = appSettings;
+            _publicadorEventosBackgroundServicio = publicadorEventosBackgroundServicio;
         }
 
         public async Task ProcesarColaSolicitudesAsync()
@@ -71,6 +73,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 {
                     case EventosColas.ENVIARCORREO:
                         await _notificadorCorreo.EnviarAsync(_serializadorJsonServicio.Deserializar<DatoCorreoRequest>(solicitudExiste.Payload));
+                        break;
+                    case EventosColas.PERMISOSACTUALIZADOS:
+                        await _publicadorEventosBackgroundServicio.PublicarActualizacionPermisos(solicitudExiste.UrlDestino);
                         break;
                 }
 

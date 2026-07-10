@@ -15,6 +15,7 @@ namespace SEG.DataAccess.EntidadesConfig
             builder.Property(x => x.Apellido1).HasColumnType("varchar(25)");
             builder.Property(x => x.Apellido2).HasColumnType("varchar(25)");
             builder.Property(x => x.Email).HasColumnType("varchar(150)");
+            builder.Property(x => x.GrupoDirectoId).HasColumnType("int").HasComment("ID del grupo que tiene directamente el usuario, es decir, no depende de la empresa");
 
             builder.Property(x => x.NombreUsuario).HasColumnType("varchar(60)");
             builder.Property(x => x.Clave).HasColumnType("varchar(50)");

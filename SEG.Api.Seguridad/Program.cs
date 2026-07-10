@@ -256,6 +256,14 @@ builder.Services
         c.DefaultRequestHeaders.Add("Accept", "application/json");
     });
 
+builder.Services
+    .AddHttpClient<IPublicadorEventosBackgroundServicio, PublicadorEventosBackgroundServicio>
+    (cliente =>
+    {
+        cliente.DefaultRequestHeaders.Add("Accept", "application/json");
+    })
+    .AddHttpMessageHandler<MiddlewareManejadorTokensBackground>();
+
 var app = builder.Build();
 
 //Dashboard para ver los jobs en el navegador

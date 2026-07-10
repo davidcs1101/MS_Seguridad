@@ -34,5 +34,11 @@ namespace SEG.Dominio.Servicios.Implementaciones
             if (usuario.Clave != clave)
                 throw new LoguinException(mensaje);
         }
+
+        public void ValidarTieneGrupoDirecto(SEG_Usuario? usuario, string mensaje)
+        {
+            if (usuario == null || usuario!.GrupoDirectoId == null)
+                throw new DatoNoEncontradoException(mensaje);
+        }
     }
 }

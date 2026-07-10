@@ -11,6 +11,7 @@ using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Dominio.Enumeraciones;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
+using Utilidades.Seguridad;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -57,7 +58,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         }
 
 
-        public async Task<ApiResponse<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest) 
+        public async Task<ApiResponse<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest)
         {
             var id = 0;
             var cola = new SEG_ColaSolicitud();
@@ -79,7 +80,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = id, NotificadoPorCorreo = null });
         }
 
-        public async Task<ApiResponse<UsuarioOtrosDatosDto>> RegistrarConSedeAsync(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
+        public async Task<ApiResponse<UsuarioOtrosDatosDto>> CrearConSedeAsync(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
         {
             var id = 0;
             var cola = new SEG_ColaSolicitud();
@@ -94,7 +95,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 _usuarioRepositorio.MarcarCrear(usuario);
                 await _unidadDeTrabajo.GuardarCambiosAsync();
 
-                var grupo = await _grupoRepositorio.ObtenerPorCodigoAsync("ADMINISTRADOREMPRESA");
+                var grupo = await _grupoRepositorio.ObtenerPorCodigoAsync(Grupos.ADMINISTRADOREMPRESA);
                 _grupoValidador.ValidarDatoNoEncontrado(grupo, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_CODIGO);
 
                 var usuarioSedeGrupo = new SEG_UsuarioSedeGrupo()
@@ -230,6 +231,16 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_DOCUMENTO_EXISTE);
 
             var usuario = _mapper.Map<SEG_Usuario>(usuarioCreacionRequest);
+            if (usuarioCreacionRequest is UsuarioConGrupoCreacionRequest usuarioConGrupoCreacionRequest)
+            {
+                if (usuarioConGrupoCreacionRequest.CodigoGrupo is not null)
+                {
+                    var grupoDirecto = await _grupoRepositorio.ObtenerPorCodigoAsync(usuarioConGrupoCreacionRequest.CodigoGrupo);
+                    _grupoValidador.ValidarDatoNoEncontrado(grupoDirecto, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_CODIGO);
+                    usuario.GrupoDirectoId = grupoDirecto!.Id;
+                }
+            }
+
             usuario.TipoIdentificacionId = tipoIdentificacion.Id;
             usuario.Clave = ProcesadorClaves.EncriptarClave(nuevaClave);
             usuario.UsuarioCreadorId = usuarioCreadorId;

@@ -23,8 +23,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public readonly IUsuarioContextoServicio _usuarioContextoServicio;
         public readonly IMapper _mapper;
         public readonly IApiResponse _apiResponse;
+        public readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
 
-        public GrupoPermisoServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IPermisoRepositorio permisoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Permiso> permisoValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApiResponse apiResponseServicio)
+        public GrupoPermisoServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IPermisoRepositorio permisoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Permiso> permisoValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApiResponse apiResponseServicio, IAutorizacionSincronizacion autorizacionSincronizacion)
         {
             _grupoPermisoRepositorio = grupoPermisoRepositorio;
             _permisoRepositorio = permisoRepositorio;
@@ -35,6 +36,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _usuarioContextoServicio = usuarioContextoServicio;
             _mapper = mapper;
             _apiResponse = apiResponseServicio;
+            _autorizacionSincronizacion = autorizacionSincronizacion;
         }
 
         //public async Task<ApiResponse<int>> CrearAsync(GrupoPermisoCreacionRequest grupoPermisoCreacionRequest)

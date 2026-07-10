@@ -19,6 +19,8 @@ namespace SEG.Dominio.Entidades
         public string NombreUsuario { get; set; } = null!;
         public string Clave { get; set; } = null!;
         public bool CambiarClave { get; set;}
+        public SEG_Grupo? Grupo { get; set; }
+        public int? GrupoDirectoId { get; set; }
         public SEG_Usuario UsuarioCreador { get; set; } = null!;
         public SEG_Usuario? UsuarioModificador { get; set; }
         public List<SEG_UsuarioSedeGrupo> UsuariosSedes { get; set; } = new List<SEG_UsuarioSedeGrupo>();

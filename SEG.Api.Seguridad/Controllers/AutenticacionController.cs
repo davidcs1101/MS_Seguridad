@@ -24,6 +24,15 @@ namespace SEG.Api.Seguridad.Controllers
             return await _autenticacionServicio.AutenticarUsuarioAsync(autenticacionRequest);
         }
 
+        [HttpPost("autenticarUsuarioConGrupo")]
+        public async Task<ActionResult<ApiResponse<AutenticacionResponse>>> AutenticarConGrupo(AutenticacionRequest autenticacionRequest)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return await _autenticacionServicio.AutenticarUsuarioConGrupoAsync(autenticacionRequest);
+        }
+
         [HttpPost("autenticarSede")]
         [Authorize]
         public async Task<ActionResult<ApiResponse<AutenticacionResponse>>> Autenticar(int sedeId)

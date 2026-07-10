@@ -28,7 +28,8 @@ namespace SEG.DataAccess.Semilla
                 new SEG_Accion { Id = 3, Codigo = "MODIFICAR", Nombre = "MODIFICAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Accion { Id = 4, Codigo = "ELIMINAR", Nombre = "ELIMINAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Accion { Id = 5, Codigo = "LISTAR", Nombre = "LISTAR", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_Accion { Id = 6, Codigo = "REGISTRARCONSEDE", Nombre = "REGISTRAR CON SEDE", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
+                new SEG_Accion { Id = 6, Codigo = "CREARCONSEDE", Nombre = "CREAR CON SEDE", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Accion { Id = 7, Codigo = "CREARCONGRUPO", Nombre = "CREAR CON GRUPO", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
                 );
 
             builder.Entity<SEG_Programa>().HasData(
@@ -58,13 +59,14 @@ namespace SEG.DataAccess.Semilla
                 new SEG_Permiso { Id = 9, ProgramaId = 10, AccionId = 4, Codigo = "PROGRAMAS.ELIMINAR", Nombre = "ELIMINAR PROGRAMAS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_Permiso { Id = 10, ProgramaId = 10, AccionId = 5, Codigo = "PROGRAMAS.LISTAR", Nombre = "LISTAR PROGRAMAS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
 
-                new SEG_Permiso { Id = 11, ProgramaId = 11, AccionId = 6, Codigo = "USUARIOS.REGISTRARCONSEDE", Nombre = "REGISTRAR USUARIO CON SEDE", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_Permiso { Id = 12, ProgramaId = 11, AccionId = 1, Codigo = "USUARIOS.CONSULTAR", Nombre = "CONSULTAR USUARIOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_Permiso { Id = 13, ProgramaId = 11, AccionId = 5, Codigo = "USUARIOS.LISTAR", Nombre = "LISTAR USUARIOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Permiso { Id = 11, ProgramaId = 11, AccionId = 6, Codigo = "USUARIOS.CREARCONSEDE", Nombre = "CREAR USUARIOS CON SEDE", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Permiso { Id = 12, ProgramaId = 11, AccionId = 7, Codigo = "USUARIOS.CREARCONGRUPO", Nombre = "CREAR USUARIOS CON GRUPO", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Permiso { Id = 13, ProgramaId = 11, AccionId = 1, Codigo = "USUARIOS.CONSULTAR", Nombre = "CONSULTAR USUARIOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Permiso { Id = 14, ProgramaId = 11, AccionId = 5, Codigo = "USUARIOS.LISTAR", Nombre = "LISTAR USUARIOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
 
-                new SEG_Permiso { Id = 14, ProgramaId = 9, AccionId = 2, Codigo = "USUARIOSSEDESGRUPOS.CREAR", Nombre = "CREAR USUARIOS SEDES GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_Permiso { Id = 15, ProgramaId = 9, AccionId = 3, Codigo = "USUARIOSSEDESGRUPOS.MODIFICAR", Nombre = "MODIFICAR USUARIOS SEDES GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_Permiso { Id = 16, ProgramaId = 9, AccionId = 4, Codigo = "USUARIOSSEDESGRUPOS.ELIMINAR", Nombre = "ELIMINAR USUARIOS SEDES GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
+                new SEG_Permiso { Id = 15, ProgramaId = 9, AccionId = 2, Codigo = "USUARIOSSEDESGRUPOS.CREAR", Nombre = "CREAR USUARIOS SEDES GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Permiso { Id = 16, ProgramaId = 9, AccionId = 3, Codigo = "USUARIOSSEDESGRUPOS.MODIFICAR", Nombre = "MODIFICAR USUARIOS SEDES GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_Permiso { Id = 17, ProgramaId = 9, AccionId = 4, Codigo = "USUARIOSSEDESGRUPOS.ELIMINAR", Nombre = "ELIMINAR USUARIOS SEDES GRUPOS", EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
                 );
 
             builder.Entity<SEG_GrupoPermiso>().HasData(
@@ -83,7 +85,8 @@ namespace SEG.DataAccess.Semilla
                 new SEG_GrupoPermiso { Id = 13, GrupoId = 1, PermisoId = 13, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_GrupoPermiso { Id = 14, GrupoId = 1, PermisoId = 14, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
                 new SEG_GrupoPermiso { Id = 15, GrupoId = 1, PermisoId = 15, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
-                new SEG_GrupoPermiso { Id = 16, GrupoId = 1, PermisoId = 16, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
+                new SEG_GrupoPermiso { Id = 16, GrupoId = 1, PermisoId = 16, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now },
+                new SEG_GrupoPermiso { Id = 17, GrupoId = 1, PermisoId = 17, EstadoActivo = true, UsuarioCreadorId = 1, FechaCreado = DateTime.Now }
                 );
 
             builder.Entity<SEG_UsuarioSedeGrupo>().HasData(

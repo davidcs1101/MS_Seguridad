@@ -26,11 +26,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IApiResponse _apiResponse;
         private readonly IUsuarioValidador _usuarioValidador;
         private readonly IEntidadValidador<SEG_UsuarioSedeGrupo> _usuarioSedeGrupoValidador;
+        private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
         private readonly IAppSettings _appsettings;
         private readonly IMSEmpresas _msEmpresas;
 
         public AutenticacionServicio(IUsuarioRepositorio usuarioRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeRepositorio, IGrupoRepositorio grupoRepositorio, IConfiguration configuracion,
-            IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IMSEmpresas msEmpresas, IAppSettings appsettings)
+            IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IMSEmpresas msEmpresas, IAppSettings appsettings, IEntidadValidador<SEG_Grupo> grupoValidador)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _usuarioSedeRepositorio = usuarioSedeRepositorio;
@@ -42,6 +43,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _usuarioSedeGrupoValidador = usuarioSedeGrupoValidador;
             _msEmpresas = msEmpresas;
             _appsettings = appsettings;
+            _grupoValidador = grupoValidador;
         }
 
         public async Task<ApiResponse<AutenticacionResponse>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
@@ -50,6 +52,19 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _usuarioValidador.ValidarLoguin(usuario, ProcesadorClaves.EncriptarClave(autenticacionRequest.Clave), Textos.Usuarios.MENSAJE_LOGIN_INCORRECTO);
          
             var token = await GenerarTokenAsync(usuario);
+            return _apiResponse.CrearRespuesta(true, "", token);
+        }
+
+        public async Task<ApiResponse<AutenticacionResponse>> AutenticarUsuarioConGrupoAsync(AutenticacionRequest autenticacionRequest)
+        {
+            var usuario = await _usuarioRepositorio.ObtenerPorUsuarioAsync(autenticacionRequest.NombreUsuario);
+            _usuarioValidador.ValidarLoguin(usuario, ProcesadorClaves.EncriptarClave(autenticacionRequest.Clave), Textos.Usuarios.MENSAJE_LOGIN_INCORRECTO);
+            _usuarioValidador.ValidarTieneGrupoDirecto(usuario, Textos.Usuarios.MENSAJE_USUARIO_NO_TIENE_GRUPO_DIRECTO);
+            
+            var grupo = await _grupoRepositorio.ObtenerPorIdAsync((int)usuario!.GrupoDirectoId!);
+            _grupoValidador.ValidarDatoNoEncontrado(grupo, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
+
+            var token = await GenerarTokenAsync(usuario, grupo!.Codigo);
             return _apiResponse.CrearRespuesta(true, "", token);
         }
 
@@ -62,7 +77,8 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var usuarioSede = await _usuarioSedeRepositorio.ObtenerUsuarioSedeAsync(usuarioId, sedeId);
             _usuarioSedeGrupoValidador.ValidarDatoNoEncontrado(usuarioSede, Textos.Usuarios.MENSAJE_LOGIN_SEDE_INCORRECTO);
             
-            var grupo = await _grupoRepositorio.ObtenerPorIdAsync(usuarioSede.GrupoId);
+            var grupo = await _grupoRepositorio.ObtenerPorIdAsync(usuarioSede!.GrupoId);
+            _grupoValidador.ValidarDatoNoEncontrado(grupo, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
 
             var token = await GenerarTokenAsync(usuarioSede.Usuario, grupo!.Codigo, usuarioSede.SedeId, sede.EmpresaId);
             return _apiResponse.CrearRespuesta(true, "", token);

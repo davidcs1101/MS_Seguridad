@@ -18,14 +18,16 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Programa> _programaValidador;
+        private readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
 
-        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio)
+        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio, IAutorizacionSincronizacion autorizacionSincronizacion)
         {
             _programaRepositorio = programaRepositorio;
             _mapper = mapper;
             _usuarioContextoServicio = usuarioContextoServicio;
             _programaValidador = programaValidador;
             _apiResponse = apiResponseServicio;
+            _autorizacionSincronizacion = autorizacionSincronizacion;
         }
 
         public async Task<ApiResponse<int>> CrearAsync(ProgramaCreacionRequest programaCreacionRequest)
@@ -55,6 +57,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             programaExiste.UsuarioModificadorId = usuarioId;
 
             await _programaRepositorio.ModificarAsync(programaExiste);
+
+            // Llamada para actualizar la sincronización de permisos después de crear un grupo
+            await _autorizacionSincronizacion.SincronizarPermisosAsync();
 
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }

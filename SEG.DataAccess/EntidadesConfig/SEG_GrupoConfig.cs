@@ -16,6 +16,11 @@ namespace SEG.DataAccess.EntidadesConfig
 
             builder.HasIndex(x => x.Codigo).IsUnique();
 
+            builder.HasMany(x => x.Usuarios)
+                .WithOne(x => x.Grupo)
+                .HasForeignKey(x => x.GrupoDirectoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasOne(x => x.UsuarioCreador)
                 .WithMany()
                 .HasForeignKey(x => x.UsuarioCreadorId)

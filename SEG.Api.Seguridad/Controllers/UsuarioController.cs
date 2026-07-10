@@ -28,14 +28,24 @@ namespace SEG.Api.Seguridad.Controllers
             return await _usuarioServicio.CrearAsync(usuarioCreacionRequest);
         }
 
-        [HttpPost("registrarConSede")]
-        [Permiso(Permisos.Usuarios.REGISTRARCONSEDE)]
-        public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> RegistrarConSede(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
+        [HttpPost("crearConGrupo")]
+        [Permiso(Permisos.Usuarios.CREARCONGRUPO)]
+        public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> CrearConGrupo(UsuarioConGrupoCreacionRequest usuarioConGrupoCreacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return await _usuarioServicio.RegistrarConSedeAsync(usuarioSedeCreacionRequest);
+            return await _usuarioServicio.CrearAsync(usuarioConGrupoCreacionRequest);
+        }
+
+        [HttpPost("crearConSede")]
+        [Permiso(Permisos.Usuarios.CREARCONSEDE)]
+        public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> CrearConSede(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return await _usuarioServicio.CrearConSedeAsync(usuarioSedeCreacionRequest);
         }
 
         [HttpPut("modificarClave")]
