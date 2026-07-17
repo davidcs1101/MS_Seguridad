@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using SEG.Dominio.Entidades;
+﻿using SEG.Dominio.Entidades;
 using SEG.Dtos;
 using Utilidades;
 using SEG.Dominio.Repositorio;
@@ -9,6 +8,7 @@ using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
 using static Utilidades.Textos;
 using Microsoft.EntityFrameworkCore;
+using SEG.Aplicacion.ServiciosExternos.Mapeo;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -21,11 +21,11 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public readonly IEntidadValidador<SEG_Permiso> _permisoValidador;
         public readonly IEntidadValidador<SEG_GrupoPermiso> _grupoPermisoValidador;
         public readonly IUsuarioContextoServicio _usuarioContextoServicio;
-        public readonly IMapper _mapper;
+        public readonly IMapperPerfiles _mapper;
         public readonly IApiResponse _apiResponse;
         public readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
 
-        public GrupoPermisoServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IPermisoRepositorio permisoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Permiso> permisoValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApiResponse apiResponseServicio, IAutorizacionSincronizacion autorizacionSincronizacion)
+        public GrupoPermisoServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IPermisoRepositorio permisoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Permiso> permisoValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapperPerfiles mapper, IApiResponse apiResponseServicio, IAutorizacionSincronizacion autorizacionSincronizacion)
         {
             _grupoPermisoRepositorio = grupoPermisoRepositorio;
             _permisoRepositorio = permisoRepositorio;
@@ -100,7 +100,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public async Task<ApiResponse<List<GrupoPermisoDto>?>> ListarAsync()
         {
             var grupoPermisos = await _grupoPermisoRepositorio.Listar().ToListAsync();
-            var grupoPermisosDto = _mapper.Map<List<GrupoPermisoDto>>(grupoPermisos);
+            var grupoPermisosDto = _mapper.Map(grupoPermisos);
             return _apiResponse.CrearRespuesta<List<GrupoPermisoDto>?>(true, "", grupoPermisosDto);
         }
     }

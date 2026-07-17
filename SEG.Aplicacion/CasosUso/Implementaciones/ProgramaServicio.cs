@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SEG.Dtos;
 using Utilidades;
 using SEG.Dominio.Entidades;
@@ -8,19 +7,20 @@ using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
+using SEG.Aplicacion.ServiciosExternos.Mapeo;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
     public class ProgramaServicio : IProgramaServicio
     {
         private readonly IProgramaRepositorio _programaRepositorio;
-        private readonly IMapper _mapper;
+        private readonly IMapperPerfiles _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Programa> _programaValidador;
         private readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
 
-        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio, IAutorizacionSincronizacion autorizacionSincronizacion)
+        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio, IAutorizacionSincronizacion autorizacionSincronizacion)
         {
             _programaRepositorio = programaRepositorio;
             _mapper = mapper;
@@ -37,7 +37,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-            var programa = _mapper.Map<SEG_Programa>(programaCreacionRequest);
+            var programa = _mapper.Map(programaCreacionRequest);
             programa.UsuarioCreadorId = usuarioId;
 
             var id = await _programaRepositorio.CrearAsync(programa);
@@ -82,7 +82,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var programaExiste = await _programaRepositorio.ObtenerPorIdAsync(id);
             _programaValidador.ValidarDatoNoEncontrado(programaExiste, Textos.Programas.MENSAJE_PROGRAMA_NO_EXISTE_ID);
 
-            var programaDto = _mapper.Map<ProgramaDto>(programaExiste);
+            var programaDto = _mapper.Map(programaExiste!);
 
             return _apiResponse.CrearRespuesta<ProgramaDto?>(true, "", programaDto);
         }
@@ -92,7 +92,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var programaExiste = await _programaRepositorio.ObtenerPorCodigoAsync(codigo);
             _programaValidador.ValidarDatoNoEncontrado(programaExiste, Textos.Programas.MENSAJE_PROGRAMA_NO_EXISTE_CODIGO);
 
-            var programaDto = _mapper.Map<ProgramaDto>(programaExiste);
+            var programaDto = _mapper.Map(programaExiste!);
 
             return _apiResponse.CrearRespuesta<ProgramaDto?>(true, "", programaDto);
         }

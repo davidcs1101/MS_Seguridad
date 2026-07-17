@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using SEG.Dtos;
+﻿using SEG.Dtos;
 using Microsoft.EntityFrameworkCore;
 using SEG.Dominio.Entidades;
 using SEG.Dominio.Repositorio;
@@ -12,6 +11,7 @@ using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Dominio.Enumeraciones;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using Utilidades.Seguridad;
+using SEG.Aplicacion.ServiciosExternos.Mapeo;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -19,7 +19,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly IConstructorMensajesNotificacionCorreo _constructorMensajesNotificacionCorreo;
-        private readonly IMapper _mapper;
+        private readonly IMapperPerfiles _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IUsuarioValidador _usuarioValidador;
         private readonly IApiResponse _apiResponse;
@@ -35,7 +35,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IEntidadValidador<ListaDetalleDto> _listaDetalleDtoValidador;
         private readonly IProcesadorTransacciones _procesadorTransacciones;
 
-        public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio,
+        public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio,
             IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IDatosComunesListasCache datosComunesListasCache, IEntidadValidador<ListaDetalleDto> listaDetalleDtoValidador, IProcesadorTransacciones procesadorTransacciones)
         {
             _usuarioRepositorio = usuarioRepositorio;
@@ -89,7 +89,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 await _msEmpresas.ValidarSedeExisteAsync(usuarioSedeCreacionRequest.SedeId);
 
                 var nuevaClave = ProcesadorClaves.GenerarClaveSegura(20);
-                var usuarioCreacionRequest = _mapper.Map<UsuarioCreacionRequest>(usuarioSedeCreacionRequest);
+                var usuarioCreacionRequest = _mapper.Map(usuarioSedeCreacionRequest);
                 var usuarioCreadorId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
                 var usuario = await this.AsignarDatosAsync(usuarioCreacionRequest, usuarioCreadorId, nuevaClave);
                 _usuarioRepositorio.MarcarCrear(usuario);
@@ -230,7 +230,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             usuarioExiste = await _usuarioRepositorio.ObtenerPorIdentificacionAsync(tipoIdentificacion.Id, usuarioCreacionRequest.Identificacion);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_DOCUMENTO_EXISTE);
 
-            var usuario = _mapper.Map<SEG_Usuario>(usuarioCreacionRequest);
+            var usuario = _mapper.Map(usuarioCreacionRequest);
             if (usuarioCreacionRequest is UsuarioConGrupoCreacionRequest usuarioConGrupoCreacionRequest)
             {
                 if (usuarioConGrupoCreacionRequest.CodigoGrupo is not null)

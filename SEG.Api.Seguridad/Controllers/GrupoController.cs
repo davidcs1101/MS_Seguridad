@@ -19,14 +19,14 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpGet("obtenerPorId")]
-        [Permiso(Permisos.Grupos.CONSULTAR)]
+        [Permiso(CodigosPermisos.Grupos.CONSULTAR)]
         public async Task<ActionResult<ApiResponse<GrupoDto?>>> ObtenerPorId(int id)
         {
             return await _grupoServicio.ObtenerPorIdAsync(id);
         }
 
         [HttpGet("obtenerPorCodigo")]
-        [Permiso(Permisos.Grupos.CONSULTAR)]
+        [Permiso(CodigosPermisos.Grupos.CONSULTAR)]
         public async Task<ActionResult<ApiResponse<GrupoDto?>>> ObtenerPorCodigo(string codigo)
         {
             return await _grupoServicio.ObtenerPorCodigoAsync(codigo);
@@ -34,7 +34,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpGet("listar")]
-        [Permiso(Permisos.Grupos.LISTAR)]
+        [Permiso(CodigosPermisos.Grupos.LISTAR)]
         public async Task<ActionResult<ApiResponse<List<GrupoDto>?>>> Listar()
         {
             return await _grupoServicio.ListarAsync();
@@ -42,7 +42,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
         
         [HttpPost("crear")]
-        [Permiso(Permisos.Grupos.CREAR)]
+        [Permiso(CodigosPermisos.Grupos.CREAR)]
         public async Task<ActionResult<ApiResponse<int>>> Crear(GrupoCreacionRequest grupoCreacionRequest) 
         {
             if (!ModelState.IsValid)
@@ -53,7 +53,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPut("modificar")]
-        [Permiso(Permisos.Grupos.MODIFICAR)]
+        [Permiso(CodigosPermisos.Grupos.MODIFICAR)]
         public async Task<ActionResult<ApiResponse<string>>> Modificar(GrupoModificacionRequest grupoModificacionRequest)
         {
             if (!ModelState.IsValid)
@@ -63,7 +63,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpDelete("eliminar")]
-        [Permiso(Permisos.Grupos.ELIMINAR)]
+        [Permiso(CodigosPermisos.Grupos.ELIMINAR)]
         public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id) 
         {
             return await _grupoServicio.EliminarAsync(id);

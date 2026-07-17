@@ -1,27 +1,27 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Aplicacion.Servicios.Interfaces;
+using SEG.Aplicacion.Servicios.Interfaces.Cache;
+using SEG.Aplicacion.ServiciosExternos;
+using SEG.Aplicacion.ServiciosExternos.Mapeo;
 using SEG.Dominio.Entidades;
+using SEG.Dominio.Repositorio;
+using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dtos;
 using Utilidades;
-using SEG.Dominio.Repositorio;
-using SEG.Aplicacion.CasosUso.Interfaces;
-using SEG.Aplicacion.ServiciosExternos;
-using SEG.Aplicacion.Servicios.Interfaces;
-using SEG.Dominio.Servicios.Interfaces;
-using SEG.Aplicacion.Servicios.Interfaces.Cache;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
     public class GrupoServicio : IGrupoServicio
     {
         private readonly IGrupoRepositorio _grupoRepositorio;
-        private readonly IMapper _mapper;
+        private readonly IMapperPerfiles _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
         private readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
 
-        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador, IAutorizacionSincronizacion autorizacionSincronizacion)
+        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador, IAutorizacionSincronizacion autorizacionSincronizacion)
         {
             _grupoRepositorio = grupoRepositorio;
             _mapper = mapper;
@@ -38,7 +38,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-            var grupo = _mapper.Map<SEG_Grupo>(grupoCreacionRequest);
+            var grupo = _mapper.Map(grupoCreacionRequest);
             grupo.UsuarioCreadorId = usuarioId;
 
             var id = await _grupoRepositorio.CrearAsync(grupo);
@@ -84,7 +84,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(id);
             _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
 
-            var grupoDto = _mapper.Map<GrupoDto>(grupoExiste);
+            var grupoDto = _mapper.Map(grupoExiste!);
 
             return _apiResponse.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
         }
@@ -94,7 +94,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var grupoExiste = await _grupoRepositorio.ObtenerPorCodigoAsync(codigo);
             _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_CODIGO);
 
-            var grupoDto = _mapper.Map<GrupoDto>(grupoExiste);
+            var grupoDto = _mapper.Map(grupoExiste!);
 
             return _apiResponse.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
         }

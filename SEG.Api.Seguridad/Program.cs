@@ -18,6 +18,7 @@ using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.ServiciosExternos.config;
+using SEG.Aplicacion.ServiciosExternos.Mapeo;
 using SEG.DataAccess;
 using SEG.Dominio.Repositorio;
 using SEG.Dominio.Repositorio.UnidadTrabajo;
@@ -27,6 +28,7 @@ using SEG.Dtos.AppSettings;
 using SEG.Infraestructura.Aplicacion.ServiciosExternos;
 using SEG.Infraestructura.Aplicacion.ServiciosExternos.Config;
 using SEG.Infraestructura.Dominio.Repositorio;
+using SEG.Infraestructura.Mapeos;
 using SEG.Intraestructura.Dominio.Repositorio;
 using SEG.Intraestructura.Dominio.Repositorio.UnidadTrabajo;
 using System.Text;
@@ -83,15 +85,18 @@ builder.Services.AddScoped<IGrupoServicio, GrupoServicio>();
 builder.Services.AddScoped<IProgramaRepositorio, ProgramaRepositorio>();
 builder.Services.AddScoped<IProgramaServicio, ProgramaServicio>();
 
+builder.Services.AddScoped<IAccionRepositorio, AccionRepositorio>();
+builder.Services.AddScoped<IAccionServicio, AccionServicio>();
+
 builder.Services.AddScoped<IGrupoProgramaRepositorio, GrupoProgramaRepositorio>();
 builder.Services.AddScoped<IGrupoProgramaServicio, GrupoProgramaServicio>();
 
 builder.Services.AddScoped<IGrupoPermisoRepositorio, GrupoPermisoRepositorio>();
 builder.Services.AddScoped<IPermisoRepositorio, PermisoRepositorio>();
+builder.Services.AddScoped<IPermisoServicio, PermisoServicio>();
 
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
-
 
 builder.Services.AddSingleton<SEG.Aplicacion.Servicios.Interfaces.IApiResponse, ApisResponse>();
 
@@ -147,8 +152,8 @@ builder.Services.AddSingleton<IAppSettings, AppSettings>();
 #endregion
 
 
-//Configuramos AutoMapper para el mapeo de DTOS a las entidades y le decimos que se hará a nivel de Ensamblado
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//Mapperly
+builder.Services.AddSingleton<IMapperPerfiles, MapperPerfiles>();
 
 // Configuración de log4net
 var logRepository = LogManager.GetRepository(System.Reflection.Assembly.GetEntryAssembly());

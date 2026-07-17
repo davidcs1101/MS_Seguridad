@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces;
+using SEG.Aplicacion.ServiciosExternos.Mapeo;
 using SEG.Dominio.Repositorio;
 using SEG.Dtos;
 namespace SEG.Aplicacion.CasosUso.Implementaciones
@@ -10,9 +10,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
     {
         private readonly IGrupoPermisoRepositorio _grupoPermisoRepositorio;
         private readonly IApiResponse _apiResponse;
-        private readonly IMapper _mapper;
+        private readonly IMapperPerfiles _mapper;
 
-        public AutorizacionServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IApiResponse apiResponse, IMapper mapper)
+        public AutorizacionServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IApiResponse apiResponse, IMapperPerfiles mapper)
         {
             _grupoPermisoRepositorio = grupoPermisoRepositorio;
             _apiResponse = apiResponse;
@@ -25,7 +25,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 .ListarPermisosCache()
                 .ToListAsync();
 
-            var autorizacionesDto = _mapper.Map<List<AutorizacionDto>>(autorizaciones);
+            var autorizacionesDto = _mapper.Map(autorizaciones);
             return _apiResponse.CrearRespuesta<List<AutorizacionDto>?>(
                 true,
                 "",
@@ -38,7 +38,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 .ListarPermisosCache()
                 .ToListAsync();
 
-            var autorizacionesDto = _mapper.Map<List<AutorizacionDto>>(autorizaciones);
+            var autorizacionesDto = _mapper.Map(autorizaciones);
             return autorizacionesDto;
         }
     }

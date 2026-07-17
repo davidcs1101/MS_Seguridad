@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SEG.Dtos;
 using Utilidades;
 using SEG.Dominio.Entidades;
@@ -8,6 +7,7 @@ using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
+using SEG.Aplicacion.ServiciosExternos.Mapeo;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -16,14 +16,14 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly IGrupoRepositorio _grupoRepositorio;
         private readonly IUsuarioSedeGrupoRepositorio _usuarioSedeGrupoRepositorio;
-        private readonly IMapper _mapper;
+        private readonly IMapperPerfiles _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IUsuarioValidador _usuarioValidador;
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
         private readonly IEntidadValidador<SEG_UsuarioSedeGrupo> _usuarioSedeGrupoValidador;
         private readonly IApiResponse _apiResponse;
 
-        public UsuarioSedeGrupoServicio(IUsuarioRepositorio usuarioRepositorio, IGrupoRepositorio grupoRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, IMapper mapper, IUsuarioContextoServicio usuarioContextoServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IApiResponse apiResponseServicio)
+        public UsuarioSedeGrupoServicio(IUsuarioRepositorio usuarioRepositorio, IGrupoRepositorio grupoRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IApiResponse apiResponseServicio)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _grupoRepositorio = grupoRepositorio;
@@ -51,7 +51,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-            var usuarioSedeGrupo = _mapper.Map<SEG_UsuarioSedeGrupo>(usuarioSedeGrupoCreacionRequest);
+            var usuarioSedeGrupo = _mapper.Map(usuarioSedeGrupoCreacionRequest);
             usuarioSedeGrupo.UsuarioCreadorId = usuarioId;
 
             var id = await _usuarioSedeGrupoRepositorio.CrearAsync(usuarioSedeGrupo);
@@ -96,7 +96,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var usuarioSedeExiste = await _usuarioSedeGrupoRepositorio.ObtenerUsuarioSedeAsync(usuarioId, sedeId);
             _usuarioSedeGrupoValidador.ValidarDatoNoEncontrado(usuarioSedeExiste, Textos.UsuariosSedesGrupos.MENSAJE_USUARIOSEDEGRUPO_NO_EXISTE_USUARIO_SEDE);
 
-            var usuarioSedeGrupoDto = _mapper.Map<UsuarioSedeGrupoDto>(usuarioSedeExiste);
+            var usuarioSedeGrupoDto = _mapper.Map(usuarioSedeExiste!);
 
             return _apiResponse.CrearRespuesta<UsuarioSedeGrupoDto?>(true, "", usuarioSedeGrupoDto);
         }

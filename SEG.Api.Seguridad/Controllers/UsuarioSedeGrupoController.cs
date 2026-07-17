@@ -25,7 +25,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPost("crear")]
-        [Permiso(Permisos.UsuariosSedesGrupos.CREAR)]
+        [Permiso(CodigosPermisos.UsuariosSedesGrupos.CREAR)]
         public async Task<ActionResult<ApiResponse<int>>> Crear(UsuarioSedeGrupoCreacionRequest usuarioSedeGrupoCreacionRequest) 
         {
             if (!ModelState.IsValid)
@@ -35,7 +35,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPut("modificar")]
-        [Permiso(Permisos.UsuariosSedesGrupos.MODIFICAR)]
+        [Permiso(CodigosPermisos.UsuariosSedesGrupos.MODIFICAR)]
         public async Task<ActionResult<ApiResponse<string>>> Modificar(UsuarioSedeGrupoModificacionRequest usuarioSedeGrupoModificacionRequest)
         {
             if (!ModelState.IsValid)
@@ -45,7 +45,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpDelete("eliminar")]
-        [Permiso(Permisos.UsuariosSedesGrupos.ELIMINAR)]
+        [Permiso(CodigosPermisos.UsuariosSedesGrupos.ELIMINAR)]
         public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id) 
         {
             return await _usuarioSedeGrupoServicio.EliminarAsync(id);

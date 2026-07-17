@@ -28,10 +28,7 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
         public ApiResponse<string> Actualizar(List<ListaDetalleDto> listasDetalle)
         {
             if (!listasDetalle.Any())
-                return _apiResponse.CrearRespuesta(
-                    false,
-                    "La lista está vacía.",
-                    "");
+                return _apiResponse.CrearRespuesta(false,"La lista está vacía.","");
 
             var codigoLista = listasDetalle.First().CodigoLista;
 

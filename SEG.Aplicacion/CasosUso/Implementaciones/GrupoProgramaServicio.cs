@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using SEG.Dominio.Entidades;
+﻿using SEG.Dominio.Entidades;
 using SEG.Dtos;
 using Utilidades;
 using SEG.Dominio.Repositorio;
@@ -8,6 +7,7 @@ using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
 using static Utilidades.Textos;
+using SEG.Aplicacion.ServiciosExternos.Mapeo;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -20,10 +20,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public readonly IEntidadValidador<SEG_Programa> _programaValidador;
         public readonly IEntidadValidador<SEG_GrupoPrograma> _grupoProgramaValidador;
         public readonly IUsuarioContextoServicio _usuarioContextoServicio;
-        public readonly IMapper _mapper;
+        public readonly IMapperPerfiles _mapper;
         public readonly IApiResponse _apiResponse;
 
-        public GrupoProgramaServicio(IGrupoProgramaRepositorio grupoProgramaRepositorio, IProgramaRepositorio programaRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Programa> programaValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPrograma> grupoProgramaValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapper mapper, IApiResponse apiResponseServicio)
+        public GrupoProgramaServicio(IGrupoProgramaRepositorio grupoProgramaRepositorio, IProgramaRepositorio programaRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Programa> programaValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPrograma> grupoProgramaValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapperPerfiles mapper, IApiResponse apiResponseServicio)
         {
             _grupoProgramaRepositorio = grupoProgramaRepositorio;
             _grupoRepositorio = grupoRepositorio;
@@ -49,7 +49,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-            var grupoPrograma = _mapper.Map<SEG_GrupoPrograma>(grupoProgramaCreacionRequest);
+            var grupoPrograma = _mapper.Map(grupoProgramaCreacionRequest);
             grupoPrograma.UsuarioCreadorId = usuarioId;
 
             var id = await _grupoProgramaRepositorio.CrearAsync(grupoPrograma);
@@ -89,7 +89,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             var grupoProgramaExiste = await _grupoProgramaRepositorio.ObtenerGrupoProgramaAsync(grupoId, programaId);
             _grupoProgramaValidador.ValidarDatoNoEncontrado(grupoProgramaExiste, Textos.GruposProgramas.MENSAJE_GRUPOPROGRAMA_NO_EXISTE_GRUPO_PROGRAMA);
 
-            var grupoProgramaDto = _mapper.Map<GrupoProgramaDto>(grupoProgramaExiste);
+            var grupoProgramaDto = _mapper.Map(grupoProgramaExiste!);
 
             return _apiResponse.CrearRespuesta<GrupoProgramaDto?> (true, "", grupoProgramaDto);
         }

@@ -29,7 +29,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPost("crearConGrupo")]
-        [Permiso(Permisos.Usuarios.CREARCONGRUPO)]
+        [Permiso(CodigosPermisos.Usuarios.CREARCONGRUPO)]
         public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> CrearConGrupo(UsuarioConGrupoCreacionRequest usuarioConGrupoCreacionRequest)
         {
             if (!ModelState.IsValid)
@@ -39,7 +39,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPost("crearConSede")]
-        [Permiso(Permisos.Usuarios.CREARCONSEDE)]
+        [Permiso(CodigosPermisos.Usuarios.CREARCONSEDE)]
         public async Task<ActionResult<ApiResponse<UsuarioOtrosDatosDto>>> CrearConSede(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
         {
             if (!ModelState.IsValid)
@@ -74,14 +74,14 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpGet("obtenerNombreUsuarioPorId")]
-        [Permiso(Permisos.Usuarios.CONSULTAR)]
+        [Permiso(CodigosPermisos.Usuarios.CONSULTAR)]
         public async Task<ActionResult<ApiResponse<string>>> ObtenerNombreUsuarioPorIdAsync(int id)
         {
             return await _usuarioServicio.ObtenerNombreUsuarioPorIdAsync(id);
         }
 
         [HttpPost("listar")]
-        [Permiso(Permisos.Usuarios.LISTAR)]
+        [Permiso(CodigosPermisos.Usuarios.LISTAR)]
         public async Task<ActionResult<ApiResponse<List<UsuarioDto>?>>> ListarAsync(IdsListadoDto ids)
         {
             return await _usuarioServicio.ListarAsync(ids);

@@ -19,28 +19,28 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpGet("obtenerPorId")]
-        [Permiso(Permisos.Programas.CONSULTAR)]
+        [Permiso(CodigosPermisos.Programas.CONSULTAR)]
         public async Task<ActionResult<ApiResponse<ProgramaDto?>>> ObtenerPorId(int id)
         {
             return await _programaServicio.ObtenerPorIdAsync(id);
         }
 
         [HttpGet("obtenerPorCodigo")]
-        [Permiso(Permisos.Programas.CONSULTAR)]
+        [Permiso(CodigosPermisos.Programas.CONSULTAR)]
         public async Task<ActionResult<ApiResponse<ProgramaDto?>>> ObtenerPorCodigo(string codigo)
         {
             return await _programaServicio.ObtenerPorCodigoAsync(codigo);
         }
 
         [HttpGet("listar")]
-        [Permiso(Permisos.Programas.LISTAR)]
+        [Permiso(CodigosPermisos.Programas.LISTAR)]
         public async Task<ActionResult<ApiResponse<List<ProgramaDto>?>>> Listar()
         {
             return await _programaServicio.ListarAsync();
         }
 
         [HttpPost("crear")]
-        [Permiso(Permisos.Programas.CREAR)]
+        [Permiso(CodigosPermisos.Programas.CREAR)]
         public async Task<ActionResult<ApiResponse<int>>> Crear(ProgramaCreacionRequest programaCreacionRequest)
         {
             if (!ModelState.IsValid)
@@ -50,7 +50,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPut("modificar")]
-        [Permiso(Permisos.Programas.MODIFICAR)]
+        [Permiso(CodigosPermisos.Programas.MODIFICAR)]
         public async Task<ActionResult<ApiResponse<string>>> Modificar(ProgramaModificacionRequest programaModificacionRequest)
         {
             if (!ModelState.IsValid)
@@ -60,7 +60,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpDelete("eliminar")]
-        [Permiso(Permisos.Programas.ELIMINAR)]
+        [Permiso(CodigosPermisos.Programas.ELIMINAR)]
         public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id)
         {
             return await _programaServicio.EliminarAsync(id);

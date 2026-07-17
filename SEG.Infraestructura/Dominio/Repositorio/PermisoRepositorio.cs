@@ -19,23 +19,18 @@ namespace SEG.Infraestructura.Dominio.Repositorio
             _context = context;
         }
 
-        public async Task<int> CrearAsync(SEG_Permiso permiso)
-        {
-            _context.SEG_Permisos.Add(permiso);
-            await _context.SaveChangesAsync();
-            return permiso.Id;
-        }
-
         public async Task ModificarAsync(SEG_Permiso permiso)
         {
             _context.SEG_Permisos.Update(permiso);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> EliminarAsync(int id)
+        public async Task<SEG_Permiso?> ObtenerPorProgramaIdYAccionIdAsync(int programaId, int accionId)
         {
-            var eliminado = await _context.SEG_Permisos.Where(u => u.Id == id).ExecuteDeleteAsync();
-            return eliminado > 0;
+            return await _context.SEG_Permisos
+                .Include(p => p.Programa)
+                .Include(p => p.Accion)
+                .FirstOrDefaultAsync(p => p.ProgramaId == programaId && p.AccionId == accionId);
         }
 
         public async Task<SEG_Permiso?> ObtenerPorIdAsync(int id)
@@ -48,11 +43,11 @@ namespace SEG.Infraestructura.Dominio.Repositorio
             return await _context.SEG_Permisos.FirstOrDefaultAsync(p => p.Codigo == codigo);
         }
 
-        public IQueryable<SEG_Permiso> ListarPermisosPorPrograma(int programaId)
+        public IQueryable<SEG_Permiso> Listar()
         {
             return _context.SEG_Permisos
-                .Where(p => p.ProgramaId == programaId)
                 .Include(p => p.Programa)
+                .Include(p => p.Accion)
                 .Include(p => p.UsuarioCreador)
                 .Include(p => p.UsuarioModificador);
         }
