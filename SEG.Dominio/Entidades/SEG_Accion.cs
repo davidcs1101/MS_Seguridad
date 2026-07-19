@@ -6,7 +6,6 @@
         public string Codigo { get; set; } = null!;
         public string Nombre { get; set; } = null!;
         public List<SEG_Permiso> Permisos { get; set; } = new();
-        public List<SEG_GrupoPermiso> GruposPermisos { get; set; } = new List<SEG_GrupoPermiso>();
         public SEG_Usuario UsuarioCreador { get; set; } = null!;
         public SEG_Usuario? UsuarioModificador { get; set; }
     }

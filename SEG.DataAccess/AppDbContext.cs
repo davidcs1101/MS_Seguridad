@@ -22,7 +22,6 @@ namespace SEG.DataAccess
         public DbSet<SEG_Usuario> SEG_Usuarios { get; set; }
         public DbSet<SEG_Grupo> SEG_Grupos { get; set; }
         public DbSet<SEG_Programa> SEG_Programas { get; set; }
-        public DbSet<SEG_GrupoPrograma> SEG_GruposProgramas { get; set; }
         public DbSet<SEG_UsuarioSedeGrupo> SEG_UsuariosSedesGrupos { get; set; }
 
         public DbSet<SEG_Accion> SEG_Acciones { get; set; }

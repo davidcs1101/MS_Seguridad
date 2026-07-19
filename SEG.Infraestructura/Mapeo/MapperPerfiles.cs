@@ -28,8 +28,8 @@ namespace SEG.Infraestructura.Mapeos
         public partial void Map(AccionModificacionRequest source, SEG_Accion target);
         public partial AccionDto Map(SEG_Accion source);
 
-        public partial SEG_GrupoPrograma Map(GrupoProgramaCreacionRequest source);
-        public partial GrupoProgramaDto Map(SEG_GrupoPrograma source);
+        public partial SEG_GrupoPermiso Map(GrupoPermisoCreacionRequest source);
+        public partial GrupoPermisoDto Map(SEG_GrupoPermiso source);
 
         public partial List<AutorizacionDto> Map(IEnumerable<AutorizacionMV> source);
         public partial List<GrupoPermisoDto> Map(IEnumerable<SEG_GrupoPermiso> source);

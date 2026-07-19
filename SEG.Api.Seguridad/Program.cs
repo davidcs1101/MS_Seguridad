@@ -88,10 +88,9 @@ builder.Services.AddScoped<IProgramaServicio, ProgramaServicio>();
 builder.Services.AddScoped<IAccionRepositorio, AccionRepositorio>();
 builder.Services.AddScoped<IAccionServicio, AccionServicio>();
 
-builder.Services.AddScoped<IGrupoProgramaRepositorio, GrupoProgramaRepositorio>();
-builder.Services.AddScoped<IGrupoProgramaServicio, GrupoProgramaServicio>();
-
 builder.Services.AddScoped<IGrupoPermisoRepositorio, GrupoPermisoRepositorio>();
+builder.Services.AddScoped<IGrupoPermisoServicio, GrupoPermisoServicio>();
+
 builder.Services.AddScoped<IPermisoRepositorio, PermisoRepositorio>();
 builder.Services.AddScoped<IPermisoServicio, PermisoServicio>();
 

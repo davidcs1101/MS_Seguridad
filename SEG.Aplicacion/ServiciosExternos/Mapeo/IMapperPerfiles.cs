@@ -25,8 +25,8 @@ namespace SEG.Aplicacion.ServiciosExternos.Mapeo
         void Map(AccionModificacionRequest source, SEG_Accion target);
         AccionDto Map(SEG_Accion source);
 
-        SEG_GrupoPrograma Map(GrupoProgramaCreacionRequest source);
-        GrupoProgramaDto Map(SEG_GrupoPrograma source);
+        SEG_GrupoPermiso Map(GrupoPermisoCreacionRequest source);
+        GrupoPermisoDto Map(SEG_GrupoPermiso source);
 
         List<AutorizacionDto> Map(IEnumerable<AutorizacionMV> source);
         List<GrupoPermisoDto> Map(IEnumerable<SEG_GrupoPermiso> source);

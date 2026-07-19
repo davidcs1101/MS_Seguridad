@@ -39,63 +39,75 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _autorizacionSincronizacion = autorizacionSincronizacion;
         }
 
-        //public async Task<ApiResponse<int>> CrearAsync(GrupoPermisoCreacionRequest grupoPermisoCreacionRequest)
-        //{
-        //    var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerGrupoPermisoAsync(grupoPermisoCreacionRequest.GrupoId, grupoPermisoCreacionRequest.PermisoId);
-        //    _grupoPermisoValidador.ValidarDatoYaExiste(grupoPermisoExiste, Textos.GruposProgramas.MENSAJE_GRUPOPROGRAMA_YA_EXISTE);
+        public async Task<ApiResponse<int>> CrearAsync(GrupoPermisoCreacionRequest grupoPermisoCreacionRequest)
+        {
+            var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerGrupoPermisoAsync(grupoPermisoCreacionRequest.GrupoId, grupoPermisoCreacionRequest.PermisoId);
+            _grupoPermisoValidador.ValidarDatoYaExiste(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_YA_EXISTE);
 
-        //    var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(grupoPermisoCreacionRequest.GrupoId);
-        //    _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
+            var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(grupoPermisoCreacionRequest.GrupoId);
+            _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
 
-        //    var permisoExiste = await _permisoRepositorio.ObtenerPorIdAsync(grupoPermisoCreacionRequest.PermisoId);
-        //    _permisoValidador.ValidarDatoNoEncontrado(permisoExiste, Textos.Permisos.MENSAJE_PERMISO_NO_EXISTE_ID);
+            var permisoExiste = await _permisoRepositorio.ObtenerPorIdAsync(grupoPermisoCreacionRequest.PermisoId);
+            _permisoValidador.ValidarDatoNoEncontrado(permisoExiste, Textos.Permisos.MENSAJE_PERMISO_NO_EXISTE_ID);
 
-        //    var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
+            var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-        //    var grupoPrograma = _mapper.Map<SEG_GrupoPrograma>(grupoPermisoCreacionRequest);
-        //    grupoPrograma.UsuarioCreadorId = usuarioId;
+            var grupoPermiso = _mapper.Map(grupoPermisoCreacionRequest);
+            grupoPermiso.UsuarioCreadorId = usuarioId;
 
-        //    var id = await _grupoProgramaRepositorio.CrearAsync(grupoPrograma);
+            var id = await _grupoPermisoRepositorio.CrearAsync(grupoPermiso);
 
-        //    return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
-        //}
+            // Llamada para actualizar la sincronización de permisos
+            await _autorizacionSincronizacion.SincronizarPermisosAsync();
 
-        //public async Task<ApiResponse<string>> ModificarAsync(GrupoProgramaModificacionRequest grupoProgramaModificacionRequest)
-        //{
-        //    var grupoProgramaExiste = await _grupoProgramaRepositorio.ObtenerPorIdAsync(grupoProgramaModificacionRequest.Id);
-        //    _grupoProgramaValidador.ValidarDatoNoEncontrado(grupoProgramaExiste, Textos.GruposProgramas.MENSAJE_GRUPOPROGRAMA_NO_EXISTE_ID);
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
+        }
 
-        //    var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
+        public async Task<ApiResponse<string>> ModificarAsync(GrupoPermisoModificacionRequest grupoPermisoModificacionRequest)
+        {
+            var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerPorIdAsync(grupoPermisoModificacionRequest.Id);
+            _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_NO_EXISTE_ID);
 
-        //    grupoProgramaExiste.EstadoActivo = grupoProgramaModificacionRequest.EstadoActivo;
-        //    grupoProgramaExiste.FechaModificado = DateTime.Now;
-        //    grupoProgramaExiste.UsuarioModificadorId = usuarioId;
+            var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-        //    await _grupoProgramaRepositorio.ModificarAsync(grupoProgramaExiste);
+            grupoPermisoExiste!.EstadoActivo = grupoPermisoModificacionRequest.EstadoActivo;
+            grupoPermisoExiste.FechaModificado = DateTime.UtcNow;
+            grupoPermisoExiste.UsuarioModificadorId = usuarioId;
 
-        //    return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
-        //}
+            await _grupoPermisoRepositorio.ModificarAsync(grupoPermisoExiste);
 
-        //public async Task<ApiResponse<string>> EliminarAsync(int id) { 
-        //    var grupoProgramaExiste = await _grupoProgramaRepositorio.ObtenerPorIdAsync(id);
-        //    _grupoProgramaValidador.ValidarDatoNoEncontrado(grupoProgramaExiste, Textos.GruposProgramas.MENSAJE_GRUPOPROGRAMA_NO_EXISTE_ID);
+            // Llamada para actualizar la sincronización de permisos
+            await _autorizacionSincronizacion.SincronizarPermisosAsync();
 
-        //    var eliminado = await _grupoProgramaRepositorio.EliminarAsync(id);
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
+        }
 
-        //    if (eliminado)
-        //        return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO,"");
+        public async Task<ApiResponse<string>> EliminarAsync(int id)
+        {
+            var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerPorIdAsync(id);
+            _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_NO_EXISTE_ID);
 
-        //    return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
-        //}
+            var eliminado = await _grupoPermisoRepositorio.EliminarAsync(id);
 
-        //public async Task<ApiResponse<GrupoProgramaDto?>> ObtenerGrupoProgramaAsync(int grupoId, int programaId) {
-        //    var grupoProgramaExiste = await _grupoProgramaRepositorio.ObtenerGrupoProgramaAsync(grupoId, programaId);
-        //    _grupoProgramaValidador.ValidarDatoNoEncontrado(grupoProgramaExiste, Textos.GruposProgramas.MENSAJE_GRUPOPROGRAMA_NO_EXISTE_GRUPO_PROGRAMA);
+            if (eliminado)
+            {
+                // Llamada para actualizar la sincronización de permisos
+                await _autorizacionSincronizacion.SincronizarPermisosAsync();
+                return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO, "");
+            }
 
-        //    var grupoProgramaDto = _mapper.Map<GrupoProgramaDto>(grupoProgramaExiste);
+            return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
+        }
 
-        //    return _apiResponse.CrearRespuesta<GrupoProgramaDto?> (true, "", grupoProgramaDto);
-        //}
+        public async Task<ApiResponse<GrupoPermisoDto?>> ObtenerGrupoPermisoAsync(int grupoId, int permisoId)
+        {
+            var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerGrupoPermisoAsync(grupoId, permisoId);
+            _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_NO_EXISTE_GRUPO_PERMISO);
+
+            var grupoPermisoDto = _mapper.Map(grupoPermisoExiste!);
+
+            return _apiResponse.CrearRespuesta<GrupoPermisoDto?>(true, "", grupoPermisoDto);
+        }
 
         public async Task<ApiResponse<List<GrupoPermisoDto>?>> ListarAsync()
         {

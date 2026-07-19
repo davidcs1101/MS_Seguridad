@@ -17,7 +17,6 @@ namespace SEG.Aplicacion.Servicios.Interfaces
         private readonly IAutorizacionServicio _autorizacionServicio;
         private readonly ISeguridadPermisosCache _permisosCache;
         private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
-        private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IAppSettings _appSettings;
 
         public AutorizacionSincronizacion(IAutorizacionServicio autorizacionServicio,
@@ -26,7 +25,6 @@ namespace SEG.Aplicacion.Servicios.Interfaces
             _autorizacionServicio = autorizacionServicio;
             _permisosCache = permisosCache;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
-            _serializadorJsonServicio = serializadorJsonServicio;
             _appSettings = appSettings;
         }
 

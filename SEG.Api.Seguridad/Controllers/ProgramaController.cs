@@ -18,13 +18,6 @@ namespace SEG.Api.Seguridad.Controllers
             _programaServicio = programaServicio; 
         }
 
-        [HttpGet("obtenerPorId")]
-        [Permiso(CodigosPermisos.Programas.CONSULTAR)]
-        public async Task<ActionResult<ApiResponse<ProgramaDto?>>> ObtenerPorId(int id)
-        {
-            return await _programaServicio.ObtenerPorIdAsync(id);
-        }
-
         [HttpGet("obtenerPorCodigo")]
         [Permiso(CodigosPermisos.Programas.CONSULTAR)]
         public async Task<ActionResult<ApiResponse<ProgramaDto?>>> ObtenerPorCodigo(string codigo)
