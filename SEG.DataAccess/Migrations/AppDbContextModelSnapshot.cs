@@ -70,7 +70,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 1,
                             Codigo = "CONSULTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2323),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6468),
                             Nombre = "CONSULTAR",
                             UsuarioCreadorId = 1
                         },
@@ -79,7 +79,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 2,
                             Codigo = "CREAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2326),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6470),
                             Nombre = "CREAR",
                             UsuarioCreadorId = 1
                         },
@@ -88,7 +88,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 3,
                             Codigo = "MODIFICAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2328),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6471),
                             Nombre = "MODIFICAR",
                             UsuarioCreadorId = 1
                         },
@@ -97,7 +97,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 4,
                             Codigo = "ELIMINAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2330),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6473),
                             Nombre = "ELIMINAR",
                             UsuarioCreadorId = 1
                         },
@@ -106,7 +106,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 5,
                             Codigo = "LISTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2332),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6475),
                             Nombre = "LISTAR",
                             UsuarioCreadorId = 1
                         },
@@ -115,7 +115,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 6,
                             Codigo = "CREARCONSEDE",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2333),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6476),
                             Nombre = "CREAR CON SEDE",
                             UsuarioCreadorId = 1
                         },
@@ -124,7 +124,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 7,
                             Codigo = "CREARCONGRUPO",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2336),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6478),
                             Nombre = "CREAR CON GRUPO",
                             UsuarioCreadorId = 1
                         });
@@ -232,7 +232,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 1,
                             Codigo = "ADMINISTRADORSISTEMA",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2239),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6432),
                             Nombre = "ADMINISTRADOR SISTEMA",
                             UsuarioCreadorId = 1
                         },
@@ -241,7 +241,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 2,
                             Codigo = "ADMINISTRADOREMPRESA",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2241),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6434),
                             Nombre = "ADMINISTRADOR DE EMPRESA",
                             UsuarioCreadorId = 1
                         },
@@ -250,7 +250,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 3,
                             Codigo = "ADMINISTRADORSEDE",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2242),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6436),
                             Nombre = "ADMINISTRADOR DE SEDE",
                             UsuarioCreadorId = 1
                         },
@@ -259,7 +259,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 4,
                             Codigo = "CONTRARREFERENCIA",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2244),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6438),
                             Nombre = "USUARIOS DE CONTRARREFERENCIA",
                             UsuarioCreadorId = 1
                         },
@@ -268,7 +268,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 5,
                             Codigo = "REFERENCIA",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2246),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6440),
                             Nombre = "USUARIOS DE REFERENCIA",
                             UsuarioCreadorId = 1
                         },
@@ -277,7 +277,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 6,
                             Codigo = "REFERENCIAYCONTRARREFERENCIA",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2248),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6442),
                             Nombre = "USUARIOS DE REFERENCIA Y CONTRARREFERENCIA",
                             UsuarioCreadorId = 1
                         });
@@ -330,7 +330,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 1,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2525),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6706),
                             GrupoId = 1,
                             PermisoId = 1,
                             UsuarioCreadorId = 1
@@ -339,7 +339,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 2,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2526),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6708),
                             GrupoId = 1,
                             PermisoId = 2,
                             UsuarioCreadorId = 1
@@ -348,7 +348,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 3,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2528),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6709),
                             GrupoId = 1,
                             PermisoId = 3,
                             UsuarioCreadorId = 1
@@ -357,7 +357,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 4,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2529),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6711),
                             GrupoId = 1,
                             PermisoId = 4,
                             UsuarioCreadorId = 1
@@ -366,7 +366,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 5,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2531),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6712),
                             GrupoId = 1,
                             PermisoId = 5,
                             UsuarioCreadorId = 1
@@ -375,7 +375,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 6,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2532),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6714),
                             GrupoId = 1,
                             PermisoId = 6,
                             UsuarioCreadorId = 1
@@ -384,7 +384,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 7,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2533),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6715),
                             GrupoId = 1,
                             PermisoId = 7,
                             UsuarioCreadorId = 1
@@ -393,7 +393,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 8,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2535),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6717),
                             GrupoId = 1,
                             PermisoId = 8,
                             UsuarioCreadorId = 1
@@ -402,7 +402,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 9,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2536),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6718),
                             GrupoId = 1,
                             PermisoId = 9,
                             UsuarioCreadorId = 1
@@ -411,7 +411,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 10,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2538),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6720),
                             GrupoId = 1,
                             PermisoId = 10,
                             UsuarioCreadorId = 1
@@ -420,7 +420,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 11,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2539),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6721),
                             GrupoId = 1,
                             PermisoId = 11,
                             UsuarioCreadorId = 1
@@ -429,7 +429,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 12,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2540),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6788),
                             GrupoId = 1,
                             PermisoId = 12,
                             UsuarioCreadorId = 1
@@ -438,7 +438,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 13,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2542),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6789),
                             GrupoId = 1,
                             PermisoId = 13,
                             UsuarioCreadorId = 1
@@ -447,7 +447,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 14,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2543),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6791),
                             GrupoId = 1,
                             PermisoId = 14,
                             UsuarioCreadorId = 1
@@ -456,7 +456,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 15,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2544),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6792),
                             GrupoId = 1,
                             PermisoId = 15,
                             UsuarioCreadorId = 1
@@ -465,7 +465,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 16,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2546),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6794),
                             GrupoId = 1,
                             PermisoId = 16,
                             UsuarioCreadorId = 1
@@ -474,7 +474,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 17,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2549),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6795),
                             GrupoId = 1,
                             PermisoId = 17,
                             UsuarioCreadorId = 1
@@ -483,7 +483,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 18,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2550),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6797),
                             GrupoId = 1,
                             PermisoId = 18,
                             UsuarioCreadorId = 1
@@ -492,7 +492,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 19,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2552),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6798),
                             GrupoId = 1,
                             PermisoId = 19,
                             UsuarioCreadorId = 1
@@ -501,7 +501,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 20,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2553),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6799),
                             GrupoId = 1,
                             PermisoId = 20,
                             UsuarioCreadorId = 1
@@ -510,7 +510,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 21,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2554),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6801),
                             GrupoId = 1,
                             PermisoId = 21,
                             UsuarioCreadorId = 1
@@ -519,7 +519,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 22,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2556),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6802),
                             GrupoId = 1,
                             PermisoId = 22,
                             UsuarioCreadorId = 1
@@ -528,7 +528,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 23,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2557),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6804),
                             GrupoId = 1,
                             PermisoId = 23,
                             UsuarioCreadorId = 1
@@ -537,7 +537,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 24,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2558),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6805),
                             GrupoId = 1,
                             PermisoId = 24,
                             UsuarioCreadorId = 1
@@ -546,7 +546,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 25,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2559),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6807),
                             GrupoId = 1,
                             PermisoId = 25,
                             UsuarioCreadorId = 1
@@ -555,7 +555,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 26,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2561),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6808),
                             GrupoId = 1,
                             PermisoId = 26,
                             UsuarioCreadorId = 1
@@ -564,7 +564,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 27,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2562),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6810),
                             GrupoId = 1,
                             PermisoId = 27,
                             UsuarioCreadorId = 1
@@ -573,18 +573,9 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 28,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2564),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6811),
                             GrupoId = 1,
                             PermisoId = 28,
-                            UsuarioCreadorId = 1
-                        },
-                        new
-                        {
-                            Id = 29,
-                            EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2566),
-                            GrupoId = 1,
-                            PermisoId = 29,
                             UsuarioCreadorId = 1
                         });
                 });
@@ -651,7 +642,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 1,
                             Codigo = "GRUPOS.CONSULTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2411),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6621),
                             Nombre = "CONSULTAR GRUPOS",
                             ProgramaId = 1,
                             UsuarioCreadorId = 1
@@ -662,7 +653,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 2,
                             Codigo = "GRUPOS.CREAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2414),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6624),
                             Nombre = "CREAR GRUPOS",
                             ProgramaId = 1,
                             UsuarioCreadorId = 1
@@ -673,7 +664,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 3,
                             Codigo = "GRUPOS.MODIFICAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2416),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6626),
                             Nombre = "MODIFICAR GRUPOS",
                             ProgramaId = 1,
                             UsuarioCreadorId = 1
@@ -684,7 +675,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 4,
                             Codigo = "GRUPOS.ELIMINAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2418),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6627),
                             Nombre = "ELIMINAR GRUPOS",
                             ProgramaId = 1,
                             UsuarioCreadorId = 1
@@ -695,7 +686,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 5,
                             Codigo = "GRUPOS.LISTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2420),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6629),
                             Nombre = "LISTAR GRUPOS",
                             ProgramaId = 1,
                             UsuarioCreadorId = 1
@@ -706,7 +697,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 1,
                             Codigo = "PROGRAMAS.CONSULTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2421),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6631),
                             Nombre = "CONSULTAR PROGRAMAS",
                             ProgramaId = 10,
                             UsuarioCreadorId = 1
@@ -717,7 +708,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 2,
                             Codigo = "PROGRAMAS.CREAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2423),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6633),
                             Nombre = "CREAR PROGRAMAS",
                             ProgramaId = 10,
                             UsuarioCreadorId = 1
@@ -728,7 +719,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 3,
                             Codigo = "PROGRAMAS.MODIFICAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2425),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6635),
                             Nombre = "MODIFICAR PROGRAMAS",
                             ProgramaId = 10,
                             UsuarioCreadorId = 1
@@ -739,7 +730,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 4,
                             Codigo = "PROGRAMAS.ELIMINAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2426),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6636),
                             Nombre = "ELIMINAR PROGRAMAS",
                             ProgramaId = 10,
                             UsuarioCreadorId = 1
@@ -750,7 +741,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 5,
                             Codigo = "PROGRAMAS.LISTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2428),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6638),
                             Nombre = "LISTAR PROGRAMAS",
                             ProgramaId = 10,
                             UsuarioCreadorId = 1
@@ -761,7 +752,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 6,
                             Codigo = "USUARIOS.CREARCONSEDE",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2430),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6640),
                             Nombre = "CREAR USUARIOS CON SEDE",
                             ProgramaId = 11,
                             UsuarioCreadorId = 1
@@ -772,7 +763,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 7,
                             Codigo = "USUARIOS.CREARCONGRUPO",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2431),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6642),
                             Nombre = "CREAR USUARIOS CON GRUPO",
                             ProgramaId = 11,
                             UsuarioCreadorId = 1
@@ -783,7 +774,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 1,
                             Codigo = "USUARIOS.CONSULTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2433),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6643),
                             Nombre = "CONSULTAR USUARIOS",
                             ProgramaId = 11,
                             UsuarioCreadorId = 1
@@ -794,7 +785,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 5,
                             Codigo = "USUARIOS.LISTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2435),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6645),
                             Nombre = "LISTAR USUARIOS",
                             ProgramaId = 11,
                             UsuarioCreadorId = 1
@@ -805,7 +796,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 2,
                             Codigo = "USUARIOSSEDESGRUPOS.CREAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2436),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6647),
                             Nombre = "CREAR USUARIOS SEDES GRUPOS",
                             ProgramaId = 9,
                             UsuarioCreadorId = 1
@@ -816,7 +807,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 3,
                             Codigo = "USUARIOSSEDESGRUPOS.MODIFICAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2438),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6649),
                             Nombre = "MODIFICAR USUARIOS SEDES GRUPOS",
                             ProgramaId = 9,
                             UsuarioCreadorId = 1
@@ -827,7 +818,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 4,
                             Codigo = "USUARIOSSEDESGRUPOS.ELIMINAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2440),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6650),
                             Nombre = "ELIMINAR USUARIOS SEDES GRUPOS",
                             ProgramaId = 9,
                             UsuarioCreadorId = 1
@@ -838,7 +829,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 1,
                             Codigo = "ACCIONES.CONSULTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2441),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6652),
                             Nombre = "CONSULTAR ACCIONES",
                             ProgramaId = 12,
                             UsuarioCreadorId = 1
@@ -849,7 +840,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 2,
                             Codigo = "ACCIONES.CREAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2443),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6654),
                             Nombre = "CREAR ACCIONES",
                             ProgramaId = 12,
                             UsuarioCreadorId = 1
@@ -860,7 +851,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 3,
                             Codigo = "ACCIONES.MODIFICAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2445),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6656),
                             Nombre = "MODIFICAR ACCIONES",
                             ProgramaId = 12,
                             UsuarioCreadorId = 1
@@ -871,7 +862,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 4,
                             Codigo = "ACCIONES.ELIMINAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2446),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6657),
                             Nombre = "ELIMINAR ACCIONES",
                             ProgramaId = 12,
                             UsuarioCreadorId = 1
@@ -882,7 +873,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 5,
                             Codigo = "ACCIONES.LISTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2448),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6659),
                             Nombre = "LISTAR ACCIONES",
                             ProgramaId = 12,
                             UsuarioCreadorId = 1
@@ -893,7 +884,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 3,
                             Codigo = "PERMISOS.MODIFICAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2450),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6660),
                             Nombre = "MODIFICAR PERMISOS",
                             ProgramaId = 13,
                             UsuarioCreadorId = 1
@@ -904,7 +895,7 @@ namespace SEG.DataAccess.Migrations
                             AccionId = 5,
                             Codigo = "PERMISOS.LISTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2451),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6662),
                             Nombre = "LISTAR PERMISOS",
                             ProgramaId = 13,
                             UsuarioCreadorId = 1
@@ -912,54 +903,43 @@ namespace SEG.DataAccess.Migrations
                         new
                         {
                             Id = 25,
-                            AccionId = 1,
-                            Codigo = "GRUPOSPERMISOS.CONSULTAR",
-                            EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2489),
-                            Nombre = "CONSULTAR GRUPOS PERMISOS",
-                            ProgramaId = 14,
-                            UsuarioCreadorId = 1
-                        },
-                        new
-                        {
-                            Id = 26,
                             AccionId = 2,
                             Codigo = "GRUPOSPERMISOS.CREAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2491),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6664),
                             Nombre = "CREAR GRUPOS PERMISOS",
                             ProgramaId = 14,
                             UsuarioCreadorId = 1
                         },
                         new
                         {
-                            Id = 27,
+                            Id = 26,
                             AccionId = 3,
                             Codigo = "GRUPOSPERMISOS.MODIFICAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2493),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6666),
                             Nombre = "MODIFICAR GRUPOS PERMISOS",
                             ProgramaId = 14,
                             UsuarioCreadorId = 1
                         },
                         new
                         {
-                            Id = 28,
+                            Id = 27,
                             AccionId = 4,
                             Codigo = "GRUPOSPERMISOS.ELIMINAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2494),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6667),
                             Nombre = "ELIMINAR GRUPOS PERMISOS",
                             ProgramaId = 14,
                             UsuarioCreadorId = 1
                         },
                         new
                         {
-                            Id = 29,
+                            Id = 28,
                             AccionId = 5,
                             Codigo = "GRUPOSPERMISOS.LISTAR",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2496),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6669),
                             Nombre = "LISTAR GRUPOS PERMISOS",
                             ProgramaId = 14,
                             UsuarioCreadorId = 1
@@ -1014,7 +994,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 1,
                             Codigo = "GRUPOS",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2360),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6507),
                             Nombre = "MAESTRO DE GRUPOS",
                             UsuarioCreadorId = 1
                         },
@@ -1023,7 +1003,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 2,
                             Codigo = "CONTRARREFERENCIA",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2362),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6509),
                             Nombre = "CONTRARREFERENCIA A PACIENTES",
                             UsuarioCreadorId = 1
                         },
@@ -1032,7 +1012,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 3,
                             Codigo = "MEDICOSSEDES",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2363),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6511),
                             Nombre = "MEDICOS POR SEDE",
                             UsuarioCreadorId = 1
                         },
@@ -1041,7 +1021,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 4,
                             Codigo = "REFERENCIA",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2366),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6512),
                             Nombre = "REFERENCIA A PACIENTES",
                             UsuarioCreadorId = 1
                         },
@@ -1050,7 +1030,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 5,
                             Codigo = "EMPRESAS",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2368),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6514),
                             Nombre = "EMPRESAS",
                             UsuarioCreadorId = 1
                         },
@@ -1059,7 +1039,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 6,
                             Codigo = "SEDES",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2370),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6515),
                             Nombre = "SEDES",
                             UsuarioCreadorId = 1
                         },
@@ -1068,7 +1048,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 7,
                             Codigo = "LISTAS",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2372),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6517),
                             Nombre = "MAESTRO DE LISTAS",
                             UsuarioCreadorId = 1
                         },
@@ -1077,7 +1057,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 8,
                             Codigo = "DATOSCONSTANTES",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2373),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6519),
                             Nombre = "MAESTRO DE DATOS CONSTANTES",
                             UsuarioCreadorId = 1
                         },
@@ -1086,7 +1066,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 9,
                             Codigo = "USUARIOSSEDESGRUPOS",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2375),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6578),
                             Nombre = "ASOCIACION DE USUARIOS SEDES GRUPOS",
                             UsuarioCreadorId = 1
                         },
@@ -1095,7 +1075,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 10,
                             Codigo = "PROGRAMAS",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2377),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6580),
                             Nombre = "MAESTRO DE PROGRAMAS",
                             UsuarioCreadorId = 1
                         },
@@ -1104,7 +1084,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 11,
                             Codigo = "USUARIOS",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2380),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6582),
                             Nombre = "MAESTRO DE USUARIOS",
                             UsuarioCreadorId = 1
                         },
@@ -1113,7 +1093,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 12,
                             Codigo = "ACCIONES",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2382),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6584),
                             Nombre = "ACCIONES EN PROGRAMAS",
                             UsuarioCreadorId = 1
                         },
@@ -1122,7 +1102,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 13,
                             Codigo = "PERMISOS",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2384),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6585),
                             Nombre = "PERMISOS",
                             UsuarioCreadorId = 1
                         },
@@ -1131,7 +1111,7 @@ namespace SEG.DataAccess.Migrations
                             Id = 14,
                             Codigo = "GRUPOSPERMISOS",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2385),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6587),
                             Nombre = "PERMISOS DE GRUPOS",
                             UsuarioCreadorId = 1
                         });
@@ -1229,7 +1209,7 @@ namespace SEG.DataAccess.Migrations
                             Clave = "1feTCdMwhKKkOSWaM5+yXEI0ZrBPlq9pbnB4k4+JRUU=",
                             Email = "CORREO@GMAIL.COM",
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2084),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6251),
                             Identificacion = "ADMINISTRADOR",
                             Nombre1 = "ADMINISTRADOR",
                             Nombre2 = "",
@@ -1289,7 +1269,7 @@ namespace SEG.DataAccess.Migrations
                         {
                             Id = 1,
                             EstadoActivo = true,
-                            FechaCreado = new DateTime(2026, 7, 19, 14, 22, 46, 458, DateTimeKind.Local).AddTicks(2596),
+                            FechaCreado = new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6856),
                             GrupoId = 1,
                             SedeId = 1,
                             UsuarioCreadorId = 1,
