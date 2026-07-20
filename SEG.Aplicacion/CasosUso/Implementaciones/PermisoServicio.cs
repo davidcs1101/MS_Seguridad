@@ -59,10 +59,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }
 
-        public async Task<ApiResponse<PermisoDto?>> ObtenerPermisoAsync(int id)
+        public async Task<ApiResponse<PermisoDto?>> ObtenerPorCodigoAsync(string codigo)
         {
-            var permisoExiste = await _permisoRepositorio.ObtenerPorIdAsync(id);
-            _permisoValidador.ValidarDatoNoEncontrado(permisoExiste, Textos.Permisos.MENSAJE_PERMISO_NO_EXISTE_ID);
+            var permisoExiste = await _permisoRepositorio.ObtenerPorCodigoAsync(codigo);
+            _permisoValidador.ValidarDatoNoEncontrado(permisoExiste, Textos.Permisos.MENSAJE_PERMISO_NO_EXISTE_CODIGO(codigo));
 
             var permisoDto = _mapper.Map(permisoExiste!);
 

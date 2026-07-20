@@ -12,6 +12,7 @@ using SEG.Dominio.Enumeraciones;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using Utilidades.Seguridad;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
+using Utilidades.Serializacion.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {

@@ -22,8 +22,7 @@ namespace SEG.Api.Seguridad.Controllers
         [Permiso(CodigosPermisos.Grupos.CONSULTAR)]
         public async Task<ActionResult<ApiResponse<GrupoDto?>>> ObtenerPorCodigo(string codigo)
         {
-            return await _grupoServicio.ObtenerPorCodigoAsync(codigo);
-            
+            return await _grupoServicio.ObtenerPorCodigoAsync(codigo);            
         }
 
         [HttpGet("listar")]

@@ -1,5 +1,5 @@
 ﻿using SEG.Aplicacion.Servicios.Interfaces;
-using SEG.Aplicacion.ServiciosExternos;
+using Utilidades.Serializacion.Interfaces;
 using Utilidades;
 using Utilidades.Seguridad;
 

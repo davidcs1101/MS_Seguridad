@@ -1,4 +1,5 @@
 ﻿using SEG.Aplicacion.ServiciosExternos;
+using Utilidades.Serializacion.Interfaces;
 using SEG.Dtos;
 
 namespace SEG.Aplicacion.Servicios.Interfaces

@@ -3,7 +3,7 @@ using System.Net;
 using Utilidades;
 using SEG.Dominio.Excepciones;
 using SEG.Aplicacion.Servicios.Interfaces;
-using SEG.Aplicacion.ServiciosExternos;
+using Utilidades.Serializacion.Interfaces;
 
 namespace SEG.Api.Seguridad.Middlewares
 {

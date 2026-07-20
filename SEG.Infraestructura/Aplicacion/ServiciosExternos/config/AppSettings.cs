@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.ServiciosExternos.config;
 using SEG.Dtos.AppSettings;
-using System.Runtime.InteropServices;
+using Utilidades.Serializacion.Interfaces;
 namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.Config
 {
     public class AppSettings : IAppSettings

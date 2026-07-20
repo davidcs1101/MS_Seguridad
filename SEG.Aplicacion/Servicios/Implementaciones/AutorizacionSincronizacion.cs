@@ -1,12 +1,9 @@
 ﻿using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
-using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.ServiciosExternos.config;
 using SEG.Dominio.Entidades;
 using SEG.Dominio.Enumeraciones;
 using SEG.Dominio.Repositorio;
-using SEG.Dtos;
-using System.Runtime.InteropServices;
 using Utilidades;
 
 namespace SEG.Aplicacion.Servicios.Interfaces
@@ -20,7 +17,7 @@ namespace SEG.Aplicacion.Servicios.Interfaces
         private readonly IAppSettings _appSettings;
 
         public AutorizacionSincronizacion(IAutorizacionServicio autorizacionServicio,
-            ISeguridadPermisosCache permisosCache, IColaSolicitudRepositorio colaSolicitudRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IAppSettings appSettings)
+            ISeguridadPermisosCache permisosCache, IColaSolicitudRepositorio colaSolicitudRepositorio, IAppSettings appSettings)
         {
             _autorizacionServicio = autorizacionServicio;
             _permisosCache = permisosCache;

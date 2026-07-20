@@ -19,14 +19,11 @@ namespace SEG.Api.Seguridad.Controllers
             _permisoServicio = permisoServicio;
         }
 
-        [HttpPut("modificar")]
-        [Permiso(CodigosPermisos.Permisos.MODIFICAR)]
-        public async Task<ActionResult<ApiResponse<string>>> Modificar(PermisoModificacionRequest permisoModificacionRequest)
+        [HttpGet("obtenerPorCodigo")]
+        [Permiso(CodigosPermisos.Permisos.CONSULTAR)]
+        public async Task<ActionResult<ApiResponse<PermisoDto?>>> ObtenerPorCodigo(string codigo)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return await _permisoServicio.ModificarAsync(permisoModificacionRequest);
+            return await _permisoServicio.ObtenerPorCodigoAsync(codigo);
         }
 
         [HttpGet("listar")]
@@ -35,6 +32,16 @@ namespace SEG.Api.Seguridad.Controllers
         {
             return await _permisoServicio.ListarAsync();
 
+        }
+
+        [HttpPut("modificar")]
+        [Permiso(CodigosPermisos.Permisos.MODIFICAR)]
+        public async Task<ActionResult<ApiResponse<string>>> Modificar(PermisoModificacionRequest permisoModificacionRequest)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return await _permisoServicio.ModificarAsync(permisoModificacionRequest);
         }
     }
 }

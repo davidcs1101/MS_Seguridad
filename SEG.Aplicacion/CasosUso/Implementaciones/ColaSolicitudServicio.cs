@@ -9,6 +9,7 @@ using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dtos;
 using Utilidades;
+using Utilidades.Serializacion.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {

@@ -314,20 +314,20 @@ namespace SEG.DataAccess.Migrations
             migrationBuilder.InsertData(
                 table: "SEG_Usuarios",
                 columns: new[] { "Id", "Apellido1", "Apellido2", "CambiarClave", "Clave", "Email", "EstadoActivo", "FechaCreado", "FechaModificado", "GrupoDirectoId", "Identificacion", "Nombre1", "Nombre2", "NombreUsuario", "TipoIdentificacionId", "UsuarioCreadorId", "UsuarioModificadorId" },
-                values: new object[] { 1, "SISTEMA", "", true, "1feTCdMwhKKkOSWaM5+yXEI0ZrBPlq9pbnB4k4+JRUU=", "CORREO@GMAIL.COM", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6251), null, null, "ADMINISTRADOR", "ADMINISTRADOR", "", "ADMINISTRADOR", 1, 1, null });
+                values: new object[] { 1, "SISTEMA", "", true, "1feTCdMwhKKkOSWaM5+yXEI0ZrBPlq9pbnB4k4+JRUU=", "CORREO@GMAIL.COM", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(8848), null, null, "ADMINISTRADOR", "ADMINISTRADOR", "", "ADMINISTRADOR", 1, 1, null });
 
             migrationBuilder.InsertData(
                 table: "SEG_Acciones",
                 columns: new[] { "Id", "Codigo", "EstadoActivo", "FechaCreado", "FechaModificado", "Nombre", "UsuarioCreadorId", "UsuarioModificadorId" },
                 values: new object[,]
                 {
-                    { 1, "CONSULTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6468), null, "CONSULTAR", 1, null },
-                    { 2, "CREAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6470), null, "CREAR", 1, null },
-                    { 3, "MODIFICAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6471), null, "MODIFICAR", 1, null },
-                    { 4, "ELIMINAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6473), null, "ELIMINAR", 1, null },
-                    { 5, "LISTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6475), null, "LISTAR", 1, null },
-                    { 6, "CREARCONSEDE", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6476), null, "CREAR CON SEDE", 1, null },
-                    { 7, "CREARCONGRUPO", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6478), null, "CREAR CON GRUPO", 1, null }
+                    { 1, "CONSULTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9055), null, "CONSULTAR", 1, null },
+                    { 2, "CREAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9058), null, "CREAR", 1, null },
+                    { 3, "MODIFICAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9060), null, "MODIFICAR", 1, null },
+                    { 4, "ELIMINAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9062), null, "ELIMINAR", 1, null },
+                    { 5, "LISTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9065), null, "LISTAR", 1, null },
+                    { 6, "CREARCONSEDE", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9067), null, "CREAR CON SEDE", 1, null },
+                    { 7, "CREARCONGRUPO", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9069), null, "CREAR CON GRUPO", 1, null }
                 });
 
             migrationBuilder.InsertData(
@@ -335,12 +335,12 @@ namespace SEG.DataAccess.Migrations
                 columns: new[] { "Id", "Codigo", "EstadoActivo", "FechaCreado", "FechaModificado", "Nombre", "UsuarioCreadorId", "UsuarioModificadorId" },
                 values: new object[,]
                 {
-                    { 1, "ADMINISTRADORSISTEMA", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6432), null, "ADMINISTRADOR SISTEMA", 1, null },
-                    { 2, "ADMINISTRADOREMPRESA", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6434), null, "ADMINISTRADOR DE EMPRESA", 1, null },
-                    { 3, "ADMINISTRADORSEDE", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6436), null, "ADMINISTRADOR DE SEDE", 1, null },
-                    { 4, "CONTRARREFERENCIA", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6438), null, "USUARIOS DE CONTRARREFERENCIA", 1, null },
-                    { 5, "REFERENCIA", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6440), null, "USUARIOS DE REFERENCIA", 1, null },
-                    { 6, "REFERENCIAYCONTRARREFERENCIA", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6442), null, "USUARIOS DE REFERENCIA Y CONTRARREFERENCIA", 1, null }
+                    { 1, "ADMINISTRADORSISTEMA", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9011), null, "ADMINISTRADOR SISTEMA", 1, null },
+                    { 2, "ADMINISTRADOREMPRESA", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9014), null, "ADMINISTRADOR DE EMPRESA", 1, null },
+                    { 3, "ADMINISTRADORSEDE", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9016), null, "ADMINISTRADOR DE SEDE", 1, null },
+                    { 4, "CONTRARREFERENCIA", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9019), null, "USUARIOS DE CONTRARREFERENCIA", 1, null },
+                    { 5, "REFERENCIA", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9022), null, "USUARIOS DE REFERENCIA", 1, null },
+                    { 6, "REFERENCIAYCONTRARREFERENCIA", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9024), null, "USUARIOS DE REFERENCIA Y CONTRARREFERENCIA", 1, null }
                 });
 
             migrationBuilder.InsertData(
@@ -348,20 +348,20 @@ namespace SEG.DataAccess.Migrations
                 columns: new[] { "Id", "Codigo", "EstadoActivo", "FechaCreado", "FechaModificado", "Nombre", "UsuarioCreadorId", "UsuarioModificadorId" },
                 values: new object[,]
                 {
-                    { 1, "GRUPOS", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6507), null, "MAESTRO DE GRUPOS", 1, null },
-                    { 2, "CONTRARREFERENCIA", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6509), null, "CONTRARREFERENCIA A PACIENTES", 1, null },
-                    { 3, "MEDICOSSEDES", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6511), null, "MEDICOS POR SEDE", 1, null },
-                    { 4, "REFERENCIA", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6512), null, "REFERENCIA A PACIENTES", 1, null },
-                    { 5, "EMPRESAS", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6514), null, "EMPRESAS", 1, null },
-                    { 6, "SEDES", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6515), null, "SEDES", 1, null },
-                    { 7, "LISTAS", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6517), null, "MAESTRO DE LISTAS", 1, null },
-                    { 8, "DATOSCONSTANTES", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6519), null, "MAESTRO DE DATOS CONSTANTES", 1, null },
-                    { 9, "USUARIOSSEDESGRUPOS", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6578), null, "ASOCIACION DE USUARIOS SEDES GRUPOS", 1, null },
-                    { 10, "PROGRAMAS", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6580), null, "MAESTRO DE PROGRAMAS", 1, null },
-                    { 11, "USUARIOS", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6582), null, "MAESTRO DE USUARIOS", 1, null },
-                    { 12, "ACCIONES", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6584), null, "ACCIONES EN PROGRAMAS", 1, null },
-                    { 13, "PERMISOS", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6585), null, "PERMISOS", 1, null },
-                    { 14, "GRUPOSPERMISOS", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6587), null, "PERMISOS DE GRUPOS", 1, null }
+                    { 1, "GRUPOS", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9100), null, "MAESTRO DE GRUPOS", 1, null },
+                    { 2, "CONTRARREFERENCIA", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9102), null, "CONTRARREFERENCIA A PACIENTES", 1, null },
+                    { 3, "MEDICOSSEDES", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9105), null, "MEDICOS POR SEDE", 1, null },
+                    { 4, "REFERENCIA", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9107), null, "REFERENCIA A PACIENTES", 1, null },
+                    { 5, "EMPRESAS", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9109), null, "EMPRESAS", 1, null },
+                    { 6, "SEDES", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9111), null, "SEDES", 1, null },
+                    { 7, "LISTAS", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9113), null, "MAESTRO DE LISTAS", 1, null },
+                    { 8, "DATOSCONSTANTES", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9115), null, "MAESTRO DE DATOS CONSTANTES", 1, null },
+                    { 9, "USUARIOSSEDESGRUPOS", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9117), null, "ASOCIACION DE USUARIOS SEDES GRUPOS", 1, null },
+                    { 10, "PROGRAMAS", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9119), null, "MAESTRO DE PROGRAMAS", 1, null },
+                    { 11, "USUARIOS", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9121), null, "MAESTRO DE USUARIOS", 1, null },
+                    { 12, "ACCIONES", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9123), null, "ACCIONES EN PROGRAMAS", 1, null },
+                    { 13, "PERMISOS", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9125), null, "PERMISOS", 1, null },
+                    { 14, "GRUPOSPERMISOS", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9127), null, "PERMISOS DE GRUPOS", 1, null }
                 });
 
             migrationBuilder.InsertData(
@@ -369,74 +369,75 @@ namespace SEG.DataAccess.Migrations
                 columns: new[] { "Id", "AccionId", "Codigo", "EstadoActivo", "FechaCreado", "FechaModificado", "Nombre", "ProgramaId", "UsuarioCreadorId", "UsuarioModificadorId" },
                 values: new object[,]
                 {
-                    { 1, 1, "GRUPOS.CONSULTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6621), null, "CONSULTAR GRUPOS", 1, 1, null },
-                    { 2, 2, "GRUPOS.CREAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6624), null, "CREAR GRUPOS", 1, 1, null },
-                    { 3, 3, "GRUPOS.MODIFICAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6626), null, "MODIFICAR GRUPOS", 1, 1, null },
-                    { 4, 4, "GRUPOS.ELIMINAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6627), null, "ELIMINAR GRUPOS", 1, 1, null },
-                    { 5, 5, "GRUPOS.LISTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6629), null, "LISTAR GRUPOS", 1, 1, null },
-                    { 6, 1, "PROGRAMAS.CONSULTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6631), null, "CONSULTAR PROGRAMAS", 10, 1, null },
-                    { 7, 2, "PROGRAMAS.CREAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6633), null, "CREAR PROGRAMAS", 10, 1, null },
-                    { 8, 3, "PROGRAMAS.MODIFICAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6635), null, "MODIFICAR PROGRAMAS", 10, 1, null },
-                    { 9, 4, "PROGRAMAS.ELIMINAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6636), null, "ELIMINAR PROGRAMAS", 10, 1, null },
-                    { 10, 5, "PROGRAMAS.LISTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6638), null, "LISTAR PROGRAMAS", 10, 1, null },
-                    { 11, 6, "USUARIOS.CREARCONSEDE", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6640), null, "CREAR USUARIOS CON SEDE", 11, 1, null },
-                    { 12, 7, "USUARIOS.CREARCONGRUPO", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6642), null, "CREAR USUARIOS CON GRUPO", 11, 1, null },
-                    { 13, 1, "USUARIOS.CONSULTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6643), null, "CONSULTAR USUARIOS", 11, 1, null },
-                    { 14, 5, "USUARIOS.LISTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6645), null, "LISTAR USUARIOS", 11, 1, null },
-                    { 15, 2, "USUARIOSSEDESGRUPOS.CREAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6647), null, "CREAR USUARIOS SEDES GRUPOS", 9, 1, null },
-                    { 16, 3, "USUARIOSSEDESGRUPOS.MODIFICAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6649), null, "MODIFICAR USUARIOS SEDES GRUPOS", 9, 1, null },
-                    { 17, 4, "USUARIOSSEDESGRUPOS.ELIMINAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6650), null, "ELIMINAR USUARIOS SEDES GRUPOS", 9, 1, null },
-                    { 18, 1, "ACCIONES.CONSULTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6652), null, "CONSULTAR ACCIONES", 12, 1, null },
-                    { 19, 2, "ACCIONES.CREAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6654), null, "CREAR ACCIONES", 12, 1, null },
-                    { 20, 3, "ACCIONES.MODIFICAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6656), null, "MODIFICAR ACCIONES", 12, 1, null },
-                    { 21, 4, "ACCIONES.ELIMINAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6657), null, "ELIMINAR ACCIONES", 12, 1, null },
-                    { 22, 5, "ACCIONES.LISTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6659), null, "LISTAR ACCIONES", 12, 1, null },
-                    { 23, 3, "PERMISOS.MODIFICAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6660), null, "MODIFICAR PERMISOS", 13, 1, null },
-                    { 24, 5, "PERMISOS.LISTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6662), null, "LISTAR PERMISOS", 13, 1, null },
-                    { 25, 2, "GRUPOSPERMISOS.CREAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6664), null, "CREAR GRUPOS PERMISOS", 14, 1, null },
-                    { 26, 3, "GRUPOSPERMISOS.MODIFICAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6666), null, "MODIFICAR GRUPOS PERMISOS", 14, 1, null },
-                    { 27, 4, "GRUPOSPERMISOS.ELIMINAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6667), null, "ELIMINAR GRUPOS PERMISOS", 14, 1, null },
-                    { 28, 5, "GRUPOSPERMISOS.LISTAR", true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6669), null, "LISTAR GRUPOS PERMISOS", 14, 1, null }
+                    { 1, 1, "GRUPOS.CONSULTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9158), null, "CONSULTAR GRUPOS", 1, 1, null },
+                    { 2, 2, "GRUPOS.CREAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9161), null, "CREAR GRUPOS", 1, 1, null },
+                    { 3, 3, "GRUPOS.MODIFICAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9164), null, "MODIFICAR GRUPOS", 1, 1, null },
+                    { 4, 4, "GRUPOS.ELIMINAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9166), null, "ELIMINAR GRUPOS", 1, 1, null },
+                    { 5, 5, "GRUPOS.LISTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9169), null, "LISTAR GRUPOS", 1, 1, null },
+                    { 6, 1, "PROGRAMAS.CONSULTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9171), null, "CONSULTAR PROGRAMAS", 10, 1, null },
+                    { 7, 2, "PROGRAMAS.CREAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9173), null, "CREAR PROGRAMAS", 10, 1, null },
+                    { 8, 3, "PROGRAMAS.MODIFICAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9176), null, "MODIFICAR PROGRAMAS", 10, 1, null },
+                    { 9, 4, "PROGRAMAS.ELIMINAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9178), null, "ELIMINAR PROGRAMAS", 10, 1, null },
+                    { 10, 5, "PROGRAMAS.LISTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9180), null, "LISTAR PROGRAMAS", 10, 1, null },
+                    { 11, 6, "USUARIOS.CREARCONSEDE", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9208), null, "CREAR USUARIOS CON SEDE", 11, 1, null },
+                    { 12, 7, "USUARIOS.CREARCONGRUPO", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9210), null, "CREAR USUARIOS CON GRUPO", 11, 1, null },
+                    { 13, 1, "USUARIOS.CONSULTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9212), null, "CONSULTAR USUARIOS", 11, 1, null },
+                    { 14, 5, "USUARIOS.LISTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9215), null, "LISTAR USUARIOS", 11, 1, null },
+                    { 15, 2, "USUARIOSSEDESGRUPOS.CREAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9217), null, "CREAR USUARIOS SEDES GRUPOS", 9, 1, null },
+                    { 16, 3, "USUARIOSSEDESGRUPOS.MODIFICAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9219), null, "MODIFICAR USUARIOS SEDES GRUPOS", 9, 1, null },
+                    { 17, 4, "USUARIOSSEDESGRUPOS.ELIMINAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9222), null, "ELIMINAR USUARIOS SEDES GRUPOS", 9, 1, null },
+                    { 18, 1, "ACCIONES.CONSULTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9224), null, "CONSULTAR ACCIONES", 12, 1, null },
+                    { 19, 2, "ACCIONES.CREAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9226), null, "CREAR ACCIONES", 12, 1, null },
+                    { 20, 3, "ACCIONES.MODIFICAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9230), null, "MODIFICAR ACCIONES", 12, 1, null },
+                    { 21, 4, "ACCIONES.ELIMINAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9232), null, "ELIMINAR ACCIONES", 12, 1, null },
+                    { 22, 5, "ACCIONES.LISTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9234), null, "LISTAR ACCIONES", 12, 1, null },
+                    { 23, 3, "PERMISOS.MODIFICAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9237), null, "MODIFICAR PERMISOS", 13, 1, null },
+                    { 24, 5, "PERMISOS.LISTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9239), null, "LISTAR PERMISOS", 13, 1, null },
+                    { 25, 2, "GRUPOSPERMISOS.CREAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9241), null, "CREAR GRUPOS PERMISOS", 14, 1, null },
+                    { 26, 3, "GRUPOSPERMISOS.MODIFICAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9243), null, "MODIFICAR GRUPOS PERMISOS", 14, 1, null },
+                    { 27, 4, "GRUPOSPERMISOS.ELIMINAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9246), null, "ELIMINAR GRUPOS PERMISOS", 14, 1, null },
+                    { 28, 5, "GRUPOSPERMISOS.LISTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9248), null, "LISTAR GRUPOS PERMISOS", 14, 1, null },
+                    { 29, 1, "PERMISOS.CONSULTAR", true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9250), null, "CONSULTAR PERMISOS", 13, 1, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "SEG_UsuariosSedesGrupos",
                 columns: new[] { "Id", "EstadoActivo", "FechaCreado", "FechaModificado", "GrupoId", "SedeId", "UsuarioCreadorId", "UsuarioId", "UsuarioModificadorId" },
-                values: new object[] { 1, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6856), null, 1, 1, 1, 1, null });
+                values: new object[] { 1, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9382), null, 1, 1, 1, 1, null });
 
             migrationBuilder.InsertData(
                 table: "SEG_GruposPermisos",
                 columns: new[] { "Id", "EstadoActivo", "FechaCreado", "FechaModificado", "GrupoId", "PermisoId", "UsuarioCreadorId", "UsuarioModificadorId" },
                 values: new object[,]
                 {
-                    { 1, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6706), null, 1, 1, 1, null },
-                    { 2, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6708), null, 1, 2, 1, null },
-                    { 3, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6709), null, 1, 3, 1, null },
-                    { 4, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6711), null, 1, 4, 1, null },
-                    { 5, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6712), null, 1, 5, 1, null },
-                    { 6, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6714), null, 1, 6, 1, null },
-                    { 7, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6715), null, 1, 7, 1, null },
-                    { 8, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6717), null, 1, 8, 1, null },
-                    { 9, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6718), null, 1, 9, 1, null },
-                    { 10, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6720), null, 1, 10, 1, null },
-                    { 11, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6721), null, 1, 11, 1, null },
-                    { 12, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6788), null, 1, 12, 1, null },
-                    { 13, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6789), null, 1, 13, 1, null },
-                    { 14, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6791), null, 1, 14, 1, null },
-                    { 15, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6792), null, 1, 15, 1, null },
-                    { 16, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6794), null, 1, 16, 1, null },
-                    { 17, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6795), null, 1, 17, 1, null },
-                    { 18, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6797), null, 1, 18, 1, null },
-                    { 19, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6798), null, 1, 19, 1, null },
-                    { 20, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6799), null, 1, 20, 1, null },
-                    { 21, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6801), null, 1, 21, 1, null },
-                    { 22, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6802), null, 1, 22, 1, null },
-                    { 23, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6804), null, 1, 23, 1, null },
-                    { 24, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6805), null, 1, 24, 1, null },
-                    { 25, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6807), null, 1, 25, 1, null },
-                    { 26, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6808), null, 1, 26, 1, null },
-                    { 27, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6810), null, 1, 27, 1, null },
-                    { 28, true, new DateTime(2026, 7, 19, 16, 3, 21, 241, DateTimeKind.Local).AddTicks(6811), null, 1, 28, 1, null }
+                    { 1, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9290), null, 1, 1, 1, null },
+                    { 2, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9292), null, 1, 2, 1, null },
+                    { 3, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9294), null, 1, 3, 1, null },
+                    { 4, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9296), null, 1, 4, 1, null },
+                    { 5, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9298), null, 1, 5, 1, null },
+                    { 6, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9299), null, 1, 6, 1, null },
+                    { 7, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9301), null, 1, 7, 1, null },
+                    { 8, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9303), null, 1, 8, 1, null },
+                    { 9, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9305), null, 1, 9, 1, null },
+                    { 10, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9307), null, 1, 10, 1, null },
+                    { 11, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9309), null, 1, 11, 1, null },
+                    { 12, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9311), null, 1, 12, 1, null },
+                    { 13, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9312), null, 1, 13, 1, null },
+                    { 14, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9314), null, 1, 14, 1, null },
+                    { 15, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9316), null, 1, 15, 1, null },
+                    { 16, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9318), null, 1, 16, 1, null },
+                    { 17, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9320), null, 1, 17, 1, null },
+                    { 18, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9322), null, 1, 18, 1, null },
+                    { 19, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9324), null, 1, 19, 1, null },
+                    { 20, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9325), null, 1, 20, 1, null },
+                    { 21, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9327), null, 1, 21, 1, null },
+                    { 22, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9329), null, 1, 22, 1, null },
+                    { 23, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9331), null, 1, 23, 1, null },
+                    { 24, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9333), null, 1, 24, 1, null },
+                    { 25, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9334), null, 1, 25, 1, null },
+                    { 26, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9336), null, 1, 26, 1, null },
+                    { 27, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9338), null, 1, 27, 1, null },
+                    { 28, true, new DateTime(2026, 7, 20, 12, 54, 26, 945, DateTimeKind.Local).AddTicks(9340), null, 1, 28, 1, null }
                 });
 
             migrationBuilder.CreateIndex(

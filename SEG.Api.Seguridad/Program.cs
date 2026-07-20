@@ -33,6 +33,8 @@ using SEG.Intraestructura.Dominio.Repositorio;
 using SEG.Intraestructura.Dominio.Repositorio.UnidadTrabajo;
 using System.Text;
 using Utilidades.Seguridad;
+using Utilidades.Serializacion.Interfaces;
+using Utilidades.Serializacion.Implementaciones;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,7 +99,7 @@ builder.Services.AddScoped<IPermisoServicio, PermisoServicio>();
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
 
-builder.Services.AddSingleton<SEG.Aplicacion.Servicios.Interfaces.IApiResponse, ApisResponse>();
+builder.Services.AddSingleton<SEG.Aplicacion.Servicios.Interfaces.IApiResponse, ApiResponse>();
 
 builder.Services.AddScoped<IUsuarioValidador, UsuarioValidador>();
 
@@ -157,6 +159,11 @@ builder.Services.AddSingleton<IMapperPerfiles, MapperPerfiles>();
 // Configuración de log4net
 var logRepository = LogManager.GetRepository(System.Reflection.Assembly.GetEntryAssembly());
 XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+log4net.GlobalContext.Properties["servicio"] = "ms_seguridad";
+log4net.GlobalContext.Properties["ambiente"] = "prod";
+//var testLog = LogManager.GetLogger("TEST_SEQ");
+//testLog.Info("Prueba directa de envio a Seq");
+//testLog.Error("Error de prueba Seq");
 builder.Services.AddLogging(loggingBuilder => { loggingBuilder.AddLog4Net(); });
 
 // Configuracion de JWT

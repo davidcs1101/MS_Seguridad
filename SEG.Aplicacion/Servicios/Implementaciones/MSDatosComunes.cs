@@ -1,7 +1,6 @@
 ﻿using SEG.Dtos;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
-using Utilidades;
 
 namespace SEG.Aplicacion.Servicios.Implementaciones
 {
@@ -10,7 +9,7 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
         private readonly IMSDatosComunesBackgroundServicio _msDatosComunesBackgroundServicio;
         private readonly IServicioComun _servicioComun;
 
-        public MSDatosComunes(IMSDatosComunesBackgroundServicio msDatosComunesBackgroundServicio, ISerializadorJsonServicio serializadorJsonServicio, IRespuestaHttpValidador respuestaHttpValidador, IServicioComun servicioComun)
+        public MSDatosComunes(IMSDatosComunesBackgroundServicio msDatosComunesBackgroundServicio, IRespuestaHttpValidador respuestaHttpValidador, IServicioComun servicioComun)
         {
             _msDatosComunesBackgroundServicio = msDatosComunesBackgroundServicio;
             _servicioComun = servicioComun;
