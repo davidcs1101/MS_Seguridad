@@ -28,7 +28,7 @@ namespace SEG.DataAccess
         public DbSet<SEG_Permiso> SEG_Permisos { get; set; }
         public DbSet<SEG_GrupoPermiso> SEG_GruposPermisos { get; set; }
 
-
+        public DbSet<SEG_ParametroExterno> SEG_ParametrosExternos { get; set; }
         public DbSet<SEG_ColaSolicitud> SEG_ColaSolicitudes { get; set; }
     }
 }

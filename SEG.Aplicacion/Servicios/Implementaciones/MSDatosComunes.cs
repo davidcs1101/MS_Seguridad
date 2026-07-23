@@ -15,20 +15,6 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
             _servicioComun = servicioComun;
         }
 
-        public async Task<List<ListaDetalleDto?>> ListarListasDetallePorCodigoListaAsync(string codigoLista) 
-        {
-            return await _servicioComun.ObtenerRespuestaHttpAsync<string, List<ListaDetalleDto?>>(
-                funcionEjecutar: _msDatosComunesBackgroundServicio.ListarListasDetallePorCodigoListaAsync,
-                request: codigoLista);
-        }
-
-        public async Task<List<ListaDetalleDto?>> ListarListasDetallePorCodigoConstanteAsync(string codigoConstante)
-        {
-            return await _servicioComun.ObtenerRespuestaHttpAsync<string, List<ListaDetalleDto?>>(
-                funcionEjecutar: _msDatosComunesBackgroundServicio.ListarListasDetallePorCodigoConstanteAsync,
-                request: codigoConstante);
-        }
-
         public async Task<List<ListaDetalleDto?>> ListarListasDetalleAsync()
         {
             return await _servicioComun.ObtenerRespuestaHttpAsync<List<ListaDetalleDto?>>(

@@ -5,19 +5,13 @@ namespace SEG.Aplicacion.ServiciosExternos
 {
     public interface IMSDatosComunesBackgroundServicio
     {
-        [Post("/listasDetalles/obtenerPorCodigoListaYCodigoListaDetalle")]
-        Task<HttpResponseMessage> ObtenerListaDetallePorCodigoListaYCodigoListaDetalleAsync([Body] CodigoDetalleRequest codigoDetalleRequest);
-
-        [Post("/listasDetalles/obtenerPorCodigoConstanteYCodigoListaDetalle")]
-        Task<HttpResponseMessage> ObtenerListaDetallePorCodigoConstanteYCodigoListaDetalleAsync([Body] CodigoDetalleRequest codigoDetalleRequest);
-
-        [Get("/listasDetalles/listarPorCodigoLista")]
-        Task<HttpResponseMessage> ListarListasDetallePorCodigoListaAsync([Query] string codigoLista);
-
-        [Get("/listasDetalles/listarPorCodigoConstante")]
-        Task<HttpResponseMessage> ListarListasDetallePorCodigoConstanteAsync([Query] string codigoConstante);
-
         [Get("/listasDetalles/listar")]
         Task<HttpResponseMessage> ListarListasDetalleAsync();
+
+        [Post("/listasDetalles/listarPorCodigosLista")]
+        Task<HttpResponseMessage> ListarListasDetallePorCodigosAsync(List<string> codigosLista);
+
+        [Post("/listasDetalles/listarPorCodigosConstante")]
+        Task<HttpResponseMessage> ListarListasDetallePorCodigosConstanteAsync(List<string> codigosConstante);
     }
 }
