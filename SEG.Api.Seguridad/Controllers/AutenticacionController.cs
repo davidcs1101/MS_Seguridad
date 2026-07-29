@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SEG.Dtos;
 using SEG.Aplicacion.CasosUso.Interfaces;
+using Utilidades.Dtos;
 
 namespace SEG.Api.Seguridad.Controllers
 {
@@ -16,7 +17,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPost("autenticarUsuario")]
-        public async Task<ActionResult<ApiResponse<AutenticacionResponse>>> Autenticar(AutenticacionRequest autenticacionRequest)
+        public async Task<ActionResult<ApiResponseDto<AutenticacionResponse>>> Autenticar(AutenticacionRequest autenticacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -25,7 +26,7 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpPost("autenticarUsuarioConGrupo")]
-        public async Task<ActionResult<ApiResponse<AutenticacionResponse>>> AutenticarConGrupo(AutenticacionRequest autenticacionRequest)
+        public async Task<ActionResult<ApiResponseDto<AutenticacionResponse>>> AutenticarConGrupo(AutenticacionRequest autenticacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -35,7 +36,7 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpPost("autenticarSede")]
         [Authorize]
-        public async Task<ActionResult<ApiResponse<AutenticacionResponse>>> Autenticar(int sedeId)
+        public async Task<ActionResult<ApiResponseDto<AutenticacionResponse>>> Autenticar(int sedeId)
         {
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);

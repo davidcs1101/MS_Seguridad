@@ -6,9 +6,10 @@ using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
-using static Utilidades.Textos;
 using Microsoft.EntityFrameworkCore;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -23,9 +24,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public readonly IUsuarioContextoServicio _usuarioContextoServicio;
         public readonly IMapperPerfiles _mapper;
         public readonly IApiResponse _apiResponse;
-        public readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
+        public readonly ISincronizadorAutorizacion _autorizacionSincronizacion;
 
-        public PermisoServicio(IPermisoRepositorio permisoRepositorio, IAccionRepositorio accionRepositorio, IEntidadValidador<SEG_Accion> accionValidador, IEntidadValidador<SEG_Programa> programaValidador, IProgramaRepositorio programaRepositorio, IUsuarioContextoServicio usuarioContextoServicio, IMapperPerfiles mapper, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Permiso> permisoValidador, IAutorizacionSincronizacion autorizacionSincronizacion)
+        public PermisoServicio(IPermisoRepositorio permisoRepositorio, IAccionRepositorio accionRepositorio, IEntidadValidador<SEG_Accion> accionValidador, IEntidadValidador<SEG_Programa> programaValidador, IProgramaRepositorio programaRepositorio, IUsuarioContextoServicio usuarioContextoServicio, IMapperPerfiles mapper, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Permiso> permisoValidador, ISincronizadorAutorizacion autorizacionSincronizacion)
         {
             _permisoRepositorio = permisoRepositorio;
             _accionRepositorio = accionRepositorio;
@@ -39,7 +40,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _autorizacionSincronizacion = autorizacionSincronizacion;
         }
 
-        public async Task<ApiResponse<string>> ModificarAsync(PermisoModificacionRequest permisoModificacionRequest)
+        public async Task<ApiResponseDto<string>> ModificarAsync(PermisoModificacionRequest permisoModificacionRequest)
         {
             var permisoExiste = await _permisoRepositorio.ObtenerPorIdAsync(permisoModificacionRequest.Id);
             _permisoValidador.ValidarDatoNoEncontrado(permisoExiste, Textos.Permisos.MENSAJE_PERMISO_NO_EXISTE_ID);
@@ -59,7 +60,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }
 
-        public async Task<ApiResponse<PermisoDto?>> ObtenerPorCodigoAsync(string codigo)
+        public async Task<ApiResponseDto<PermisoDto?>> ObtenerPorCodigoAsync(string codigo)
         {
             var permisoExiste = await _permisoRepositorio.ObtenerPorCodigoAsync(codigo);
             _permisoValidador.ValidarDatoNoEncontrado(permisoExiste, Textos.Permisos.MENSAJE_PERMISO_NO_EXISTE_CODIGO(codigo));
@@ -69,7 +70,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta<PermisoDto?>(true, "", permisoDto);
         }
 
-        public async Task<ApiResponse<List<PermisoDto>?>> ListarAsync()
+        public async Task<ApiResponseDto<List<PermisoDto>?>> ListarAsync()
         {
             var permisos = await _permisoRepositorio.Listar().ToListAsync();
 

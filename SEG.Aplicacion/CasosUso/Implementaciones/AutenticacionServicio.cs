@@ -13,6 +13,8 @@ using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos.config;
 using Utilidades.Seguridad;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -46,7 +48,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _grupoValidador = grupoValidador;
         }
 
-        public async Task<ApiResponse<AutenticacionResponse>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
+        public async Task<ApiResponseDto<AutenticacionResponse>> AutenticarUsuarioAsync(AutenticacionRequest autenticacionRequest)
         {
             var usuario = await _usuarioRepositorio.ObtenerPorUsuarioAsync(autenticacionRequest.NombreUsuario);
             _usuarioValidador.ValidarLoguin(usuario, ProcesadorClaves.EncriptarClave(autenticacionRequest.Clave), Textos.Usuarios.MENSAJE_LOGIN_INCORRECTO);
@@ -55,7 +57,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, "", token);
         }
 
-        public async Task<ApiResponse<AutenticacionResponse>> AutenticarUsuarioConGrupoAsync(AutenticacionRequest autenticacionRequest)
+        public async Task<ApiResponseDto<AutenticacionResponse>> AutenticarUsuarioConGrupoAsync(AutenticacionRequest autenticacionRequest)
         {
             var usuario = await _usuarioRepositorio.ObtenerPorUsuarioAsync(autenticacionRequest.NombreUsuario);
             _usuarioValidador.ValidarLoguin(usuario, ProcesadorClaves.EncriptarClave(autenticacionRequest.Clave), Textos.Usuarios.MENSAJE_LOGIN_INCORRECTO);
@@ -68,7 +70,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, "", token);
         }
 
-        public async Task<ApiResponse<AutenticacionResponse>> AutenticarSedeAsync(int sedeId)
+        public async Task<ApiResponseDto<AutenticacionResponse>> AutenticarSedeAsync(int sedeId)
         {
             var sede = await _msEmpresas.ObtenerSedePorId(sedeId);
 

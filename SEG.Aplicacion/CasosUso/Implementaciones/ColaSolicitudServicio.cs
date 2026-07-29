@@ -9,7 +9,9 @@ using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dtos;
 using Utilidades;
-using Utilidades.Serializacion.Interfaces;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
+using Utilidades.Servicios.Serializacion.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -17,23 +19,25 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
     {
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
         private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
-        private readonly IMSEnvioCorreos _notificadorCorreo;
+        private readonly IMSEnvioCorreos _msEnvioCorreos;
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IEntidadValidador<SEG_ColaSolicitud> _colaSolicitudValidador;
         private readonly IAppSettings _appSettings;
         private readonly IPublicadorEventosBackgroundServicio _publicadorEventosBackgroundServicio;
         private readonly IProcesadorTransacciones _procesadorTransacciones;
+        private readonly IApiResponse _apiResponse;
 
-        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IMSEnvioCorreos notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IPublicadorEventosBackgroundServicio publicadorEventosBackgroundServicio, IProcesadorTransacciones procesadorTransacciones)
+        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IMSEnvioCorreos notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IPublicadorEventosBackgroundServicio publicadorEventosBackgroundServicio, IProcesadorTransacciones procesadorTransacciones, IApiResponse apiResponse)
         {
             _unidadDeTrabajo = unidadTrabajo;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
-            _notificadorCorreo = notificadorCorreo;
+            _msEnvioCorreos = notificadorCorreo;
             _serializadorJsonServicio = serializadorJsonServicio;
             _colaSolicitudValidador = colaSolicitudValidador;
             _appSettings = appSettings;
             _publicadorEventosBackgroundServicio = publicadorEventosBackgroundServicio;
             _procesadorTransacciones = procesadorTransacciones;
+            _apiResponse = apiResponse;
         }
 
         public async Task ProcesarColaSolicitudesAsync()
@@ -76,10 +80,14 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                     switch (solicitudExiste.Tipo)
                     {
                         case EventosColas.ENVIARCORREO:
-                            await _notificadorCorreo.EnviarAsync(_serializadorJsonServicio.Deserializar<DatoCorreoRequest>(solicitudExiste.Payload));
+                            await _msEnvioCorreos.EnviarAsync(_serializadorJsonServicio.Deserializar<DatoCorreoRequest>(solicitudExiste.Payload));
                             break;
                         case EventosColas.PERMISOSACTUALIZADOS:
                             await _publicadorEventosBackgroundServicio.PublicarActualizacionPermisos(solicitudExiste.UrlDestino);
+                            break;
+                        case EventosColas.CONSTANTESDETALLEACTUALIZADO:
+                            //Actualizar las constantes de detalle consultando en el microservicio de datos comunes, obtener los datos actualizar la tabla SEG_ParametrosExternos, y actualizar la caché
+                            //await _msDatosComunes.ActualizarConstantesDetalleAsync();
                             break;
                     }
 
@@ -96,6 +104,20 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 _colaSolicitudRepositorio.MarcarModificar(solicitudExiste);
                 await _unidadDeTrabajo.GuardarCambiosAsync();
             });
+        }
+
+        public async Task<ApiResponseDto<int>> CrearAsync(ColaSolicitudCreacionRequest colaSolicitudCreacionRequest)
+        {
+            var solicitud = new SEG_ColaSolicitud
+            {
+                Tipo = colaSolicitudCreacionRequest.Tipo,
+                Payload = colaSolicitudCreacionRequest.Payload,
+                Estado = EstadoCola.Pendiente,
+            };
+
+            var id = await _colaSolicitudRepositorio.CrearAsync(solicitud);
+
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
         }
     }
 }

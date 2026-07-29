@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using SEG.Aplicacion.ServiciosExternos.config;
 using SEG.Dtos.AppSettings;
-using Utilidades.Serializacion.Interfaces;
+using Utilidades.Servicios.Serializacion.Interfaces;
 namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.Config
 {
     public class AppSettings : IAppSettings
@@ -9,15 +9,17 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.Config
         private readonly TrabajosColasSettings _trabajosColas;
         private readonly EventosNotificarSettings _eventosNotificar;
         private readonly JWTSettings _jwt;
+        private readonly ConsultasDatosComunesSettings _consultasDatosComunes;
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
 
         public AppSettings(
-            IOptions<TrabajosColasSettings> opcionesTrabajosColas, IOptions<EventosNotificarSettings> eventosNotificar, IOptions<JWTSettings> jwt, ISerializadorJsonServicio serializadorJsonServicio)
+            IOptions<TrabajosColasSettings> opcionesTrabajosColas, IOptions<EventosNotificarSettings> eventosNotificar, IOptions<JWTSettings> jwt, ISerializadorJsonServicio serializadorJsonServicio, IOptions<ConsultasDatosComunesSettings> consultasDatosComunes)
         {
             _trabajosColas = opcionesTrabajosColas.Value;
             _eventosNotificar = eventosNotificar.Value;
             _jwt = jwt.Value;
             _serializadorJsonServicio = serializadorJsonServicio;
+            _consultasDatosComunes = consultasDatosComunes.Value;
         }
 
 
@@ -45,7 +47,7 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.Config
         public List<string?> ObtenerEventosNotificarActualizarPermisos()
         {
             var urls = _eventosNotificar.ActualizarPermisos;
-            return ObtenerListasUrls(urls);
+            return ObtenerListas(urls);
         }
 
         // JWT
@@ -81,12 +83,19 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.Config
             return string.IsNullOrWhiteSpace(audienciasDestinotexto) ? "" : audienciasDestinotexto;
         }
 
+        //ConsultasDatosComunes/CodigosConstantes
+        public List<string?> ObtenerConsultasDatosComunesCodigosConstantes()
+        {
+            var codigos = _consultasDatosComunes.CodigosConstantes;
+            return ObtenerListas(codigos);
+        }
 
 
-        private List<string?> ObtenerListasUrls(List<string?> urls)
+
+        private List<string?> ObtenerListas(List<string?> lista)
         {
             var urlsCompletas = new List<string?>();
-            foreach (var url in urls)
+            foreach (var url in lista)
                 urlsCompletas.Add(url);
 
             return urlsCompletas ?? new List<string?>();

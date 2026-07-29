@@ -4,6 +4,7 @@ using SEG.Dtos;
 using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Api.Seguridad.Middlewares.Permisos;
 using Utilidades.Seguridad;
+using Utilidades.Dtos;
 
 namespace SEG.Api.Seguridad.Controllers
 {
@@ -20,14 +21,14 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpGet("obtenerPorCodigo")]
         [Permiso(CodigosPermisos.Grupos.CONSULTAR)]
-        public async Task<ActionResult<ApiResponse<GrupoDto?>>> ObtenerPorCodigo(string codigo)
+        public async Task<ActionResult<ApiResponseDto<GrupoDto?>>> ObtenerPorCodigo(string codigo)
         {
             return await _grupoServicio.ObtenerPorCodigoAsync(codigo);            
         }
 
         [HttpGet("listar")]
         [Permiso(CodigosPermisos.Grupos.LISTAR)]
-        public async Task<ActionResult<ApiResponse<List<GrupoDto>?>>> Listar()
+        public async Task<ActionResult<ApiResponseDto<List<GrupoDto>?>>> Listar()
         {
             return await _grupoServicio.ListarAsync();
             
@@ -35,7 +36,7 @@ namespace SEG.Api.Seguridad.Controllers
         
         [HttpPost("crear")]
         [Permiso(CodigosPermisos.Grupos.CREAR)]
-        public async Task<ActionResult<ApiResponse<int>>> Crear(GrupoCreacionRequest grupoCreacionRequest) 
+        public async Task<ActionResult<ApiResponseDto<int>>> Crear(GrupoCreacionRequest grupoCreacionRequest) 
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -46,7 +47,7 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpPut("modificar")]
         [Permiso(CodigosPermisos.Grupos.MODIFICAR)]
-        public async Task<ActionResult<ApiResponse<string>>> Modificar(GrupoModificacionRequest grupoModificacionRequest)
+        public async Task<ActionResult<ApiResponseDto<string>>> Modificar(GrupoModificacionRequest grupoModificacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -56,7 +57,7 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpDelete("eliminar")]
         [Permiso(CodigosPermisos.Grupos.ELIMINAR)]
-        public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id) 
+        public async Task<ActionResult<ApiResponseDto<string>>> Eliminar(int id) 
         {
             return await _grupoServicio.EliminarAsync(id);
         }

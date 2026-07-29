@@ -6,9 +6,10 @@ using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
-using static Utilidades.Textos;
 using Microsoft.EntityFrameworkCore;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -23,9 +24,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public readonly IUsuarioContextoServicio _usuarioContextoServicio;
         public readonly IMapperPerfiles _mapper;
         public readonly IApiResponse _apiResponse;
-        public readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
+        public readonly ISincronizadorAutorizacion _autorizacionSincronizacion;
 
-        public GrupoPermisoServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IPermisoRepositorio permisoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Permiso> permisoValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapperPerfiles mapper, IApiResponse apiResponseServicio, IAutorizacionSincronizacion autorizacionSincronizacion)
+        public GrupoPermisoServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IPermisoRepositorio permisoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Permiso> permisoValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapperPerfiles mapper, IApiResponse apiResponseServicio, ISincronizadorAutorizacion autorizacionSincronizacion)
         {
             _grupoPermisoRepositorio = grupoPermisoRepositorio;
             _permisoRepositorio = permisoRepositorio;
@@ -39,7 +40,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _autorizacionSincronizacion = autorizacionSincronizacion;
         }
 
-        public async Task<ApiResponse<int>> CrearAsync(GrupoPermisoCreacionRequest grupoPermisoCreacionRequest)
+        public async Task<ApiResponseDto<int>> CrearAsync(GrupoPermisoCreacionRequest grupoPermisoCreacionRequest)
         {
             var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerGrupoPermisoAsync(grupoPermisoCreacionRequest.GrupoId, grupoPermisoCreacionRequest.PermisoId);
             _grupoPermisoValidador.ValidarDatoYaExiste(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_YA_EXISTE);
@@ -63,7 +64,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
         }
 
-        public async Task<ApiResponse<string>> ModificarAsync(GrupoPermisoModificacionRequest grupoPermisoModificacionRequest)
+        public async Task<ApiResponseDto<string>> ModificarAsync(GrupoPermisoModificacionRequest grupoPermisoModificacionRequest)
         {
             var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerPorIdAsync(grupoPermisoModificacionRequest.Id);
             _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_NO_EXISTE_ID);
@@ -82,7 +83,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }
 
-        public async Task<ApiResponse<string>> EliminarAsync(int id)
+        public async Task<ApiResponseDto<string>> EliminarAsync(int id)
         {
             var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerPorIdAsync(id);
             _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_NO_EXISTE_ID);
@@ -99,7 +100,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
         }
 
-        public async Task<ApiResponse<GrupoPermisoDto?>> ObtenerGrupoPermisoAsync(int grupoId, int permisoId)
+        public async Task<ApiResponseDto<GrupoPermisoDto?>> ObtenerGrupoPermisoAsync(int grupoId, int permisoId)
         {
             var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerGrupoPermisoAsync(grupoId, permisoId);
             _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_NO_EXISTE_GRUPO_PERMISO);
@@ -109,7 +110,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta<GrupoPermisoDto?>(true, "", grupoPermisoDto);
         }
 
-        public async Task<ApiResponse<List<GrupoPermisoDto>?>> ListarAsync()
+        public async Task<ApiResponseDto<List<GrupoPermisoDto>?>> ListarAsync()
         {
             var grupoPermisos = await _grupoPermisoRepositorio.Listar().ToListAsync();
             var grupoPermisosDto = _mapper.Map(grupoPermisos);

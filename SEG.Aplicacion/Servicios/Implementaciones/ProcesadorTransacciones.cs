@@ -1,8 +1,6 @@
-﻿using SEG.Aplicacion.ServiciosExternos;
-using SEG.Dominio.Repositorio.UnidadTrabajo;
+﻿using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Dominio.Excepciones;
-using SEG.Dominio.Entidades;
-using SEG.Dtos;
+using Utilidades.Excepciones;
 
 namespace SEG.Aplicacion.Servicios.Interfaces
 {

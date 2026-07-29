@@ -1,7 +1,8 @@
-﻿using SEG.Aplicacion.Servicios.Interfaces;
-using Utilidades.Serializacion.Interfaces;
-using Utilidades;
+﻿using Utilidades;
 using Utilidades.Seguridad;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
+using Utilidades.Servicios.Serializacion.Interfaces;
 
 namespace SEG.Api.Seguridad.Middlewares
 {

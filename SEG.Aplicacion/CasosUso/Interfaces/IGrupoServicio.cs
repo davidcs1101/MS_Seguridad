@@ -1,14 +1,15 @@
 ﻿using SEG.Dtos;
+using Utilidades.Dtos;
 
 namespace SEG.Aplicacion.CasosUso.Interfaces
 {
     public interface IGrupoServicio
     {
-        Task<ApiResponse<int>> CrearAsync(GrupoCreacionRequest grupoCreacionRequest);
-        Task<ApiResponse<string>> ModificarAsync(GrupoModificacionRequest grupoModificacionRequest);
-        Task<ApiResponse<string>> EliminarAsync(int id);
-        Task<ApiResponse<GrupoDto?>> ObtenerPorIdAsync(int id);
-        Task<ApiResponse<GrupoDto?>> ObtenerPorCodigoAsync(string codigo);
-        Task<ApiResponse<List<GrupoDto>?>> ListarAsync();
+        Task<ApiResponseDto<int>> CrearAsync(GrupoCreacionRequest grupoCreacionRequest);
+        Task<ApiResponseDto<string>> ModificarAsync(GrupoModificacionRequest grupoModificacionRequest);
+        Task<ApiResponseDto<string>> EliminarAsync(int id);
+        Task<ApiResponseDto<GrupoDto?>> ObtenerPorIdAsync(int id);
+        Task<ApiResponseDto<GrupoDto?>> ObtenerPorCodigoAsync(string codigo);
+        Task<ApiResponseDto<List<GrupoDto>?>> ListarAsync();
     }
 }

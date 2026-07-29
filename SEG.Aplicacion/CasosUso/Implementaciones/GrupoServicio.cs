@@ -9,6 +9,8 @@ using SEG.Dominio.Repositorio;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dtos;
 using Utilidades;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -19,9 +21,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
-        private readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
+        private readonly ISincronizadorAutorizacion _autorizacionSincronizacion;
 
-        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador, IAutorizacionSincronizacion autorizacionSincronizacion)
+        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador, ISincronizadorAutorizacion autorizacionSincronizacion)
         {
             _grupoRepositorio = grupoRepositorio;
             _mapper = mapper;
@@ -31,7 +33,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _autorizacionSincronizacion = autorizacionSincronizacion;
         }
 
-        public async Task<ApiResponse<int>> CrearAsync(GrupoCreacionRequest grupoCreacionRequest)
+        public async Task<ApiResponseDto<int>> CrearAsync(GrupoCreacionRequest grupoCreacionRequest)
         {
             var grupoExiste = await _grupoRepositorio.ObtenerPorCodigoAsync(grupoCreacionRequest.Codigo);
             _grupoValidador.ValidarDatoYaExiste(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_CODIGO_EXISTE);
@@ -47,7 +49,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         }
 
-        public async Task<ApiResponse<string>> ModificarAsync(GrupoModificacionRequest grupoModificacionRequest)
+        public async Task<ApiResponseDto<string>> ModificarAsync(GrupoModificacionRequest grupoModificacionRequest)
         {
             var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(grupoModificacionRequest.Id);
             _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
@@ -66,7 +68,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO,"");
         }
 
-        public async Task<ApiResponse<string>> EliminarAsync(int id)
+        public async Task<ApiResponseDto<string>> EliminarAsync(int id)
         {
             var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(id);
             _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
@@ -79,7 +81,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
         }
 
-        public async Task<ApiResponse<GrupoDto?>> ObtenerPorIdAsync(int id)
+        public async Task<ApiResponseDto<GrupoDto?>> ObtenerPorIdAsync(int id)
         {
             var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(id);
             _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
@@ -89,7 +91,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
         }
 
-        public async Task<ApiResponse<GrupoDto?>> ObtenerPorCodigoAsync(string codigo)
+        public async Task<ApiResponseDto<GrupoDto?>> ObtenerPorCodigoAsync(string codigo)
         {
             var grupoExiste = await _grupoRepositorio.ObtenerPorCodigoAsync(codigo);
             _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_CODIGO);
@@ -99,7 +101,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta<GrupoDto?>(true, "", grupoDto);
         }
 
-        public async Task<ApiResponse<List<GrupoDto>?>> ListarAsync()
+        public async Task<ApiResponseDto<List<GrupoDto>?>> ListarAsync()
         {
             var grupos = await _grupoRepositorio.Listar().ToListAsync();
 

@@ -3,6 +3,7 @@ using SEG.Aplicacion.ServiciosExternos;
 using System.Net.Http.Json;
 using Utilidades;
 using SEG.Aplicacion.ServiciosExternos.config;
+using Utilidades.Servicios.Http.Interfaces;
 
 namespace SEG.Infraestructura.Aplicacion.ServiciosExternos
 {
@@ -21,8 +22,7 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos
         {
             var requestUrl = $"{url}";
             var respuesta = await _httpClient.PostAsJsonAsync(requestUrl, "");
-            await _respuestaHttpValidador.ValidarRespuesta(
-                respuesta, Textos.Generales.MENSAJE_ERROR_CONSUMO_SERVICIO);
+            await _respuestaHttpValidador.ValidarRespuesta(respuesta, Textos.Generales.MENSAJE_ERROR_CONSUMO_SERVICIO);
 
             return respuesta;
         }

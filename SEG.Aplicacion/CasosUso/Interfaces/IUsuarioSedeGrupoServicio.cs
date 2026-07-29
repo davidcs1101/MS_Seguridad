@@ -1,13 +1,13 @@
 ﻿using SEG.Dtos;
-
+using Utilidades.Dtos;
 namespace SEG.Aplicacion.CasosUso.Interfaces
 {
     public interface IUsuarioSedeGrupoServicio
     {
-        Task<ApiResponse<int>> CrearAsync(UsuarioSedeGrupoCreacionRequest usuarioSedeGrupoCreacion);
-        Task<ApiResponse<string>> ModificarAsync(UsuarioSedeGrupoModificacionRequest usuarioSedeGrupoModificacionRequest);
-        Task<ApiResponse<string>> EliminarAsync(int id);
-        Task<ApiResponse<UsuarioSedeGrupoDto?>> ObtenerUsuarioSedeAsync(int usuarioId, int sedeId);
-        Task<ApiResponse<List<UsuarioSedeGrupoDto>?>> ListarPorUsuarioIdLogueadoAsync();
+        Task<ApiResponseDto<int>> CrearAsync(UsuarioSedeGrupoCreacionRequest usuarioSedeGrupoCreacion);
+        Task<ApiResponseDto<string>> ModificarAsync(UsuarioSedeGrupoModificacionRequest usuarioSedeGrupoModificacionRequest);
+        Task<ApiResponseDto<string>> EliminarAsync(int id);
+        Task<ApiResponseDto<UsuarioSedeGrupoDto?>> ObtenerUsuarioSedeAsync(int usuarioId, int sedeId);
+        Task<ApiResponseDto<List<UsuarioSedeGrupoDto>?>> ListarPorUsuarioIdLogueadoAsync();
     }
 }

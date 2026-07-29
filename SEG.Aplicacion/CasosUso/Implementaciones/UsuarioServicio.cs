@@ -12,7 +12,9 @@ using SEG.Dominio.Enumeraciones;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using Utilidades.Seguridad;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
-using Utilidades.Serializacion.Interfaces;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
+using Utilidades.Servicios.Serializacion.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -32,12 +34,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IJobEncoladorServicio _jobEncoladorServicio;
         private readonly IMSEmpresas _msEmpresas;
-        private readonly IDatosComunesListasCache _datosComunesListasCache;
-        private readonly IEntidadValidador<ListaDetalleDto> _listaDetalleDtoValidador;
+        private readonly ICatalogoExternoCache _parametroExternoCache;
+        private readonly IEntidadValidador<CatalogoExternoDto> _parametroExternoDtoValidador;
         private readonly IProcesadorTransacciones _procesadorTransacciones;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IDatosComunesListasCache datosComunesListasCache, IEntidadValidador<ListaDetalleDto> listaDetalleDtoValidador, IProcesadorTransacciones procesadorTransacciones)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IProcesadorTransacciones procesadorTransacciones, ICatalogoExternoCache parametroExternoCache, IEntidadValidador<CatalogoExternoDto> parametroExternoDtoValidador)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;
@@ -53,13 +55,13 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _serializadorJsonServicio = serializadorJsonServicio;
             _jobEncoladorServicio = jobEncoladorServicio;
             _msEmpresas = msEmpresas;
-            _datosComunesListasCache = datosComunesListasCache;
-            _listaDetalleDtoValidador = listaDetalleDtoValidador;
             _procesadorTransacciones = procesadorTransacciones;
+            _parametroExternoCache = parametroExternoCache;
+            _parametroExternoDtoValidador = parametroExternoDtoValidador;
         }
 
 
-        public async Task<ApiResponse<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest)
+        public async Task<ApiResponseDto<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest)
         {
             var id = 0;
             var cola = new SEG_ColaSolicitud();
@@ -81,7 +83,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = id, NotificadoPorCorreo = null });
         }
 
-        public async Task<ApiResponse<UsuarioOtrosDatosDto>> CrearConSedeAsync(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
+        public async Task<ApiResponseDto<UsuarioOtrosDatosDto>> CrearConSedeAsync(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest)
         {
             var id = 0;
             var cola = new SEG_ColaSolicitud();
@@ -120,7 +122,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, new UsuarioOtrosDatosDto { Id = id, NotificadoPorCorreo = null });
         }
 
-        public async Task<ApiResponse<UsuarioOtrosDatosDto>> ModificarClaveAsync(string clave)
+        public async Task<ApiResponseDto<UsuarioOtrosDatosDto>> ModificarClaveAsync(string clave)
         {
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
@@ -136,7 +138,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = false });
         }
 
-        public async Task<ApiResponse<UsuarioOtrosDatosDto>> RestablecerClavePorUsuarioAsync(string nombreUsuario)
+        public async Task<ApiResponseDto<UsuarioOtrosDatosDto>> RestablecerClavePorUsuarioAsync(string nombreUsuario)
         {
             var cola = new SEG_ColaSolicitud();
             var nuevaClave = "";
@@ -162,7 +164,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, new UsuarioOtrosDatosDto { NotificadoPorCorreo = false, Clave = nuevaClave });
         }
 
-        public async Task<ApiResponse<string>> ModificarEmailAsync(string email)
+        public async Task<ApiResponseDto<string>> ModificarEmailAsync(string email)
         {
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
@@ -180,7 +182,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO,"");
         }
 
-        public async Task<ApiResponse<string>> ObtenerNombreUsuarioPorIdAsync(int id) 
+        public async Task<ApiResponseDto<string>> ObtenerNombreUsuarioPorIdAsync(int id) 
         {
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorIdAsync(id);
             _usuarioValidador.ValidarDatoNoEncontrado(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NO_EXISTE_ID);
@@ -188,7 +190,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, "", usuarioExiste.NombreUsuario);
         }
 
-        public async Task<ApiResponse<List<UsuarioDto>?>> ListarAsync(IdsListadoDto? idsListado = null)
+        public async Task<ApiResponseDto<List<UsuarioDto>?>> ListarAsync(IdsListadoDto? idsListado = null)
         {
             var usuariosResultado = _usuarioRepositorio.Listar()
                 .Select(u => new UsuarioDto
@@ -219,8 +221,8 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         private async Task<SEG_Usuario> AsignarDatosAsync(UsuarioCreacionRequest usuarioCreacionRequest, int usuarioCreadorId, string nuevaClave) 
         {
-            var tipoIdentificacion = _datosComunesListasCache.ObtenerPorCodigoListaYCodigoListaDetalle(CodigosListas.TIPOSIDENTIFICACION,usuarioCreacionRequest.TipoIdentificacion);
-            _listaDetalleDtoValidador.ValidarDatoNoEncontrado(tipoIdentificacion, Textos.ListasDetalles.MENSAJE_LISTADETALLE_NO_EXISTE_EN_CODIGOLISTA(CodigosListas.TIPOSIDENTIFICACION, usuarioCreacionRequest.TipoIdentificacion));
+            var tipoIdentificacion = _parametroExternoCache.ObtenerPorCodigoCatalogoYCodigo(CodigosConstantes.TIPOIDENTIREGISTROUSUARIO, usuarioCreacionRequest.TipoIdentificacion);
+            _parametroExternoDtoValidador.ValidarDatoNoEncontrado(tipoIdentificacion, Textos.Generales.MENSAJE_PARAMETROEXTERNO_NO_EXISTE_EN_CODIGOCATALOGO(CodigosConstantes.TIPOIDENTIREGISTROUSUARIO, usuarioCreacionRequest.TipoIdentificacion));
 
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(usuarioCreacionRequest.NombreUsuario);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NOMBRE_EXISTE);

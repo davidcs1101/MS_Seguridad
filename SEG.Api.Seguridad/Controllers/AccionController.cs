@@ -4,6 +4,7 @@ using SEG.Api.Seguridad.Middlewares.Permisos;
 using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Dtos;
 using Utilidades.Seguridad;
+using Utilidades.Dtos;
 
 namespace SEG.Api.Seguridad.Controllers
 {
@@ -20,21 +21,21 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpGet("obtenerPorCodigo")]
         [Permiso(CodigosPermisos.Acciones.CONSULTAR)]
-        public async Task<ActionResult<ApiResponse<AccionDto?>>> ObtenerPorCodigo(string codigo)
+        public async Task<ActionResult<ApiResponseDto<AccionDto?>>> ObtenerPorCodigo(string codigo)
         {
             return await _accionServicio.ObtenerPorCodigoAsync(codigo);
         }
 
         [HttpGet("listar")]
         [Permiso(CodigosPermisos.Acciones.LISTAR)]
-        public async Task<ActionResult<ApiResponse<List<AccionDto>?>>> Listar()
+        public async Task<ActionResult<ApiResponseDto<List<AccionDto>?>>> Listar()
         {
             return await _accionServicio.ListarAsync();
         }
 
         [HttpPost("crear")]
         [Permiso(CodigosPermisos.Acciones.CREAR)]
-        public async Task<ActionResult<ApiResponse<int>>> Crear(AccionCreacionRequest accionCreacionRequest)
+        public async Task<ActionResult<ApiResponseDto<int>>> Crear(AccionCreacionRequest accionCreacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -44,7 +45,7 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpPut("modificar")]
         [Permiso(CodigosPermisos.Acciones.MODIFICAR)]
-        public async Task<ActionResult<ApiResponse<string>>> Modificar(AccionModificacionRequest accionModificacionRequest)
+        public async Task<ActionResult<ApiResponseDto<string>>> Modificar(AccionModificacionRequest accionModificacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -54,7 +55,7 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpDelete("eliminar")]
         [Permiso(CodigosPermisos.Acciones.ELIMINAR)]
-        public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id)
+        public async Task<ActionResult<ApiResponseDto<string>>> Eliminar(int id)
         {
             return await _accionServicio.EliminarAsync(id);
         }

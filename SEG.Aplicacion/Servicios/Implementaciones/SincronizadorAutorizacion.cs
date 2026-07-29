@@ -8,7 +8,7 @@ using Utilidades;
 
 namespace SEG.Aplicacion.Servicios.Interfaces
 {
-    public class AutorizacionSincronizacion : IAutorizacionSincronizacion
+    public class SincronizadorAutorizacion : ISincronizadorAutorizacion
     {
         /// <inheritdoc/>
         private readonly IAutorizacionServicio _autorizacionServicio;
@@ -16,7 +16,7 @@ namespace SEG.Aplicacion.Servicios.Interfaces
         private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
         private readonly IAppSettings _appSettings;
 
-        public AutorizacionSincronizacion(IAutorizacionServicio autorizacionServicio,
+        public SincronizadorAutorizacion(IAutorizacionServicio autorizacionServicio,
             ISeguridadPermisosCache permisosCache, IColaSolicitudRepositorio colaSolicitudRepositorio, IAppSettings appSettings)
         {
             _autorizacionServicio = autorizacionServicio;

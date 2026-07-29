@@ -9,16 +9,16 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
         private readonly IMSDatosComunesBackgroundServicio _msDatosComunesBackgroundServicio;
         private readonly IServicioComun _servicioComun;
 
-        public MSDatosComunes(IMSDatosComunesBackgroundServicio msDatosComunesBackgroundServicio, IRespuestaHttpValidador respuestaHttpValidador, IServicioComun servicioComun)
+        public MSDatosComunes(IMSDatosComunesBackgroundServicio msDatosComunesBackgroundServicio, IServicioComun servicioComun)
         {
             _msDatosComunesBackgroundServicio = msDatosComunesBackgroundServicio;
             _servicioComun = servicioComun;
         }
 
-        public async Task<List<ListaDetalleDto?>> ListarListasDetalleAsync()
+        public async Task<List<ListaDetalleDto?>> ListarListasDetallePorCodigosConstanteAsync(List<string> codigosConstante)
         {
             return await _servicioComun.ObtenerRespuestaHttpAsync<List<ListaDetalleDto?>>(
-                funcionEjecutar: _msDatosComunesBackgroundServicio.ListarListasDetalleAsync);
+                funcionEjecutar: () => _msDatosComunesBackgroundServicio.ListarListasDetallePorCodigosConstanteAsync(codigosConstante));
         }
 
     }

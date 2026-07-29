@@ -16,17 +16,4 @@ public class JobEncoladorServicio: IJobEncoladorServicio
         }
         return Task.CompletedTask;
     }
-
-    public Task EncolarCacheListaTiposIdentificacion() 
-    {
-        try
-        {
-            BackgroundJob.Enqueue<IDatosComunesListasCache>(x => x.InicializarAsync());
-        }
-        catch (Exception e)
-        {
-            Logs.EscribirLog("e", Textos.ColasSolicitudes.MENSAJE_COLASOLICITUD_ERROR_ENCOLAR_HANGFIRE, e);
-        }
-        return Task.CompletedTask;
-    }
 }

@@ -7,6 +7,6 @@ namespace SEG.Aplicacion.ServiciosExternos.config
         List<string?> ObtenerEventosNotificarActualizarPermisos();
         JWTSettings ObtenerJWT();
         string ObtenerAudienciasDestinoTexto();
-
+        List<string?> ObtenerConsultasDatosComunesCodigosConstantes();
     }
 }

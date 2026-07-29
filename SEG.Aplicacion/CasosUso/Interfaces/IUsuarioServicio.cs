@@ -1,15 +1,15 @@
 ﻿using SEG.Dtos;
-
+using Utilidades.Dtos;
 namespace SEG.Aplicacion.CasosUso.Interfaces
 {
     public interface IUsuarioServicio
     {
-        Task<ApiResponse<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest);
-        Task<ApiResponse<UsuarioOtrosDatosDto>> CrearConSedeAsync(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest);
-        Task<ApiResponse<UsuarioOtrosDatosDto>> ModificarClaveAsync(string clave);
-        Task<ApiResponse<UsuarioOtrosDatosDto>> RestablecerClavePorUsuarioAsync(string nombreUsuario);
-        Task<ApiResponse<string>> ModificarEmailAsync(string email);
-        Task<ApiResponse<string>> ObtenerNombreUsuarioPorIdAsync(int id);
-        Task<ApiResponse<List<UsuarioDto>?>> ListarAsync(IdsListadoDto ids);
+        Task<ApiResponseDto<UsuarioOtrosDatosDto>> CrearAsync(UsuarioCreacionRequest usuarioCreacionRequest);
+        Task<ApiResponseDto<UsuarioOtrosDatosDto>> CrearConSedeAsync(UsuarioSedeCreacionRequest usuarioSedeCreacionRequest);
+        Task<ApiResponseDto<UsuarioOtrosDatosDto>> ModificarClaveAsync(string clave);
+        Task<ApiResponseDto<UsuarioOtrosDatosDto>> RestablecerClavePorUsuarioAsync(string nombreUsuario);
+        Task<ApiResponseDto<string>> ModificarEmailAsync(string email);
+        Task<ApiResponseDto<string>> ObtenerNombreUsuarioPorIdAsync(int id);
+        Task<ApiResponseDto<List<UsuarioDto>?>> ListarAsync(IdsListadoDto ids);
     }
 }

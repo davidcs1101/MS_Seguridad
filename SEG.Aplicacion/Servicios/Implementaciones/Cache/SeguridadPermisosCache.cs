@@ -3,8 +3,9 @@ using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using SEG.Dtos;
-using System.Runtime.InteropServices;
 using Utilidades;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
 {
@@ -26,7 +27,7 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
             await InicializarPermisosAsync();
         }
 
-        public ApiResponse<string> Actualizar(List<AutorizacionDto> autorizaciones)
+        public ApiResponseDto<string> Actualizar(List<AutorizacionDto> autorizaciones)
         {
             var permisos = autorizaciones
                 .Where(x => x.EstadoPrograma && x.EstadoGrupo && x.EstadoPermiso && x.EstadoGrupoPermiso)
@@ -38,9 +39,7 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
                         .ToHashSet(StringComparer.OrdinalIgnoreCase));
 
             lock (_lock)
-            {
                 _permisos = permisos;
-            }
 
             Logs.EscribirLog("i","Cache de permisos actualizada.");
             return _apiResponse.CrearRespuesta(true,"Cache de permisos actualizada.","");

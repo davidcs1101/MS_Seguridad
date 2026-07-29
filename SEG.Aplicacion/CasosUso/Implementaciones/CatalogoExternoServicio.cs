@@ -8,19 +8,21 @@ using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
-    public class ParametroExternoServicio : IParametroExternoServicio
+    public class CatalogoExternoServicio : ICatalogoExternoServicio
     {
         private readonly IProgramaRepositorio _programaRepositorio;
         private readonly IMapperPerfiles _mapper;
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Programa> _programaValidador;
-        private readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
+        private readonly ISincronizadorAutorizacion _autorizacionSincronizacion;
 
-        public ParametroExternoServicio(IProgramaRepositorio programaRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio, IAutorizacionSincronizacion autorizacionSincronizacion)
+        public CatalogoExternoServicio(IProgramaRepositorio programaRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio, ISincronizadorAutorizacion autorizacionSincronizacion)
         {
             _programaRepositorio = programaRepositorio;
             _mapper = mapper;
@@ -30,13 +32,13 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _autorizacionSincronizacion = autorizacionSincronizacion;
         }
 
-        public async Task<ApiResponse<int>> SincronizarDatosAsync()
+        public async Task<ApiResponseDto<int>> SincronizarDatosAsync()
         {
             // Lógica para sincronizar datos
             return _apiResponse.CrearRespuesta(true, "", 0);
         }
 
-        public async Task<ApiResponse<List<ProgramaDto>?>> ListarAsync()
+        public async Task<ApiResponseDto<List<ProgramaDto>?>> ListarAsync()
         {
             var programas = await _programaRepositorio.Listar().ToListAsync();
 

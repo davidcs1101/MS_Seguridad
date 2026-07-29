@@ -4,6 +4,7 @@ using SEG.Dtos;
 using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Api.Seguridad.Middlewares.Permisos;
 using Utilidades.Seguridad;
+using Utilidades.Dtos;
 
 namespace SEG.Api.Seguridad.Controllers
 {
@@ -19,14 +20,14 @@ namespace SEG.Api.Seguridad.Controllers
         }
 
         [HttpGet("listarPorUsuarioIdLogueado")]
-        public async Task<ActionResult<ApiResponse<List<UsuarioSedeGrupoDto>?>>> ListarPorUsuarioIdLogueado()
+        public async Task<ActionResult<ApiResponseDto<List<UsuarioSedeGrupoDto>?>>> ListarPorUsuarioIdLogueado()
         {
             return await _usuarioSedeGrupoServicio.ListarPorUsuarioIdLogueadoAsync();
         }
 
         [HttpPost("crear")]
         [Permiso(CodigosPermisos.UsuariosSedesGrupos.CREAR)]
-        public async Task<ActionResult<ApiResponse<int>>> Crear(UsuarioSedeGrupoCreacionRequest usuarioSedeGrupoCreacionRequest) 
+        public async Task<ActionResult<ApiResponseDto<int>>> Crear(UsuarioSedeGrupoCreacionRequest usuarioSedeGrupoCreacionRequest) 
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -36,7 +37,7 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpPut("modificar")]
         [Permiso(CodigosPermisos.UsuariosSedesGrupos.MODIFICAR)]
-        public async Task<ActionResult<ApiResponse<string>>> Modificar(UsuarioSedeGrupoModificacionRequest usuarioSedeGrupoModificacionRequest)
+        public async Task<ActionResult<ApiResponseDto<string>>> Modificar(UsuarioSedeGrupoModificacionRequest usuarioSedeGrupoModificacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -46,7 +47,7 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpDelete("eliminar")]
         [Permiso(CodigosPermisos.UsuariosSedesGrupos.ELIMINAR)]
-        public async Task<ActionResult<ApiResponse<string>>> Eliminar(int id) 
+        public async Task<ActionResult<ApiResponseDto<string>>> Eliminar(int id) 
         {
             return await _usuarioSedeGrupoServicio.EliminarAsync(id);
         }

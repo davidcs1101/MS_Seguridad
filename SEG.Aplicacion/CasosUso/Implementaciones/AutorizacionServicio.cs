@@ -4,6 +4,9 @@ using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
 using SEG.Dominio.Repositorio;
 using SEG.Dtos;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
+
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
     public class AutorizacionServicio : IAutorizacionServicio
@@ -19,7 +22,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<List<AutorizacionDto>?>> ObtenerCatalogoAutorizacionAsync()
+        public async Task<ApiResponseDto<List<AutorizacionDto>?>> ObtenerCatalogoAutorizacionAsync()
         {
             var autorizaciones = await _grupoPermisoRepositorio
                 .ListarPermisosCache()

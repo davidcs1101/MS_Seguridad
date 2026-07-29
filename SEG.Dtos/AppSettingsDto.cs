@@ -26,4 +26,9 @@
         public List<string> ActualizarPermisos { get; set; } = new();
     }
 
+    public class ConsultasDatosComunesSettings
+    {
+        public List<string> CodigosConstantes { get; set; } = new();
+    }
+
 }

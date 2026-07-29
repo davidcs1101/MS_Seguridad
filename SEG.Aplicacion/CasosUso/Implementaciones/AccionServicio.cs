@@ -8,6 +8,8 @@ using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -18,9 +20,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Accion> _accionValidador;
-        private readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
+        private readonly ISincronizadorAutorizacion _autorizacionSincronizacion;
 
-        public AccionServicio(IAccionRepositorio accionRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Accion> accionValidador, IApiResponse apiResponseServicio, IAutorizacionSincronizacion autorizacionSincronizacion)
+        public AccionServicio(IAccionRepositorio accionRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Accion> accionValidador, IApiResponse apiResponseServicio, ISincronizadorAutorizacion autorizacionSincronizacion)
         {
             _accionRepositorio = accionRepositorio;
             _mapper = mapper;
@@ -30,7 +32,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _autorizacionSincronizacion = autorizacionSincronizacion;
         }
 
-        public async Task<ApiResponse<int>> CrearAsync(AccionCreacionRequest accionCreacionRequest)
+        public async Task<ApiResponseDto<int>> CrearAsync(AccionCreacionRequest accionCreacionRequest)
         {
             var accionExiste = await _accionRepositorio.ObtenerPorCodigoAsync(accionCreacionRequest.Codigo);
             _accionValidador.ValidarDatoYaExiste(accionExiste, Textos.Acciones.MENSAJE_ACCION_CODIGO_EXISTE);
@@ -45,7 +47,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
         }
 
-        public async Task<ApiResponse<string>> ModificarAsync(AccionModificacionRequest accionModificacionRequest)
+        public async Task<ApiResponseDto<string>> ModificarAsync(AccionModificacionRequest accionModificacionRequest)
         {
             var accionExiste = await _accionRepositorio.ObtenerPorIdAsync(accionModificacionRequest.Id);
             _accionValidador.ValidarDatoNoEncontrado(accionExiste, Textos.Acciones.MENSAJE_ACCION_NO_EXISTE_ID);
@@ -64,7 +66,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }
 
-        public async Task<ApiResponse<string>> EliminarAsync(int id)
+        public async Task<ApiResponseDto<string>> EliminarAsync(int id)
         {
             var accionExiste = await _accionRepositorio.ObtenerPorIdAsync(id);
             _accionValidador.ValidarDatoNoEncontrado(accionExiste, Textos.Acciones.MENSAJE_ACCION_NO_EXISTE_ID);
@@ -77,7 +79,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
         }
 
-        public async Task<ApiResponse<AccionDto?>> ObtenerPorIdAsync(int id)
+        public async Task<ApiResponseDto<AccionDto?>> ObtenerPorIdAsync(int id)
         {
             var accionExiste = await _accionRepositorio.ObtenerPorIdAsync(id);
             _accionValidador.ValidarDatoNoEncontrado(accionExiste, Textos.Acciones.MENSAJE_ACCION_NO_EXISTE_ID);
@@ -87,7 +89,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta<AccionDto?>(true, "", accionDto);
         }
 
-        public async Task<ApiResponse<AccionDto?>> ObtenerPorCodigoAsync(string codigo)
+        public async Task<ApiResponseDto<AccionDto?>> ObtenerPorCodigoAsync(string codigo)
         {
             var accionExiste = await _accionRepositorio.ObtenerPorCodigoAsync(codigo);
             _accionValidador.ValidarDatoNoEncontrado(accionExiste, Textos.Acciones.MENSAJE_ACCION_NO_EXISTE_CODIGO);
@@ -97,7 +99,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta<AccionDto?>(true, "", accionDto);
         }
 
-        public async Task<ApiResponse<List<AccionDto>?>> ListarAsync()
+        public async Task<ApiResponseDto<List<AccionDto>?>> ListarAsync()
         {
             var acciones = await _accionRepositorio.Listar().ToListAsync();
 

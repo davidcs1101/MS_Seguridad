@@ -8,6 +8,8 @@ using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -18,9 +20,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Programa> _programaValidador;
-        private readonly IAutorizacionSincronizacion _autorizacionSincronizacion;
+        private readonly ISincronizadorAutorizacion _autorizacionSincronizacion;
 
-        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio, IAutorizacionSincronizacion autorizacionSincronizacion)
+        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio, ISincronizadorAutorizacion autorizacionSincronizacion)
         {
             _programaRepositorio = programaRepositorio;
             _mapper = mapper;
@@ -30,7 +32,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _autorizacionSincronizacion = autorizacionSincronizacion;
         }
 
-        public async Task<ApiResponse<int>> CrearAsync(ProgramaCreacionRequest programaCreacionRequest)
+        public async Task<ApiResponseDto<int>> CrearAsync(ProgramaCreacionRequest programaCreacionRequest)
         {
             var programaExiste = await _programaRepositorio.ObtenerPorCodigoAsync(programaCreacionRequest.Codigo);
             _programaValidador.ValidarDatoYaExiste(programaExiste, Textos.Programas.MENSAJE_PROGRAMA_CODIGO_EXISTE);
@@ -45,7 +47,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
         }
 
-        public async Task<ApiResponse<string>> ModificarAsync(ProgramaModificacionRequest programaModificacionRequest)
+        public async Task<ApiResponseDto<string>> ModificarAsync(ProgramaModificacionRequest programaModificacionRequest)
         {
             var programaExiste = await _programaRepositorio.ObtenerPorIdAsync(programaModificacionRequest.Id);
             _programaValidador.ValidarDatoNoEncontrado(programaExiste, Textos.Programas.MENSAJE_PROGRAMA_NO_EXISTE_ID);
@@ -64,7 +66,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }
 
-        public async Task<ApiResponse<string>> EliminarAsync(int id)
+        public async Task<ApiResponseDto<string>> EliminarAsync(int id)
         {
             var programaExiste = await _programaRepositorio.ObtenerPorIdAsync(id);
             _programaValidador.ValidarDatoNoEncontrado(programaExiste, Textos.Programas.MENSAJE_PROGRAMA_NO_EXISTE_ID);
@@ -77,7 +79,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
         }
 
-        public async Task<ApiResponse<ProgramaDto?>> ObtenerPorIdAsync(int id)
+        public async Task<ApiResponseDto<ProgramaDto?>> ObtenerPorIdAsync(int id)
         {
             var programaExiste = await _programaRepositorio.ObtenerPorIdAsync(id);
             _programaValidador.ValidarDatoNoEncontrado(programaExiste, Textos.Programas.MENSAJE_PROGRAMA_NO_EXISTE_ID);
@@ -87,7 +89,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta<ProgramaDto?>(true, "", programaDto);
         }
 
-        public async Task<ApiResponse<ProgramaDto?>> ObtenerPorCodigoAsync(string codigo)
+        public async Task<ApiResponseDto<ProgramaDto?>> ObtenerPorCodigoAsync(string codigo)
         {
             var programaExiste = await _programaRepositorio.ObtenerPorCodigoAsync(codigo);
             _programaValidador.ValidarDatoNoEncontrado(programaExiste, Textos.Programas.MENSAJE_PROGRAMA_NO_EXISTE_CODIGO);
@@ -97,7 +99,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta<ProgramaDto?>(true, "", programaDto);
         }
 
-        public async Task<ApiResponse<List<ProgramaDto>?>> ListarAsync()
+        public async Task<ApiResponseDto<List<ProgramaDto>?>> ListarAsync()
         {
             var programas = await _programaRepositorio.Listar().ToListAsync();
 

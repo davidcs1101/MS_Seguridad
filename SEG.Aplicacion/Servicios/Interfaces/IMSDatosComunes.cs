@@ -4,6 +4,6 @@ namespace SEG.Aplicacion.Servicios.Interfaces
 {
     public interface IMSDatosComunes
     {
-        Task<List<ListaDetalleDto?>> ListarListasDetalleAsync();
+        Task<List<ListaDetalleDto?>> ListarListasDetallePorCodigosConstanteAsync(List<string> codigosConstante);
     }
 }

@@ -2,8 +2,9 @@
 using System.Net;
 using Utilidades;
 using SEG.Dominio.Excepciones;
-using SEG.Aplicacion.Servicios.Interfaces;
-using Utilidades.Serializacion.Interfaces;
+using Utilidades.Servicios.Responses.Interfaces;
+using Utilidades.Servicios.Serializacion.Interfaces;
+using Utilidades.Excepciones;
 
 namespace SEG.Api.Seguridad.Middlewares
 {

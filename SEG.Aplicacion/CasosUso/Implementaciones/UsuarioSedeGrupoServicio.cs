@@ -8,6 +8,8 @@ using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
+using Utilidades.Dtos;
+using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -36,7 +38,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _apiResponse = apiResponseServicio;
         }
 
-        public async Task<ApiResponse<int>> CrearAsync(UsuarioSedeGrupoCreacionRequest usuarioSedeGrupoCreacionRequest) 
+        public async Task<ApiResponseDto<int>> CrearAsync(UsuarioSedeGrupoCreacionRequest usuarioSedeGrupoCreacionRequest) 
         {
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorIdAsync(usuarioSedeGrupoCreacionRequest.UsuarioId);
             _usuarioValidador.ValidarDatoNoEncontrado(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NO_EXISTE_ID);
@@ -59,7 +61,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
         }
 
-        public async Task<ApiResponse<string>> ModificarAsync(UsuarioSedeGrupoModificacionRequest usuarioSedeGrupoModificacionRequest)
+        public async Task<ApiResponseDto<string>> ModificarAsync(UsuarioSedeGrupoModificacionRequest usuarioSedeGrupoModificacionRequest)
         {
             var usuarioSedeGrupoExiste = await _usuarioSedeGrupoRepositorio.ObtenerPorIdAsync(usuarioSedeGrupoModificacionRequest.Id);
             _usuarioSedeGrupoValidador.ValidarDatoNoEncontrado(usuarioSedeGrupoExiste, Textos.UsuariosSedesGrupos.MENSAJE_USUARIOSEDEGRUPO_NO_EXISTE_ID);
@@ -78,7 +80,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }
 
-        public async Task<ApiResponse<string>> EliminarAsync(int id) 
+        public async Task<ApiResponseDto<string>> EliminarAsync(int id) 
         {
             var usuarioSedeGrupo = await _usuarioSedeGrupoRepositorio.ObtenerPorIdAsync(id);
             _usuarioSedeGrupoValidador.ValidarDatoNoEncontrado(usuarioSedeGrupo, Textos.UsuariosSedesGrupos.MENSAJE_USUARIOSEDEGRUPO_NO_EXISTE_ID);
@@ -91,7 +93,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
         }
 
-        public async Task<ApiResponse<UsuarioSedeGrupoDto?>> ObtenerUsuarioSedeAsync(int usuarioId, int sedeId) 
+        public async Task<ApiResponseDto<UsuarioSedeGrupoDto?>> ObtenerUsuarioSedeAsync(int usuarioId, int sedeId) 
         {
             var usuarioSedeExiste = await _usuarioSedeGrupoRepositorio.ObtenerUsuarioSedeAsync(usuarioId, sedeId);
             _usuarioSedeGrupoValidador.ValidarDatoNoEncontrado(usuarioSedeExiste, Textos.UsuariosSedesGrupos.MENSAJE_USUARIOSEDEGRUPO_NO_EXISTE_USUARIO_SEDE);
@@ -101,7 +103,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             return _apiResponse.CrearRespuesta<UsuarioSedeGrupoDto?>(true, "", usuarioSedeGrupoDto);
         }
 
-        public async Task<ApiResponse<List<UsuarioSedeGrupoDto>?>> ListarPorUsuarioIdLogueadoAsync() 
+        public async Task<ApiResponseDto<List<UsuarioSedeGrupoDto>?>> ListarPorUsuarioIdLogueadoAsync() 
         {
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 

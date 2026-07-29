@@ -1,6 +1,6 @@
-﻿using SEG.Aplicacion.ServiciosExternos;
-using Utilidades.Serializacion.Interfaces;
-using SEG.Dtos;
+﻿using Utilidades.Dtos;
+using Utilidades.Servicios.Serializacion.Interfaces;
+using Utilidades.Servicios.Http.Interfaces;
 
 namespace SEG.Aplicacion.Servicios.Interfaces
 {
@@ -22,7 +22,7 @@ namespace SEG.Aplicacion.Servicios.Interfaces
             var respuesta = await funcionEjecutar(request);
             await _respuestaHttpValidador.ValidarRespuesta(respuesta, Utilidades.Textos.Generales.MENSAJE_ERROR_CONSUMO_SERVICIO);
             var contenidoJson = await respuesta.Content.ReadAsStringAsync();
-            var resultado = _serializadorJsonServicio.Deserializar<ApiResponse<T?>>(contenidoJson);
+            var resultado = _serializadorJsonServicio.Deserializar<ApiResponseDto<T?>>(contenidoJson);
 
             return resultado.Data!;
         }
@@ -33,7 +33,7 @@ namespace SEG.Aplicacion.Servicios.Interfaces
             var respuesta = await funcionEjecutar();
             await _respuestaHttpValidador.ValidarRespuesta(respuesta, Utilidades.Textos.Generales.MENSAJE_ERROR_CONSUMO_SERVICIO);
             var contenidoJson = await respuesta.Content.ReadAsStringAsync();
-            var resultado = _serializadorJsonServicio.Deserializar<ApiResponse<T?>>(contenidoJson);
+            var resultado = _serializadorJsonServicio.Deserializar<ApiResponseDto<T?>>(contenidoJson);
 
             return resultado.Data!;
         }

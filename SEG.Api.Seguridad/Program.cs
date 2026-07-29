@@ -33,8 +33,11 @@ using SEG.Intraestructura.Dominio.Repositorio;
 using SEG.Intraestructura.Dominio.Repositorio.UnidadTrabajo;
 using System.Text;
 using Utilidades.Seguridad;
-using Utilidades.Serializacion.Interfaces;
-using Utilidades.Serializacion.Implementaciones;
+using Utilidades.Servicios.Responses.Implementaciones;
+using Utilidades.Servicios.Serializacion.Implementaciones;
+using Utilidades.Servicios.Serializacion.Interfaces;
+using Utilidades.Servicios.Http.Interfaces;
+using Utilidades.Servicios.Http.Implementaciones;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,7 +102,10 @@ builder.Services.AddScoped<IPermisoServicio, PermisoServicio>();
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
 
-builder.Services.AddSingleton<SEG.Aplicacion.Servicios.Interfaces.IApiResponse, ApiResponse>();
+builder.Services.AddScoped<ICatalogoExternoRepositorio, CatalogoExternoRepositorio>();
+builder.Services.AddScoped<ICatalogoExternoServicio, CatalogoExternoServicio>();
+
+builder.Services.AddSingleton<Utilidades.Servicios.Responses.Interfaces.IApiResponse, ApiResponse>();
 
 builder.Services.AddScoped<IUsuarioValidador, UsuarioValidador>();
 
@@ -114,6 +120,8 @@ builder.Services.AddSingleton<ISerializadorJsonServicio, SerializadorJsonServici
 
 builder.Services.AddScoped<IProcesadorTransacciones, ProcesadorTransacciones>();
 builder.Services.AddSingleton<IServicioComun, ServicioComun>();
+
+builder.Services.AddScoped<IProcesadorCatalogos, ProcesadorCatalogos>();
 
 builder.Services.AddSingleton<IRespuestaHttpValidador, RespuestaHttpValidador>();
 
@@ -131,8 +139,8 @@ builder.Services.AddSingleton<IMSDatosComunes, MSDatosComunes>();
 builder.Services.AddScoped<IMSEnvioCorreos, MSEnvioCorreos>();
 
 //Para cachear datos de otros microservicios
-builder.Services.AddSingleton<IDatosComunesListasCache, DatosComunesListasCache>();
 builder.Services.AddSingleton<ISeguridadPermisosCache, SeguridadPermisosCache>();
+builder.Services.AddSingleton<ICatalogoExternoCache, CatalogoExternoCache>();
 
 //Para cachear tokens de seguridad de acceso de usuarios
 builder.Services.AddMemoryCache();
@@ -140,7 +148,7 @@ builder.Services.AddMemoryCache();
 
 builder.Services.AddSingleton<IAuthorizationHandler, PermisoManejadorAutorizacion>();
 builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
-builder.Services.AddScoped<IAutorizacionSincronizacion, AutorizacionSincronizacion>();
+builder.Services.AddScoped<ISincronizadorAutorizacion, SincronizadorAutorizacion>();
 
 
 #region REG_Servicios de configuraciones Appsettings
@@ -148,6 +156,7 @@ builder.Services.AddScoped<IAutorizacionSincronizacion, AutorizacionSincronizaci
 builder.Services.Configure<TrabajosColasSettings>(builder.Configuration.GetSection("TrabajosColas"));
 builder.Services.Configure<JWTSettings>(builder.Configuration.GetSection("JWT"));
 builder.Services.Configure<EventosNotificarSettings>(builder.Configuration.GetSection("EventosNotificar"));
+builder.Services.Configure<ConsultasDatosComunesSettings>(builder.Configuration.GetSection("ConsultasDatosComunes"));
 builder.Services.AddSingleton<IAppSettings, AppSettings>();
 
 #endregion
@@ -286,13 +295,15 @@ RecurringJob.AddOrUpdate<IColaSolicitudServicio>("procesador_solicitudes", x => 
     configuracionTrabajosColas.ProcesarColaSolicitudesCron);
 
 
-// Aquí encolas el trabajo al arrancar la app
-BackgroundJob.Enqueue<IDatosComunesListasCache>(x => x.InicializarAsync());
-RecurringJob.AddOrUpdate<IDatosComunesListasCache>("inicializar_listas_identificacion", x => x.InicializarAsync(),
-    configuracionTrabajosColas.ProcesarColaSolicitudesCron);
-
+// Se configura un job para inicializar la caché de permisos desde la base de datos al iniciar el microservicio y luego se programa para que se ejecute periódicamente.
 BackgroundJob.Enqueue<ISeguridadPermisosCache>(x => x.InicializarAsync());
 RecurringJob.AddOrUpdate<ISeguridadPermisosCache>("inicializar_permisos", x => x.InicializarAsync(),
+    configuracionTrabajosColas.ProcesarColaSolicitudesCron);
+
+
+// Se actualiza la tabla de CatalogosExternos desde el microservicio de datos comunes y se refresca la caché local
+BackgroundJob.Enqueue<IProcesadorCatalogos>(x => x.ProcesarAsync());
+RecurringJob.AddOrUpdate<ICatalogoExternoCache>("inicializar_catalogos_externos", x => x.InicializarAsync(),
     configuracionTrabajosColas.ProcesarColaSolicitudesCron);
 
 

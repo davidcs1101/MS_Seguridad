@@ -4,19 +4,19 @@ using SEG.Dominio.Entidades;
 
 namespace SEG.DataAccess.EntidadesConfig
 {
-    public class SEG_ParametroExternoConfig : IEntityTypeConfiguration<SEG_ParametroExterno>
+    public class SEG_CatalogoExternoConfig : IEntityTypeConfiguration<SEG_CatalogoExterno>
     {
-        public void Configure(EntityTypeBuilder<SEG_ParametroExterno> builder) 
+        public void Configure(EntityTypeBuilder<SEG_CatalogoExterno> builder) 
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Origen).HasColumnType("varchar(30)");
+            builder.Property(x => x.ServicioOrigen).HasColumnType("varchar(30)");
             builder.Property(x => x.CodigoCatalogo).HasColumnType("varchar(30)");
             builder.Property(x => x.Codigo).HasColumnType("varchar(30)");
             builder.Property(x => x.Nombre).HasColumnType("varchar(250)");
             builder.Property(x => x.FechaCreado).HasColumnType("datetime");
             builder.Property(x => x.FechaModificado).HasColumnType("datetime");
 
-            builder.HasIndex(x => new { x.Origen, x.CodigoCatalogo, x.OrigenId }).IsUnique();
+            builder.HasIndex(x => new { x.ServicioOrigen, x.CodigoCatalogo, x.OrigenId }).IsUnique();
 
             builder.HasOne(x => x.UsuarioCreador)
                 .WithMany()

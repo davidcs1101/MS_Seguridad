@@ -5,6 +5,7 @@ using SEG.Aplicacion.CasosUso.Implementaciones;
 using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Dtos;
 using Utilidades.Seguridad;
+using Utilidades.Dtos;
 
 namespace SEG.Api.Seguridad.Controllers
 {
@@ -21,14 +22,14 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpGet("obtenerPorCodigo")]
         [Permiso(CodigosPermisos.Permisos.CONSULTAR)]
-        public async Task<ActionResult<ApiResponse<PermisoDto?>>> ObtenerPorCodigo(string codigo)
+        public async Task<ActionResult<ApiResponseDto<PermisoDto?>>> ObtenerPorCodigo(string codigo)
         {
             return await _permisoServicio.ObtenerPorCodigoAsync(codigo);
         }
 
         [HttpGet("listar")]
         [Permiso(CodigosPermisos.Permisos.LISTAR)]
-        public async Task<ActionResult<ApiResponse<List<PermisoDto>?>>> Listar()
+        public async Task<ActionResult<ApiResponseDto<List<PermisoDto>?>>> Listar()
         {
             return await _permisoServicio.ListarAsync();
 
@@ -36,7 +37,7 @@ namespace SEG.Api.Seguridad.Controllers
 
         [HttpPut("modificar")]
         [Permiso(CodigosPermisos.Permisos.MODIFICAR)]
-        public async Task<ActionResult<ApiResponse<string>>> Modificar(PermisoModificacionRequest permisoModificacionRequest)
+        public async Task<ActionResult<ApiResponseDto<string>>> Modificar(PermisoModificacionRequest permisoModificacionRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
