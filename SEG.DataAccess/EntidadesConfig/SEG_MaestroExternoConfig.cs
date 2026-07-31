@@ -1,22 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SEG.Dominio.Entidades;
 
 namespace SEG.DataAccess.EntidadesConfig
 {
-    public class SEG_CatalogoExternoConfig : IEntityTypeConfiguration<SEG_CatalogoExterno>
+    public class SEG_MaestroExternoConfig : IEntityTypeConfiguration<SEG_MaestroExterno>
     {
-        public void Configure(EntityTypeBuilder<SEG_CatalogoExterno> builder) 
+        public void Configure(EntityTypeBuilder<SEG_MaestroExterno> builder)
         {
+            builder.ToTable("SEG_MaestrosExternos");
+
             builder.HasKey(x => x.Id);
             builder.Property(x => x.ServicioOrigen).HasColumnType("varchar(30)");
-            builder.Property(x => x.CodigoCatalogo).HasColumnType("varchar(30)");
+            builder.Property(x => x.CodigoMaestro).HasColumnType("varchar(30)");
             builder.Property(x => x.Codigo).HasColumnType("varchar(30)");
             builder.Property(x => x.Nombre).HasColumnType("varchar(250)");
             builder.Property(x => x.FechaCreado).HasColumnType("datetime");
             builder.Property(x => x.FechaModificado).HasColumnType("datetime");
 
-            builder.HasIndex(x => new { x.ServicioOrigen, x.CodigoCatalogo, x.OrigenId }).IsUnique();
+            builder.HasIndex(x => new { x.ServicioOrigen, x.CodigoMaestro, x.OrigenId }).IsUnique();
 
             builder.HasOne(x => x.UsuarioCreador)
                 .WithMany()

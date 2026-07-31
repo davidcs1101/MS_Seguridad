@@ -102,7 +102,7 @@ builder.Services.AddScoped<IPermisoServicio, PermisoServicio>();
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
 
-builder.Services.AddScoped<ICatalogoExternoRepositorio, CatalogoExternoRepositorio>();
+builder.Services.AddScoped<IMaestroExternoRepositorio, MaestroExternoRepositorio>();
 builder.Services.AddScoped<ICatalogoExternoServicio, CatalogoExternoServicio>();
 
 builder.Services.AddSingleton<Utilidades.Servicios.Responses.Interfaces.IApiResponse, ApiResponse>();
@@ -121,7 +121,7 @@ builder.Services.AddSingleton<ISerializadorJsonServicio, SerializadorJsonServici
 builder.Services.AddScoped<IProcesadorTransacciones, ProcesadorTransacciones>();
 builder.Services.AddSingleton<IServicioComun, ServicioComun>();
 
-builder.Services.AddScoped<IProcesadorCatalogos, ProcesadorCatalogos>();
+builder.Services.AddScoped<IProcesadorMaestrosExternos, ProcesadorMaestrosExternos>();
 
 builder.Services.AddSingleton<IRespuestaHttpValidador, RespuestaHttpValidador>();
 
@@ -140,7 +140,7 @@ builder.Services.AddScoped<IMSEnvioCorreos, MSEnvioCorreos>();
 
 //Para cachear datos de otros microservicios
 builder.Services.AddSingleton<ISeguridadPermisosCache, SeguridadPermisosCache>();
-builder.Services.AddSingleton<ICatalogoExternoCache, CatalogoExternoCache>();
+builder.Services.AddSingleton<IMaestroExternoCache, MaestroExternoCache>();
 
 //Para cachear tokens de seguridad de acceso de usuarios
 builder.Services.AddMemoryCache();
@@ -302,8 +302,8 @@ RecurringJob.AddOrUpdate<ISeguridadPermisosCache>("inicializar_permisos", x => x
 
 
 // Se actualiza la tabla de CatalogosExternos desde el microservicio de datos comunes y se refresca la caché local
-BackgroundJob.Enqueue<IProcesadorCatalogos>(x => x.ProcesarAsync());
-RecurringJob.AddOrUpdate<ICatalogoExternoCache>("inicializar_catalogos_externos", x => x.InicializarAsync(),
+BackgroundJob.Enqueue<IProcesadorMaestrosExternos>(x => x.ProcesarDatosConstantesAsync());
+RecurringJob.AddOrUpdate<IMaestroExternoCache>("inicializar_catalogos_externos", x => x.InicializarAsync(),
     configuracionTrabajosColas.ProcesarColaSolicitudesCron);
 
 

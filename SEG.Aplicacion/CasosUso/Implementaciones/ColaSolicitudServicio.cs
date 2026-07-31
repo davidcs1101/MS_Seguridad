@@ -26,8 +26,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IPublicadorEventosBackgroundServicio _publicadorEventosBackgroundServicio;
         private readonly IProcesadorTransacciones _procesadorTransacciones;
         private readonly IApiResponse _apiResponse;
+        private readonly IProcesadorMaestrosExternos _procesadorMaestrosExternos;
 
-        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IMSEnvioCorreos notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IPublicadorEventosBackgroundServicio publicadorEventosBackgroundServicio, IProcesadorTransacciones procesadorTransacciones, IApiResponse apiResponse)
+        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IMSEnvioCorreos notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IPublicadorEventosBackgroundServicio publicadorEventosBackgroundServicio, IProcesadorTransacciones procesadorTransacciones, IApiResponse apiResponse, IProcesadorMaestrosExternos procesadorMaestrosExternos)
         {
             _unidadDeTrabajo = unidadTrabajo;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
@@ -38,6 +39,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _publicadorEventosBackgroundServicio = publicadorEventosBackgroundServicio;
             _procesadorTransacciones = procesadorTransacciones;
             _apiResponse = apiResponse;
+            _procesadorMaestrosExternos = procesadorMaestrosExternos;
         }
 
         public async Task ProcesarColaSolicitudesAsync()
@@ -86,8 +88,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                             await _publicadorEventosBackgroundServicio.PublicarActualizacionPermisos(solicitudExiste.UrlDestino);
                             break;
                         case EventosColas.CONSTANTESDETALLEACTUALIZADO:
-                            //Actualizar las constantes de detalle consultando en el microservicio de datos comunes, obtener los datos actualizar la tabla SEG_ParametrosExternos, y actualizar la caché
-                            //await _msDatosComunes.ActualizarConstantesDetalleAsync();
+                            await _procesadorCatalogos.ProcesarDatosConstantesAsync(_serializadorJsonServicio.Deserializar<MaestroActualizadoEventoDto>(solicitudExiste.Payload));
                             break;
                     }
 

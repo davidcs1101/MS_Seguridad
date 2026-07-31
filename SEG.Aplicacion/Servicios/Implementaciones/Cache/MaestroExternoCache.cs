@@ -9,16 +9,16 @@ using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
 {
-    public class CatalogoExternoCache : ICatalogoExternoCache
+    public class MaestroExternoCache : IMaestroExternoCache
     {
         private readonly object _lock = new();
 
-        private Dictionary<string, List<CatalogoExternoDto>> _catalogos = new Dictionary<string, List<CatalogoExternoDto>>();
+        private Dictionary<string, List<MaestroExternoDto>> _maestros = new Dictionary<string, List<MaestroExternoDto>>();
 
         private readonly IApiResponse _apiResponse;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public CatalogoExternoCache(IApiResponse apiResponse, IServiceScopeFactory scopeFactory)
+        public MaestroExternoCache(IApiResponse apiResponse, IServiceScopeFactory scopeFactory)
         {
             _apiResponse = apiResponse;
             _scopeFactory = scopeFactory;
@@ -29,15 +29,15 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
             await InicializarCatalogosAsync();
         }
 
-        public ApiResponseDto<string> Actualizar(List<CatalogoExternoDto> parametrosExternos)
+        public ApiResponseDto<string> Actualizar(List<MaestroExternoDto> parametrosExternos)
         {
-            var parametros = parametrosExternos.GroupBy(x => x.CodigoCatalogo)
+            var parametros = parametrosExternos.GroupBy(x => x.CodigoMaestro)
                 .ToDictionary(
                     g => g.Key,
                     g => g.ToList());
 
             lock (_lock)
-                _catalogos = parametros;
+                _maestros = parametros;
 
             Logs.EscribirLog("i", Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_ACTUALIZADA);
 
@@ -47,33 +47,33 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
                 "");
         }
 
-        public IReadOnlyList<CatalogoExternoDto> ListarPorCodigoCatalogo(string codigoCatalogo)
+        public IReadOnlyList<MaestroExternoDto> ListarPorCodigoMaestro(string codigoMaestro)
         {
             lock (_lock)
             {
-                if (_catalogos.TryGetValue(codigoCatalogo, out var lista))
+                if (_maestros.TryGetValue(codigoMaestro, out var lista))
                     return lista.AsReadOnly();
 
-                return Array.Empty<CatalogoExternoDto>();
+                return Array.Empty<MaestroExternoDto>();
             }
         }
 
-        public CatalogoExternoDto? ObtenerPorCodigoCatalogoYOrigenId(string codigoCatalogo, int origenId)
+        public MaestroExternoDto? ObtenerPorCodigoMaestroYOrigenId(string codigoMaestro, int origenId)
         {
             lock (_lock)
             {
-                if (_catalogos.TryGetValue(codigoCatalogo, out var lista))
+                if (_maestros.TryGetValue(codigoMaestro, out var lista))
                     return lista.FirstOrDefault(x => x.OrigenId == origenId);
 
                 return null;
             }
         }
 
-        public CatalogoExternoDto? ObtenerPorCodigoCatalogoYCodigo(string codigoCatalogo, string codigo)
+        public MaestroExternoDto? ObtenerPorCodigoMaestroYCodigo(string codigoMaestro, string codigo)
         {
             lock (_lock)
             {
-                if (_catalogos.TryGetValue(codigoCatalogo, out var lista))
+                if (_maestros.TryGetValue(codigoMaestro, out var lista))
                     return lista.FirstOrDefault(x => x.Codigo == codigo);
 
                 return null;
@@ -91,7 +91,7 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
         {
             lock (_lock)
             {
-                if (_catalogos.Count > 0)
+                if (_maestros.Count > 0)
                     return;
             }
 
@@ -103,16 +103,17 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
             using var scope = _scopeFactory.CreateScope();
 
             var catalogoExternoRepositorio = scope.ServiceProvider
-                .GetRequiredService<ICatalogoExternoRepositorio>();
+                .GetRequiredService<IMaestroExternoRepositorio>();
 
             var listas = await catalogoExternoRepositorio
                 .Listar()
-                .Select(x => new CatalogoExternoDto
+                .Select(x => new MaestroExternoDto
                 {
                     Id = x.Id,
                     ServicioOrigen = x.ServicioOrigen,
-                    CodigoCatalogo = x.CodigoCatalogo,
+                    CodigoMaestro = x.CodigoMaestro,
                     OrigenId = x.OrigenId,
+                    OrigenPadreId = x.OrigenPadreId,
                     Codigo = x.Codigo,
                     Nombre = x.Nombre,
                     EstadoActivo = x.EstadoActivo,

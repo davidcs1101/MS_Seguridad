@@ -83,13 +83,6 @@ namespace SEG.Infraestructura.Aplicacion.ServiciosExternos.Config
             return string.IsNullOrWhiteSpace(audienciasDestinotexto) ? "" : audienciasDestinotexto;
         }
 
-        //ConsultasDatosComunes/CodigosConstantes
-        public List<string?> ObtenerConsultasDatosComunesCodigosConstantes()
-        {
-            var codigos = _consultasDatosComunes.CodigosConstantes;
-            return ObtenerListas(codigos);
-        }
-
 
 
         private List<string?> ObtenerListas(List<string?> lista)

@@ -34,12 +34,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IJobEncoladorServicio _jobEncoladorServicio;
         private readonly IMSEmpresas _msEmpresas;
-        private readonly ICatalogoExternoCache _parametroExternoCache;
-        private readonly IEntidadValidador<CatalogoExternoDto> _parametroExternoDtoValidador;
+        private readonly IMaestroExternoCache _maestroExternoCache;
+        private readonly IEntidadValidador<MaestroExternoDto> _parametroExternoDtoValidador;
         private readonly IProcesadorTransacciones _procesadorTransacciones;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IProcesadorTransacciones procesadorTransacciones, ICatalogoExternoCache parametroExternoCache, IEntidadValidador<CatalogoExternoDto> parametroExternoDtoValidador)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IProcesadorTransacciones procesadorTransacciones, IMaestroExternoCache maestroExternoCache, IEntidadValidador<MaestroExternoDto> parametroExternoDtoValidador)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;
@@ -56,7 +56,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _jobEncoladorServicio = jobEncoladorServicio;
             _msEmpresas = msEmpresas;
             _procesadorTransacciones = procesadorTransacciones;
-            _parametroExternoCache = parametroExternoCache;
+            _maestroExternoCache = maestroExternoCache;
             _parametroExternoDtoValidador = parametroExternoDtoValidador;
         }
 
@@ -221,7 +221,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         private async Task<SEG_Usuario> AsignarDatosAsync(UsuarioCreacionRequest usuarioCreacionRequest, int usuarioCreadorId, string nuevaClave) 
         {
-            var tipoIdentificacion = _parametroExternoCache.ObtenerPorCodigoCatalogoYCodigo(CodigosConstantes.TIPOIDENTIREGISTROUSUARIO, usuarioCreacionRequest.TipoIdentificacion);
+            var tipoIdentificacion = _maestroExternoCache.ObtenerPorCodigoMaestroYCodigo(CodigosConstantes.TIPOIDENTIREGISTROUSUARIO, usuarioCreacionRequest.TipoIdentificacion);
             _parametroExternoDtoValidador.ValidarDatoNoEncontrado(tipoIdentificacion, Textos.Generales.MENSAJE_PARAMETROEXTERNO_NO_EXISTE_EN_CODIGOCATALOGO(CodigosConstantes.TIPOIDENTIREGISTROUSUARIO, usuarioCreacionRequest.TipoIdentificacion));
 
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(usuarioCreacionRequest.NombreUsuario);
