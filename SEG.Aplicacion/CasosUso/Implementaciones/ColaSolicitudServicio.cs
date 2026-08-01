@@ -11,7 +11,6 @@ using SEG.Dtos;
 using Utilidades;
 using Utilidades.Dtos;
 using Utilidades.Servicios.Responses.Interfaces;
-using Utilidades.Servicios.Serializacion.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -19,27 +18,21 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
     {
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
         private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
-        private readonly IMSEnvioCorreos _msEnvioCorreos;
-        private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IEntidadValidador<SEG_ColaSolicitud> _colaSolicitudValidador;
         private readonly IAppSettings _appSettings;
-        private readonly IPublicadorEventosBackgroundServicio _publicadorEventosBackgroundServicio;
         private readonly IProcesadorTransacciones _procesadorTransacciones;
         private readonly IApiResponse _apiResponse;
-        private readonly IProcesadorMaestrosExternos _procesadorMaestrosExternos;
+        private readonly IProcesadorEventos _procesadorEventos;
 
-        public ColaSolicitudServicio(IUnidadDeTrabajo unidadTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IMSEnvioCorreos notificadorCorreo, ISerializadorJsonServicio serializadorJsonServicio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IPublicadorEventosBackgroundServicio publicadorEventosBackgroundServicio, IProcesadorTransacciones procesadorTransacciones, IApiResponse apiResponse, IProcesadorMaestrosExternos procesadorMaestrosExternos)
+        public ColaSolicitudServicio(IUnidadDeTrabajo unidadDeTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IProcesadorTransacciones procesadorTransacciones, IApiResponse apiResponse, IProcesadorEventos procesadorEventos)
         {
-            _unidadDeTrabajo = unidadTrabajo;
+            _unidadDeTrabajo = unidadDeTrabajo;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
-            _msEnvioCorreos = notificadorCorreo;
-            _serializadorJsonServicio = serializadorJsonServicio;
             _colaSolicitudValidador = colaSolicitudValidador;
             _appSettings = appSettings;
-            _publicadorEventosBackgroundServicio = publicadorEventosBackgroundServicio;
             _procesadorTransacciones = procesadorTransacciones;
             _apiResponse = apiResponse;
-            _procesadorMaestrosExternos = procesadorMaestrosExternos;
+            _procesadorEventos = procesadorEventos;
         }
 
         public async Task ProcesarColaSolicitudesAsync()
@@ -79,18 +72,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                     _colaSolicitudRepositorio.MarcarModificar(solicitudExiste);
                     await _unidadDeTrabajo.GuardarCambiosAsync();
 
-                    switch (solicitudExiste.Tipo)
-                    {
-                        case EventosColas.ENVIARCORREO:
-                            await _msEnvioCorreos.EnviarAsync(_serializadorJsonServicio.Deserializar<DatoCorreoRequest>(solicitudExiste.Payload));
-                            break;
-                        case EventosColas.PERMISOSACTUALIZADOS:
-                            await _publicadorEventosBackgroundServicio.PublicarActualizacionPermisos(solicitudExiste.UrlDestino);
-                            break;
-                        case EventosColas.CONSTANTESDETALLEACTUALIZADO:
-                            await _procesadorCatalogos.ProcesarDatosConstantesAsync(_serializadorJsonServicio.Deserializar<MaestroActualizadoEventoDto>(solicitudExiste.Payload));
-                            break;
-                    }
+                    await _procesadorEventos.ProcesarAsync(solicitudExiste.Tipo, solicitudExiste.Payload, solicitudExiste.UrlDestino);
 
                     solicitudExiste.Estado = EstadoCola.Exitoso;
                     solicitudExiste.ErrorMensaje = null;

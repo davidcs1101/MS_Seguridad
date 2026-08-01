@@ -103,7 +103,6 @@ builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
 
 builder.Services.AddScoped<IMaestroExternoRepositorio, MaestroExternoRepositorio>();
-builder.Services.AddScoped<ICatalogoExternoServicio, CatalogoExternoServicio>();
 
 builder.Services.AddSingleton<Utilidades.Servicios.Responses.Interfaces.IApiResponse, ApiResponse>();
 
@@ -121,7 +120,11 @@ builder.Services.AddSingleton<ISerializadorJsonServicio, SerializadorJsonServici
 builder.Services.AddScoped<IProcesadorTransacciones, ProcesadorTransacciones>();
 builder.Services.AddSingleton<IServicioComun, ServicioComun>();
 
+builder.Services.AddScoped<IProcesadorEventos, ProcesadorEventos>();
 builder.Services.AddScoped<IProcesadorMaestrosExternos, ProcesadorMaestrosExternos>();
+builder.Services.AddScoped<ProcesadorMaestrosExternosJob>();//Este es con el que consultamos los maestros externos y actualizamos la tabla de maestros externos y la cache local
+
+builder.Services.AddScoped<IProcesadorDatosComunes, ProcesadorDatosComunes>();
 
 builder.Services.AddSingleton<IRespuestaHttpValidador, RespuestaHttpValidador>();
 
@@ -260,13 +263,13 @@ builder.Services
     .AddHttpMessageHandler<MiddlewareManejadorTokensBackground>();
 
 builder.Services
-    .AddRefitClient<IMSEmpresasContextoWebServicio>()
+    .AddRefitClient<IMSEmpresasBackgroundServicio>()
     .ConfigureHttpClient(c =>
     {
         c.BaseAddress = new Uri(urlMsEmpresas);
         c.DefaultRequestHeaders.Add("Accept", "application/json");
     })
-    .AddHttpMessageHandler<MiddlewareManejadorTokens>();
+    .AddHttpMessageHandler<MiddlewareManejadorTokensBackground>();
 
 builder.Services
     .AddRefitClient<IMSDatosComunesBackgroundServicio>()
@@ -274,7 +277,8 @@ builder.Services
     {
         c.BaseAddress = new Uri(urlMsDatosComunes);
         c.DefaultRequestHeaders.Add("Accept", "application/json");
-    });
+    })
+    .AddHttpMessageHandler<MiddlewareManejadorTokensBackground>();
 
 builder.Services
     .AddHttpClient<IPublicadorEventosBackgroundServicio, PublicadorEventosBackgroundServicio>
@@ -289,21 +293,22 @@ var app = builder.Build();
 //Dashboard para ver los jobs en el navegador
 app.UseHangfireDashboard("/hangfire");
 
+
+// Se actualiza la tabla de MaestrosExternos desde el microservicio de datos comunes y se refresca la caché local
+BackgroundJob.Enqueue<ProcesadorMaestrosExternosJob>(x => x.ProcesarAsync());
+
 //Configuracion para la tarea Job en segundo plano que rastrea las solicitudes pendientes de procesar.
 var configuracionTrabajosColas = app.Services.GetRequiredService<IAppSettings>().ObtenerTrabajosColasSettings();
 RecurringJob.AddOrUpdate<IColaSolicitudServicio>("procesador_solicitudes", x => x.ProcesarColaSolicitudesAsync(),
     configuracionTrabajosColas.ProcesarColaSolicitudesCron);
-
 
 // Se configura un job para inicializar la caché de permisos desde la base de datos al iniciar el microservicio y luego se programa para que se ejecute periódicamente.
 BackgroundJob.Enqueue<ISeguridadPermisosCache>(x => x.InicializarAsync());
 RecurringJob.AddOrUpdate<ISeguridadPermisosCache>("inicializar_permisos", x => x.InicializarAsync(),
     configuracionTrabajosColas.ProcesarColaSolicitudesCron);
 
-
-// Se actualiza la tabla de CatalogosExternos desde el microservicio de datos comunes y se refresca la caché local
-BackgroundJob.Enqueue<IProcesadorMaestrosExternos>(x => x.ProcesarDatosConstantesAsync());
-RecurringJob.AddOrUpdate<IMaestroExternoCache>("inicializar_catalogos_externos", x => x.InicializarAsync(),
+BackgroundJob.Enqueue<IMaestroExternoCache>(x => x.InicializarAsync());
+RecurringJob.AddOrUpdate<IMaestroExternoCache>("inicializar_maestros_externos", x => x.InicializarAsync(),
     configuracionTrabajosColas.ProcesarColaSolicitudesCron);
 
 

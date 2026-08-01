@@ -1,19 +1,18 @@
 ﻿using SEG.Dtos;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
-using Utilidades;
 
 namespace SEG.Aplicacion.Servicios.Implementaciones
 {
     public class MSEmpresas : IMSEmpresas
     {
-        private readonly IMSEmpresasContextoWebServicio _msEmpresasContextoWebServicio;
+        private readonly IMSEmpresasBackgroundServicio _msEmpresasBackgroundServicio;
         private readonly IServicioComun _servicioComun;
 
-        public MSEmpresas(IMSEmpresasContextoWebServicio msEmpresasContextoWebServicio, IServicioComun servicioComun)
+        public MSEmpresas(IMSEmpresasBackgroundServicio msEmpresasBackgroundServicio, IServicioComun servicioComun)
         {
-            _msEmpresasContextoWebServicio = msEmpresasContextoWebServicio;
             _servicioComun = servicioComun;
+            _msEmpresasBackgroundServicio = msEmpresasBackgroundServicio;
         }
 
         public async Task<bool> ValidarSedeExisteAsync(int id) 
@@ -25,7 +24,7 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
         public async Task<SedeDto> ObtenerSedePorId(int sedeId) 
         {
             return await _servicioComun.ObtenerRespuestaHttpAsync<int, SedeDto>(
-                funcionEjecutar: _msEmpresasContextoWebServicio.ObtenerSedePorIdAsync,
+                funcionEjecutar: _msEmpresasBackgroundServicio.ObtenerSedePorIdAsync,
                 request: sedeId);
         }
     }

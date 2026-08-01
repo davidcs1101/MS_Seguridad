@@ -2,7 +2,7 @@
 
 namespace SEG.Aplicacion.ServiciosExternos
 {
-    public interface IMSEmpresasContextoWebServicio
+    public interface IMSEmpresasBackgroundServicio
     {
         [Get("/sedes/obtenerPorId")]
         Task<HttpResponseMessage> ObtenerSedePorIdAsync([Query] int id);

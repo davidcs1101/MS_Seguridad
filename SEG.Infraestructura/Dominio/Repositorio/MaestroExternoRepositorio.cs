@@ -21,10 +21,10 @@ namespace SEG.Infraestructura.Dominio.Repositorio
                 .Include(p => p.UsuarioModificador);
         }
 
-        public async Task SincronizarCatalogoAsync(string microservicioOrigen, string codigoCatalogo,List<SEG_MaestroExterno> registros)
+        public async Task SincronizarMaestroAsync(string microservicioOrigen, string codigoMaestro, List<SEG_MaestroExterno> registros)
         {
             var existentes = await _context.SEG_MaestrosExternos
-                .Where(x => x.ServicioOrigen == microservicioOrigen && x.CodigoMaestro == codigoCatalogo).ToListAsync();
+                .Where(x => x.ServicioOrigen == microservicioOrigen && x.CodigoMaestro == codigoMaestro).ToListAsync();
 
             // Crear y actualizar
             foreach (var registro in registros)

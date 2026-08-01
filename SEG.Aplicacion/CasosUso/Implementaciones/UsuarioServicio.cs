@@ -230,7 +230,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             usuarioExiste = await _usuarioRepositorio.ObtenerPorEmailAsync(usuarioCreacionRequest.Email);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_EMAIL_EXISTE);
 
-            usuarioExiste = await _usuarioRepositorio.ObtenerPorIdentificacionAsync(tipoIdentificacion.Id, usuarioCreacionRequest.Identificacion);
+            usuarioExiste = await _usuarioRepositorio.ObtenerPorIdentificacionAsync(tipoIdentificacion.OrigenId, usuarioCreacionRequest.Identificacion);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_DOCUMENTO_EXISTE);
 
             var usuario = _mapper.Map(usuarioCreacionRequest);
@@ -244,7 +244,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 }
             }
 
-            usuario.TipoIdentificacionId = tipoIdentificacion.Id;
+            usuario.TipoIdentificacionId = tipoIdentificacion.OrigenId;
             usuario.Clave = ProcesadorClaves.EncriptarClave(nuevaClave);
             usuario.UsuarioCreadorId = usuarioCreadorId;
 

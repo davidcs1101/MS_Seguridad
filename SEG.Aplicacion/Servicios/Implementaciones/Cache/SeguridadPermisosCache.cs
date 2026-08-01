@@ -41,7 +41,6 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
             lock (_lock)
                 _permisos = permisos;
 
-            Logs.EscribirLog("i","Cache de permisos actualizada.");
             return _apiResponse.CrearRespuesta(true,"Cache de permisos actualizada.","");
         }
 
@@ -81,7 +80,6 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
             var autorizaciones = await autorizacionServicio.ListarCatalogoAutorizacionAsync();
 
             Actualizar(autorizaciones);
-            Logs.EscribirLog("i","Cache de permisos inicializada.");
         }
 
     }

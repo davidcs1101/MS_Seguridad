@@ -26,7 +26,7 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
 
         public async Task InicializarAsync()
         {
-            await InicializarCatalogosAsync();
+            await InicializarMaestroAsync();
         }
 
         public ApiResponseDto<string> Actualizar(List<MaestroExternoDto> parametrosExternos)
@@ -38,8 +38,6 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
 
             lock (_lock)
                 _maestros = parametros;
-
-            Logs.EscribirLog("i", Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_ACTUALIZADA);
 
             return _apiResponse.CrearRespuesta(
                 true,
@@ -82,12 +80,12 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
 
         public async Task RefrescarAsync()
         {
-            await ObtenerListaCatalogosAsync();
+            await ObtenerListaMaestrosAsync();
         }
 
 
 
-        private async Task InicializarCatalogosAsync()
+        private async Task InicializarMaestroAsync()
         {
             lock (_lock)
             {
@@ -95,17 +93,17 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
                     return;
             }
 
-            await ObtenerListaCatalogosAsync();
+            await ObtenerListaMaestrosAsync();
         }
 
-        private async Task ObtenerListaCatalogosAsync()
+        private async Task ObtenerListaMaestrosAsync()
         {
             using var scope = _scopeFactory.CreateScope();
 
-            var catalogoExternoRepositorio = scope.ServiceProvider
+            var maestroExternoRepositorio = scope.ServiceProvider
                 .GetRequiredService<IMaestroExternoRepositorio>();
 
-            var listas = await catalogoExternoRepositorio
+            var listas = await maestroExternoRepositorio
                 .Listar()
                 .Select(x => new MaestroExternoDto
                 {
@@ -121,8 +119,6 @@ namespace SEG.Aplicacion.Servicios.Implementaciones.Cache
                 .ToListAsync();
 
             Actualizar(listas);
-
-            Logs.EscribirLog("i", Textos.CacheDatos.MENSAJE_CACHE_DATOSCOMUNES_INICIALIZADA);
         }
     }
 }

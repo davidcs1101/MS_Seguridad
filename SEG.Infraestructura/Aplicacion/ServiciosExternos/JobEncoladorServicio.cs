@@ -2,7 +2,6 @@
 using SEG.Aplicacion.ServiciosExternos;
 using Utilidades;
 using Hangfire;
-using SEG.Aplicacion.Servicios.Interfaces.Cache;
 
 public class JobEncoladorServicio: IJobEncoladorServicio
 {
