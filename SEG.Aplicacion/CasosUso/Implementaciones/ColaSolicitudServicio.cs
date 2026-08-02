@@ -101,7 +101,6 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             };
 
             var id = await _colaSolicitudRepositorio.CrearAsync(solicitud);
-
             _ = _jobEncoladorServicio.EncolarPorColaSolicitudId(id, true);
 
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);

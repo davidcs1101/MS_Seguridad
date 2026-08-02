@@ -48,9 +48,7 @@ namespace SEG.Aplicacion.Servicios.Interfaces
                 {
                     Tipo = EventosColas.PERMISOSACTUALIZADOS,
                     UrlDestino = url,
-                    Payload = "",
                     Estado = EstadoCola.Pendiente,
-                    Intentos = 0
                 };
                 await _colaSolicitudRepositorio.CrearAsync(solicitud);
                 _ = _jobEncoladorServicio.EncolarPorColaSolicitudId(solicitud.Id, true);
