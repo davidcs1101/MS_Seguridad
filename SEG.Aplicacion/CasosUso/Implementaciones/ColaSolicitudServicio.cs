@@ -23,8 +23,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IProcesadorTransacciones _procesadorTransacciones;
         private readonly IApiResponse _apiResponse;
         private readonly IProcesadorEventos _procesadorEventos;
+        private readonly IJobEncoladorServicio _jobEncoladorServicio;
 
-        public ColaSolicitudServicio(IUnidadDeTrabajo unidadDeTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IProcesadorTransacciones procesadorTransacciones, IApiResponse apiResponse, IProcesadorEventos procesadorEventos)
+        public ColaSolicitudServicio(IUnidadDeTrabajo unidadDeTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IProcesadorTransacciones procesadorTransacciones, IApiResponse apiResponse, IProcesadorEventos procesadorEventos, IJobEncoladorServicio jobEncoladorServicio)
         {
             _unidadDeTrabajo = unidadDeTrabajo;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
@@ -33,6 +34,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _procesadorTransacciones = procesadorTransacciones;
             _apiResponse = apiResponse;
             _procesadorEventos = procesadorEventos;
+            _jobEncoladorServicio = jobEncoladorServicio;
         }
 
         public async Task ProcesarColaSolicitudesAsync()
@@ -99,6 +101,8 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             };
 
             var id = await _colaSolicitudRepositorio.CrearAsync(solicitud);
+
+            _ = _jobEncoladorServicio.EncolarPorColaSolicitudId(id, true);
 
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
         }

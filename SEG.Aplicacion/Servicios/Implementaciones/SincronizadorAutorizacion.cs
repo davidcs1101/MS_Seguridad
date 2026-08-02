@@ -1,5 +1,6 @@
 ﻿using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
+using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.ServiciosExternos.config;
 using SEG.Dominio.Entidades;
 using SEG.Dominio.Enumeraciones;
@@ -15,14 +16,16 @@ namespace SEG.Aplicacion.Servicios.Interfaces
         private readonly ISeguridadPermisosCache _permisosCache;
         private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
         private readonly IAppSettings _appSettings;
+        private readonly IJobEncoladorServicio _jobEncoladorServicio;
 
         public SincronizadorAutorizacion(IAutorizacionServicio autorizacionServicio,
-            ISeguridadPermisosCache permisosCache, IColaSolicitudRepositorio colaSolicitudRepositorio, IAppSettings appSettings)
+            ISeguridadPermisosCache permisosCache, IColaSolicitudRepositorio colaSolicitudRepositorio, IAppSettings appSettings, IJobEncoladorServicio jobEncoladorServicio)
         {
             _autorizacionServicio = autorizacionServicio;
             _permisosCache = permisosCache;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
             _appSettings = appSettings;
+            _jobEncoladorServicio = jobEncoladorServicio;
         }
 
         public async Task SincronizarPermisosAsync()
@@ -36,7 +39,7 @@ namespace SEG.Aplicacion.Servicios.Interfaces
                 await this.AgregarColaSolicitud(urls!);
         }
 
-        private async Task<List<SEG_ColaSolicitud>> AgregarColaSolicitud(List<string> urls)
+        private async Task AgregarColaSolicitud(List<string> urls)
         {
             var colas = new List<SEG_ColaSolicitud>();
             foreach (var url in urls)
@@ -50,9 +53,8 @@ namespace SEG.Aplicacion.Servicios.Interfaces
                     Intentos = 0
                 };
                 await _colaSolicitudRepositorio.CrearAsync(solicitud);
-                colas.Add(solicitud);
+                _ = _jobEncoladorServicio.EncolarPorColaSolicitudId(solicitud.Id, true);
             }
-            return colas;
         }
     }
 }
