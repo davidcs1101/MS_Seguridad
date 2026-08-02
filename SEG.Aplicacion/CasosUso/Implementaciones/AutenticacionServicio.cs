@@ -1,19 +1,20 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using SEG.Dtos;
+using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Aplicacion.Servicios.Implementaciones;
+using SEG.Aplicacion.Servicios.Interfaces;
+using SEG.Aplicacion.ServiciosExternos;
+using SEG.Aplicacion.ServiciosExternos.config;
 using SEG.Dominio.Entidades;
+using SEG.Dominio.Repositorio;
+using SEG.Dominio.Servicios.Interfaces;
+using SEG.Dtos;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Utilidades;
-using SEG.Dominio.Repositorio;
-using SEG.Aplicacion.ServiciosExternos;
-using SEG.Aplicacion.Servicios.Interfaces;
-using SEG.Aplicacion.CasosUso.Interfaces;
-using SEG.Dominio.Servicios.Interfaces;
-using SEG.Aplicacion.ServiciosExternos.config;
-using Utilidades.Seguridad;
 using Utilidades.Dtos;
+using Utilidades.Seguridad;
 using Utilidades.Servicios.Responses.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
@@ -30,10 +31,10 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IEntidadValidador<SEG_UsuarioSedeGrupo> _usuarioSedeGrupoValidador;
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
         private readonly IAppSettings _appsettings;
-        private readonly IMSEmpresas _msEmpresas;
+        //private readonly IMSEmpresas _msEmpresas;
 
         public AutenticacionServicio(IUsuarioRepositorio usuarioRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeRepositorio, IGrupoRepositorio grupoRepositorio, IConfiguration configuracion,
-            IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IMSEmpresas msEmpresas, IAppSettings appsettings, IEntidadValidador<SEG_Grupo> grupoValidador)
+            IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IUsuarioValidador usuarioValidador, IEntidadValidador<SEG_UsuarioSedeGrupo> usuarioSedeGrupoValidador, IAppSettings appsettings, IEntidadValidador<SEG_Grupo> grupoValidador)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _usuarioSedeRepositorio = usuarioSedeRepositorio;
@@ -43,7 +44,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _apiResponse = apiResponseServicio;
             _usuarioValidador = usuarioValidador;
             _usuarioSedeGrupoValidador = usuarioSedeGrupoValidador;
-            _msEmpresas = msEmpresas;
+            //_msEmpresas = msEmpresas;
             _appsettings = appsettings;
             _grupoValidador = grupoValidador;
         }
@@ -72,7 +73,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         public async Task<ApiResponseDto<AutenticacionResponse>> AutenticarSedeAsync(int sedeId)
         {
-            var sede = await _msEmpresas.ObtenerSedePorId(sedeId);
+            //var sede = await _msEmpresas.ObtenerSedePorId(sedeId);
+            var sede = new SedeDto
+            {
+                Id = sedeId,
+                EmpresaId = 1
+            };
 
             var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 

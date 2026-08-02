@@ -1,5 +1,4 @@
-﻿using SEG.Dtos;
-
+﻿using Utilidades.Dtos;
 namespace SEG.Aplicacion.Servicios.Interfaces
 {
     public interface IMSDatosComunes

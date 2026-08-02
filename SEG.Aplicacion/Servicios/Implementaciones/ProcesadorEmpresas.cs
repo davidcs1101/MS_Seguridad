@@ -1,6 +1,7 @@
 ﻿using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using SEG.Dominio.Entidades;
 using SEG.Dominio.Repositorio;
+using System.ComponentModel.Design;
 using Utilidades;
 using Utilidades.Dtos;
 
@@ -8,91 +9,61 @@ namespace SEG.Aplicacion.Servicios.Interfaces
 {
     public class ProcesadorEmpresas : IProcesadorEmpresas
     {
-        private readonly IMSDatosComunes _msDatosComunes;
+        private readonly IMSEmpresas _msEmpresas;
         private readonly IMaestroExternoRepositorio _maestroExternoRepositorio;
         private readonly IMaestroExternoCache _maestroExternoCache;
 
-        public ProcesadorEmpresas(IMSDatosComunes msDatosComunes, IMaestroExternoRepositorio maestroExternoRepositorio, IMaestroExternoCache maestroExternoCache)
+        public ProcesadorEmpresas(IMaestroExternoRepositorio maestroExternoRepositorio, IMaestroExternoCache maestroExternoCache, IMSEmpresas msEmpresas)
         {
-            _msDatosComunes = msDatosComunes;
+            _msEmpresas = msEmpresas;
             _maestroExternoRepositorio = maestroExternoRepositorio;
             _maestroExternoCache = maestroExternoCache;
         }
 
-        //Procesos para CONSTANTES
+        //Procesos para SEDES
         public async Task ProcesarSedesAsync()
         {
-            // Obtener del appsettings la lista de catálogos a procesar
-            var constantesRequeridas = ObtenerCodigosConstantesRequeridos();
-            await ProcesarConstantesAsync(constantesRequeridas!);
+            await ProcesarDatosSedesAsync();
         }
 
-        public async Task ProcesarSedesAsync(MaestroActualizadoEventoDto codigosConstantes)
+        public async Task ProcesarSedesAsync(int sedeId)
         {
-            if (codigosConstantes is null || !codigosConstantes.CodigosMaestro.Any())
-                return; // Si no se proporcionan códigos, no se hace nada
-
-            // Obtener la lista de constantes a procesar
-            var constantesRequeridas = ObtenerCodigosConstantesRequeridos();
-
-            // Solo procesar los catálogos que realmente consume este micro
-            var constantesValidas = codigosConstantes.CodigosMaestro
-                .Where(c => !string.IsNullOrWhiteSpace(c))
-                .Intersect(constantesRequeridas, StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-            if (!constantesValidas.Any())
-                return;
-
-            await ProcesarConstantesAsync(constantesValidas!);
+            await ProcesarDatosSedesAsync(sedeId);
         }
 
 
-        //Procesos para LISTAS
-
-
-        private async Task ProcesarConstantesAsync(List<string?>? codigosMaestros)
+        private async Task ProcesarDatosSedesAsync(int? sedeId = null)
         {
-            if (codigosMaestros == null || !codigosMaestros.Any())
-                throw new Exception("La lista de maestros (DatosConstantes) a consultar se encuentra vacía.");
-
-            // Obtener los registros desde Datos Comunes
-            var catalogos = await _msDatosComunes.ListarListasDetallePorCodigosConstanteAsync(codigosMaestros!);
-
-            // Agrupar por maestro
-            var catalogosAgrupados = catalogos.GroupBy(x => x.CodigoDatoConstante);
-
-            foreach (var grupo in catalogosAgrupados)
+            // Obtener los registros desde Empresas
+            var sedes = new List<Dtos.SedeDto?>();
+            if (sedeId is not null)
             {
-                var parametros = grupo.Select(x => new SEG_MaestroExterno
-                {
-                    ServicioOrigen = "ms_datoscomunes",
-                    CodigoMaestro = x.CodigoDatoConstante!,
-                    OrigenId = x.Id,
-                    Codigo = x.Codigo,
-                    Nombre = x.Nombre,
-                    EstadoActivo = x.EstadoActivo,
-                    UsuarioCreadorId = x.UsuarioCreadorId,
-                }).ToList();
-
-                await _maestroExternoRepositorio.SincronizarMaestroAsync(
-                    "ms_datoscomunes",
-                    grupo.Key!,
-                    parametros);
+                var sede = await _msEmpresas.ObtenerSedePorId((int)sedeId);
+                sedes.Add(sede);
             }
+            else
+                sedes = await _msEmpresas.ListarSedesAsync();
+
+            // Convertir cada sede en un maestro externo
+            var maestros = sedes.Select(x => new SEG_MaestroExterno
+            {
+                ServicioOrigen = CodigosMicroservicios.MS_EMPRESAS,
+                CodigoMaestro = CodigosMaestrosExternos.SEDES,
+                OrigenId = x.Id,
+                Codigo = "",
+                Nombre = x.Descripcion ?? "",
+                EstadoActivo = x.EstadoActivo,
+                UsuarioCreadorId = x.UsuarioCreadorId,
+            }).ToList();
+
+            // Sincronizar todas las sedes como un único maestro
+            await _maestroExternoRepositorio.SincronizarMaestroAsync(
+                CodigosMicroservicios.MS_EMPRESAS,
+                CodigosMaestrosExternos.SEDES,
+                maestros);
 
             // Refrescar la caché local
             await _maestroExternoCache.RefrescarAsync();
         }
-
-        //Acá se adicionará las difreentes constantes que se requieran para el microservicio.
-        private List<string> ObtenerCodigosConstantesRequeridos() 
-        {
-            return new List<string>() 
-            {
-                CodigosConstantes.TIPOIDENTIREGISTROUSUARIO
-            };
-        }
-
     }
 }

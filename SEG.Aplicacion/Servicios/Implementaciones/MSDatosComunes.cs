@@ -1,6 +1,6 @@
-﻿using SEG.Dtos;
-using SEG.Aplicacion.ServiciosExternos;
+﻿using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.Servicios.Interfaces;
+using Utilidades.Dtos;
 
 namespace SEG.Aplicacion.Servicios.Implementaciones
 {

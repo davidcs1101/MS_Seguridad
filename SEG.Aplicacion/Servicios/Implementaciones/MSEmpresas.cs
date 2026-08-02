@@ -27,5 +27,12 @@ namespace SEG.Aplicacion.Servicios.Implementaciones
                 funcionEjecutar: _msEmpresasBackgroundServicio.ObtenerSedePorIdAsync,
                 request: sedeId);
         }
+
+        public async Task<List<SedeDto?>> ListarSedesAsync()
+        {
+            return await _servicioComun.ObtenerRespuestaHttpAsync<List<SedeDto?>>(
+                funcionEjecutar: _msEmpresasBackgroundServicio.ListarSedesAsync);
+        }
+
     }
 }

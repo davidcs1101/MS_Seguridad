@@ -64,21 +64,21 @@ namespace SEG.Aplicacion.Servicios.Interfaces
 
             foreach (var grupo in catalogosAgrupados)
             {
-                var parametros = grupo.Select(x => new SEG_MaestroExterno
+                var maestros = grupo.Select(x => new SEG_MaestroExterno
                 {
-                    ServicioOrigen = "ms_datoscomunes",
+                    ServicioOrigen = CodigosMicroservicios.MS_DATOSCOMUNES,
                     CodigoMaestro = x.CodigoDatoConstante!,
                     OrigenId = x.Id,
                     Codigo = x.Codigo,
                     Nombre = x.Nombre,
-                    EstadoActivo = x.EstadoActivo,
+                    EstadoActivo = x.EstadoActivoConstanteDetalle,
                     UsuarioCreadorId = x.UsuarioCreadorId,
                 }).ToList();
 
                 await _maestroExternoRepositorio.SincronizarMaestroAsync(
-                    "ms_datoscomunes",
+                    CodigosMicroservicios.MS_DATOSCOMUNES,
                     grupo.Key!,
-                    parametros);
+                    maestros);
             }
 
             // Refrescar la caché local

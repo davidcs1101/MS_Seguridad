@@ -6,5 +6,6 @@ namespace SEG.Aplicacion.Servicios.Interfaces
     {
         Task<bool> ValidarSedeExisteAsync(int id);
         Task<SedeDto> ObtenerSedePorId(int sedeId);
+        Task<List<SedeDto?>> ListarSedesAsync();
     }
 }

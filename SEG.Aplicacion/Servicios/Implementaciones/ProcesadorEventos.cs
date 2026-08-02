@@ -12,13 +12,15 @@ namespace SEG.Aplicacion.Servicios.Interfaces
         private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IPublicadorEventosBackgroundServicio _publicadorEventosBackgroundServicio;
         private readonly IProcesadorDatosComunes _procesadorDatosComunes;
+        private readonly IProcesadorEmpresas _procesadorEmpresas;
 
-        public ProcesadorEventos(IMSEnvioCorreos msEnvioCorreos, ISerializadorJsonServicio serializadorJsonServicio, IPublicadorEventosBackgroundServicio publicadorEventosBackgroundServicio, IProcesadorDatosComunes procesadorDatosComunes)
+        public ProcesadorEventos(IMSEnvioCorreos msEnvioCorreos, ISerializadorJsonServicio serializadorJsonServicio, IPublicadorEventosBackgroundServicio publicadorEventosBackgroundServicio, IProcesadorDatosComunes procesadorDatosComunes, IProcesadorEmpresas procesadorEmpresas)
         {
             _msEnvioCorreos = msEnvioCorreos;
             _serializadorJsonServicio = serializadorJsonServicio;
             _publicadorEventosBackgroundServicio = publicadorEventosBackgroundServicio;
             _procesadorDatosComunes = procesadorDatosComunes;
+            _procesadorEmpresas = procesadorEmpresas;
         }
 
         public async Task ProcesarAsync(string evento, string payload = "", string UrlDestino = "")
@@ -33,6 +35,9 @@ namespace SEG.Aplicacion.Servicios.Interfaces
                     break;
                 case EventosColas.CONSTANTESDETALLEACTUALIZADO:
                     await _procesadorDatosComunes.ProcesarDatosConstantesAsync(_serializadorJsonServicio.Deserializar<MaestroActualizadoEventoDto>(payload));
+                    break;
+                case EventosColas.SEDESACTUALIZADAS:
+                    await _procesadorEmpresas.ProcesarSedesAsync(Convert.ToInt32(payload));
                     break;
             }
         }

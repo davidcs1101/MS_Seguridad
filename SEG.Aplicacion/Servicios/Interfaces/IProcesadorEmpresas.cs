@@ -6,6 +6,6 @@ namespace SEG.Aplicacion.Servicios.Interfaces
     public interface IProcesadorEmpresas
     {
         Task ProcesarSedesAsync();
-        Task ProcesarSedesAsync(MaestroActualizadoEventoDto codigosMaestros);
+        Task ProcesarSedesAsync(int sedeId);
     }
 }

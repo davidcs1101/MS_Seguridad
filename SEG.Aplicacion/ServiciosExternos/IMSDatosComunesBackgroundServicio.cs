@@ -1,6 +1,4 @@
-﻿using SEG.Dtos;
-using Refit;
-
+﻿using Refit;
 namespace SEG.Aplicacion.ServiciosExternos
 {
     public interface IMSDatosComunesBackgroundServicio

@@ -125,6 +125,7 @@ builder.Services.AddScoped<IProcesadorMaestrosExternos, ProcesadorMaestrosExtern
 builder.Services.AddScoped<ProcesadorMaestrosExternosJob>();//Este es con el que consultamos los maestros externos y actualizamos la tabla de maestros externos y la cache local
 
 builder.Services.AddScoped<IProcesadorDatosComunes, ProcesadorDatosComunes>();
+builder.Services.AddScoped<IProcesadorEmpresas, ProcesadorEmpresas>();
 
 builder.Services.AddSingleton<IRespuestaHttpValidador, RespuestaHttpValidador>();
 
