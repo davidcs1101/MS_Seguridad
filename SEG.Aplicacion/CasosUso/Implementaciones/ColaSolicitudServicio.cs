@@ -111,6 +111,27 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         public async Task<SEG_ColaSolicitud> AgregarColaSolicitud(string tipo, object payload, string urlDestino = "")
         {
+            return await AgregarCola(tipo, payload, urlDestino);
+        }
+
+        public async Task<List<SEG_ColaSolicitud>> AgregarColasSolicitudes(string tipo, object payload, List<string?>? urlsDestino = null)
+        {
+            if (urlsDestino is null || urlsDestino.Count == 0)
+                return new List<SEG_ColaSolicitud>();
+
+            var solicitudes = new List<SEG_ColaSolicitud>();
+            foreach (var url in urlsDestino)
+            {
+                var cola = await AgregarCola(tipo, payload, url);
+                solicitudes.Add(cola);
+            }
+            return solicitudes;
+        }
+
+
+
+        private async Task<SEG_ColaSolicitud> AgregarCola(string tipo, object payload, string urlDestino = "")
+        {
             var solicitud = new SEG_ColaSolicitud
             {
                 Tipo = tipo,
@@ -121,5 +142,6 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _colaSolicitudRepositorio.MarcarCrear(solicitud);
             return solicitud;
         }
+
     }
 }

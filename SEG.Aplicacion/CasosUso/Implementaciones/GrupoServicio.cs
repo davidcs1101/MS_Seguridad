@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Aplicacion.Servicios.Implementaciones;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using SEG.Aplicacion.ServiciosExternos;
+using SEG.Aplicacion.ServiciosExternos.config;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
 using SEG.Dominio.Entidades;
 using SEG.Dominio.Repositorio;
+using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dtos;
 using Utilidades;
@@ -21,16 +24,24 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
-        private readonly ISincronizadorAutorizacion _autorizacionSincronizacion;
+        private readonly ISincronizadorMicroservicios _sincronizadorMicroservicios;
+        private readonly IProcesadorTransacciones _procesadorTransacciones;
+        private readonly IColaSolicitudServicio _colaSolicitudServicio;
+        private readonly IAppSettings _appSettings;
+        private readonly IUnidadDeTrabajo _unidadDeTrabajo;
 
-        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador, ISincronizadorAutorizacion autorizacionSincronizacion)
+        public GrupoServicio(IGrupoRepositorio grupoRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IApiResponse apiResponseServicio, IEntidadValidador<SEG_Grupo> grupoValidador, ISincronizadorMicroservicios sincronizadorMicroservicios, IProcesadorTransacciones procesadorTransacciones, IColaSolicitudServicio colaSolicitudServicio, IAppSettings appSettings, IUnidadDeTrabajo unidadDeTrabajo)
         {
             _grupoRepositorio = grupoRepositorio;
             _mapper = mapper;
             _usuarioContextoServicio = usuarioContextoServicio;
             _apiResponse = apiResponseServicio;
             _grupoValidador = grupoValidador;
-            _autorizacionSincronizacion = autorizacionSincronizacion;
+            _sincronizadorMicroservicios = sincronizadorMicroservicios;
+            _procesadorTransacciones = procesadorTransacciones;
+            _colaSolicitudServicio = colaSolicitudServicio;
+            _appSettings = appSettings;
+            _unidadDeTrabajo = unidadDeTrabajo;
         }
 
         public async Task<ApiResponseDto<int>> CrearAsync(GrupoCreacionRequest grupoCreacionRequest)
@@ -51,19 +62,28 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         public async Task<ApiResponseDto<string>> ModificarAsync(GrupoModificacionRequest grupoModificacionRequest)
         {
-            var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(grupoModificacionRequest.Id);
-            _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
+            var colas = new List<SEG_ColaSolicitud>();
+            await _procesadorTransacciones.EjecutarEnTransaccionAsync(async () =>
+            {
+                var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(grupoModificacionRequest.Id);
+                _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
 
-            var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
+                var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-            _mapper.Map(grupoModificacionRequest, grupoExiste);
-            grupoExiste.FechaModificado = DateTime.Now;
-            grupoExiste.UsuarioModificadorId = usuarioId;
+                _mapper.Map(grupoModificacionRequest, grupoExiste!);
+                grupoExiste!.FechaModificado = DateTime.Now;
+                grupoExiste.UsuarioModificadorId = usuarioId;
 
-            await _grupoRepositorio.ModificarAsync(grupoExiste);
+                _grupoRepositorio.MarcarModificar(grupoExiste);
+
+                var urls = _appSettings.ObtenerEventosNotificarActualizarPermisos();
+                colas = await _colaSolicitudServicio.AgregarColasSolicitudes(EventosColas.PERMISOSACTUALIZADOS, "", urls);
+
+                await _unidadDeTrabajo.GuardarCambiosAsync();
+            });
 
             // Llamada para actualizar la sincronización de permisos después de crear un grupo
-            await _autorizacionSincronizacion.SincronizarPermisosAsync();
+            await _sincronizadorMicroservicios.SincronizarPermisosAsync(colas.Select(c => c.Id).ToList());
 
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO,"");
         }

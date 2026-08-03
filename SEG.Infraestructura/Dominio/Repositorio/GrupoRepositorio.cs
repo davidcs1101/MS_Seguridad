@@ -20,10 +20,9 @@ namespace SEG.Infraestructura.Dominio.Repositorio
             return grupo.Id;
         }
 
-        public async Task ModificarAsync(SEG_Grupo grupo) 
+        public void MarcarModificar(SEG_Grupo grupo)
         {
             _context.SEG_Grupos.Update(grupo);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> EliminarAsync(int id)

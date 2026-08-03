@@ -1,13 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SEG.Dtos;
-using Utilidades;
+using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Aplicacion.Servicios.Interfaces;
+using SEG.Aplicacion.ServiciosExternos;
+using SEG.Aplicacion.ServiciosExternos.config;
+using SEG.Aplicacion.ServiciosExternos.Mapeo;
 using SEG.Dominio.Entidades;
 using SEG.Dominio.Repositorio;
-using SEG.Aplicacion.CasosUso.Interfaces;
-using SEG.Aplicacion.ServiciosExternos;
-using SEG.Aplicacion.Servicios.Interfaces;
+using SEG.Dominio.Repositorio.UnidadTrabajo;
 using SEG.Dominio.Servicios.Interfaces;
-using SEG.Aplicacion.ServiciosExternos.Mapeo;
+using SEG.Dtos;
+using Utilidades;
 using Utilidades.Dtos;
 using Utilidades.Servicios.Responses.Interfaces;
 
@@ -20,16 +22,24 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUsuarioContextoServicio _usuarioContextoServicio;
         private readonly IApiResponse _apiResponse;
         private readonly IEntidadValidador<SEG_Programa> _programaValidador;
-        private readonly ISincronizadorAutorizacion _autorizacionSincronizacion;
+        private readonly ISincronizadorMicroservicios _sincronizadorMicroservicios;
+        private readonly IProcesadorTransacciones _procesadorTransacciones;
+        private readonly IColaSolicitudServicio _colaSolicitudServicio;
+        private readonly IAppSettings _appSettings;
+        private readonly IUnidadDeTrabajo _unidadDeTrabajo;
 
-        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio, ISincronizadorAutorizacion autorizacionSincronizacion)
+        public ProgramaServicio(IProgramaRepositorio programaRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio, IEntidadValidador<SEG_Programa> programaValidador, IApiResponse apiResponseServicio, ISincronizadorMicroservicios sincronizadorMicroservicios, IProcesadorTransacciones procesadorTransacciones, IColaSolicitudServicio colaSolicitudServicio, IAppSettings appSettings, IUnidadDeTrabajo unidadDeTrabajo)
         {
             _programaRepositorio = programaRepositorio;
             _mapper = mapper;
             _usuarioContextoServicio = usuarioContextoServicio;
             _programaValidador = programaValidador;
             _apiResponse = apiResponseServicio;
-            _autorizacionSincronizacion = autorizacionSincronizacion;
+            _sincronizadorMicroservicios = sincronizadorMicroservicios;
+            _procesadorTransacciones = procesadorTransacciones;
+            _colaSolicitudServicio = colaSolicitudServicio;
+            _appSettings = appSettings;
+            _unidadDeTrabajo = unidadDeTrabajo;
         }
 
         public async Task<ApiResponseDto<int>> CrearAsync(ProgramaCreacionRequest programaCreacionRequest)
@@ -49,19 +59,28 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         public async Task<ApiResponseDto<string>> ModificarAsync(ProgramaModificacionRequest programaModificacionRequest)
         {
-            var programaExiste = await _programaRepositorio.ObtenerPorIdAsync(programaModificacionRequest.Id);
-            _programaValidador.ValidarDatoNoEncontrado(programaExiste, Textos.Programas.MENSAJE_PROGRAMA_NO_EXISTE_ID);
+            var colas = new List<SEG_ColaSolicitud>();
+            await _procesadorTransacciones.EjecutarEnTransaccionAsync(async () =>
+            {
+                var programaExiste = await _programaRepositorio.ObtenerPorIdAsync(programaModificacionRequest.Id);
+                _programaValidador.ValidarDatoNoEncontrado(programaExiste, Textos.Programas.MENSAJE_PROGRAMA_NO_EXISTE_ID);
 
-            var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
+                var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-            _mapper.Map(programaModificacionRequest, programaExiste);
-            programaExiste.FechaModificado = DateTime.Now;
-            programaExiste.UsuarioModificadorId = usuarioId;
+                _mapper.Map(programaModificacionRequest, programaExiste);
+                programaExiste.FechaModificado = DateTime.Now;
+                programaExiste.UsuarioModificadorId = usuarioId;
 
-            await _programaRepositorio.ModificarAsync(programaExiste);
+                _programaRepositorio.MarcarModificar(programaExiste);
 
-            // Llamada para actualizar la sincronización de permisos después de crear un grupo
-            await _autorizacionSincronizacion.SincronizarPermisosAsync();
+                var urls = _appSettings.ObtenerEventosNotificarActualizarPermisos();
+                colas = await _colaSolicitudServicio.AgregarColasSolicitudes(EventosColas.PERMISOSACTUALIZADOS, "", urls);
+
+                await _unidadDeTrabajo.GuardarCambiosAsync();
+            });
+
+            // Llamada para actualizar la sincronización de permisos después de modificar una acción
+            await _sincronizadorMicroservicios.SincronizarPermisosAsync(colas.Select(c => c.Id).ToList());
 
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }

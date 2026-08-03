@@ -20,10 +20,9 @@ namespace SEG.Infraestructura.Dominio.Repositorio
             return accion.Id;
         }
 
-        public async Task ModificarAsync(SEG_Accion accion) 
+        public void MarcarModificar(SEG_Accion accion) 
         {
             _context.SEG_Acciones.Update(accion);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> EliminarAsync(int id)

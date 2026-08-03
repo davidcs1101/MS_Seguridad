@@ -152,7 +152,7 @@ builder.Services.AddMemoryCache();
 
 builder.Services.AddSingleton<IAuthorizationHandler, PermisoManejadorAutorizacion>();
 builder.Services.AddScoped<IAutorizacionServicio, AutorizacionServicio>();
-builder.Services.AddScoped<ISincronizadorAutorizacion, SincronizadorAutorizacion>();
+builder.Services.AddScoped<ISincronizadorMicroservicios, SincronizadorMicroservicios>();
 
 
 #region REG_Servicios de configuraciones Appsettings

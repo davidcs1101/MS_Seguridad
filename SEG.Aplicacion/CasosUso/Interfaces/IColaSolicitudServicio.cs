@@ -8,5 +8,6 @@ namespace SEG.Aplicacion.CasosUso.Interfaces
         Task ProcesarPorColaSolicitudIdAsync(int id, bool validarEstadoPendiente = false);
         Task<ApiResponseDto<int>> CrearAsync(ColaSolicitudCreacionRequest colaSolicitudCreacionRequest);
         Task<SEG_ColaSolicitud> AgregarColaSolicitud(string tipo, object payload, string urlDestino = "");
+        Task<List<SEG_ColaSolicitud>> AgregarColasSolicitudes(string tipo, object payload, List<string?>? urlsDestino = null);
     }
 }

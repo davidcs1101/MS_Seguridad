@@ -19,10 +19,9 @@ namespace SEG.Infraestructura.Dominio.Repositorio
             _context = context;
         }
 
-        public async Task ModificarAsync(SEG_Permiso permiso)
+        public void MarcarModificar(SEG_Permiso permiso)
         {
             _context.SEG_Permisos.Update(permiso);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<SEG_Permiso?> ObtenerPorProgramaIdYAccionIdAsync(int programaId, int accionId)

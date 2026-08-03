@@ -14,7 +14,6 @@ using Utilidades.Seguridad;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
 using Utilidades.Dtos;
 using Utilidades.Servicios.Responses.Interfaces;
-using Utilidades.Servicios.Serializacion.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -29,7 +28,6 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
         private readonly IGrupoRepositorio _grupoRepositorio;
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
-        private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
         private readonly IUsuarioSedeGrupoRepositorio _usuarioSedeGrupoRepositorio;
         private readonly IJobEncoladorServicio _jobEncoladorServicio;
         private readonly IMSEmpresas _msEmpresas;
@@ -39,7 +37,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IColaSolicitudServicio _colaSolicitudServicio;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IProcesadorTransacciones procesadorTransacciones, IMaestroExternoCache maestroExternoCache, IEntidadValidador<MaestroExternoDto> parametroExternoDtoValidador, IColaSolicitudServicio colaSolicitudServicio)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IProcesadorTransacciones procesadorTransacciones, IMaestroExternoCache maestroExternoCache, IEntidadValidador<MaestroExternoDto> parametroExternoDtoValidador, IColaSolicitudServicio colaSolicitudServicio)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;
@@ -50,7 +48,6 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _unidadDeTrabajo = unidadDeTrabajo;
             _grupoRepositorio = grupoRepositorio;
             _grupoValidador = grupoValidador;
-            _colaSolicitudRepositorio = colaSolicitudRepositorio;
             _usuarioSedeGrupoRepositorio = usuarioSedeGrupoRepositorio;
             _jobEncoladorServicio = jobEncoladorServicio;
             _msEmpresas = msEmpresas;

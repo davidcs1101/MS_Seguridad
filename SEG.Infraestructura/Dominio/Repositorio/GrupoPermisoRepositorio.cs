@@ -14,20 +14,17 @@ namespace SEG.Infraestructura.Dominio.Repositorio
             _context = context;
         }
 
-        public async Task<int> CrearAsync(SEG_GrupoPermiso grupoPermiso) {
+        public void MarcarCrear(SEG_GrupoPermiso grupoPermiso) {
             _context.SEG_GruposPermisos.Add(grupoPermiso);
-            await _context.SaveChangesAsync();
-            return grupoPermiso.Id;
         }
 
-        public async Task ModificarAsync(SEG_GrupoPermiso grupoPermiso) {
+        public void MarcarModificar(SEG_GrupoPermiso grupoPermiso) {
             _context.SEG_GruposPermisos.Update(grupoPermiso);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> EliminarAsync(int id) {
-            var eliminado = await _context.SEG_GruposPermisos.Where(g => g.Id == id).ExecuteDeleteAsync();
-            return eliminado > 0;
+        public void MarcarEliminar(SEG_GrupoPermiso grupoPermiso)
+        {
+            _context.SEG_GruposPermisos.Remove(grupoPermiso);
         }
 
         public async Task<SEG_GrupoPermiso?> ObtenerGrupoPermisoAsync(int grupoId, int permisoId)

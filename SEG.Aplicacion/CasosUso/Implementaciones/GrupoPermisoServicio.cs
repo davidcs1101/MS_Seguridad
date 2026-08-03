@@ -1,13 +1,16 @@
-﻿using SEG.Dominio.Entidades;
+﻿using Microsoft.EntityFrameworkCore;
+using SEG.Aplicacion.CasosUso.Interfaces;
+using SEG.Aplicacion.Servicios.Implementaciones;
+using SEG.Aplicacion.Servicios.Interfaces;
+using SEG.Aplicacion.ServiciosExternos;
+using SEG.Aplicacion.ServiciosExternos.config;
+using SEG.Aplicacion.ServiciosExternos.Mapeo;
+using SEG.Dominio.Entidades;
+using SEG.Dominio.Repositorio;
+using SEG.Dominio.Repositorio.UnidadTrabajo;
+using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dtos;
 using Utilidades;
-using SEG.Dominio.Repositorio;
-using SEG.Aplicacion.CasosUso.Interfaces;
-using SEG.Aplicacion.ServiciosExternos;
-using SEG.Aplicacion.Servicios.Interfaces;
-using SEG.Dominio.Servicios.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using SEG.Aplicacion.ServiciosExternos.Mapeo;
 using Utilidades.Dtos;
 using Utilidades.Servicios.Responses.Interfaces;
 
@@ -24,9 +27,13 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         public readonly IUsuarioContextoServicio _usuarioContextoServicio;
         public readonly IMapperPerfiles _mapper;
         public readonly IApiResponse _apiResponse;
-        public readonly ISincronizadorAutorizacion _autorizacionSincronizacion;
+        public readonly ISincronizadorMicroservicios _sincronizadorMicroservicios;
+        private readonly IProcesadorTransacciones _procesadorTransacciones;
+        private readonly IColaSolicitudServicio _colaSolicitudServicio;
+        private readonly IAppSettings _appSettings;
+        private readonly IUnidadDeTrabajo _unidadDeTrabajo;
 
-        public GrupoPermisoServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IPermisoRepositorio permisoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Permiso> permisoValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapperPerfiles mapper, IApiResponse apiResponseServicio, ISincronizadorAutorizacion autorizacionSincronizacion)
+        public GrupoPermisoServicio(IGrupoPermisoRepositorio grupoPermisoRepositorio, IPermisoRepositorio permisoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IEntidadValidador<SEG_Permiso> permisoValidador, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_GrupoPermiso> grupoPermisoValidador, IUsuarioContextoServicio usuarioContextoServicio, IMapperPerfiles mapper, IApiResponse apiResponseServicio, ISincronizadorMicroservicios sincronizadorMicroservicios, IProcesadorTransacciones procesadorTransacciones, IColaSolicitudServicio colaSolicitudServicio, IAppSettings appSettings, IUnidadDeTrabajo unidadDeTrabajo)
         {
             _grupoPermisoRepositorio = grupoPermisoRepositorio;
             _permisoRepositorio = permisoRepositorio;
@@ -37,67 +44,97 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _usuarioContextoServicio = usuarioContextoServicio;
             _mapper = mapper;
             _apiResponse = apiResponseServicio;
-            _autorizacionSincronizacion = autorizacionSincronizacion;
+            _sincronizadorMicroservicios = sincronizadorMicroservicios;
+            _procesadorTransacciones = procesadorTransacciones;
+            _colaSolicitudServicio = colaSolicitudServicio;
+            _appSettings = appSettings;
+            _unidadDeTrabajo = unidadDeTrabajo;
         }
 
         public async Task<ApiResponseDto<int>> CrearAsync(GrupoPermisoCreacionRequest grupoPermisoCreacionRequest)
         {
-            var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerGrupoPermisoAsync(grupoPermisoCreacionRequest.GrupoId, grupoPermisoCreacionRequest.PermisoId);
-            _grupoPermisoValidador.ValidarDatoYaExiste(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_YA_EXISTE);
+            var id = 0;
+            var colas = new List<SEG_ColaSolicitud>();
+            await _procesadorTransacciones.EjecutarEnTransaccionAsync(async () =>
+            {
+                var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerGrupoPermisoAsync(grupoPermisoCreacionRequest.GrupoId, grupoPermisoCreacionRequest.PermisoId);
+                _grupoPermisoValidador.ValidarDatoYaExiste(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_YA_EXISTE);
 
-            var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(grupoPermisoCreacionRequest.GrupoId);
-            _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
+                var grupoExiste = await _grupoRepositorio.ObtenerPorIdAsync(grupoPermisoCreacionRequest.GrupoId);
+                _grupoValidador.ValidarDatoNoEncontrado(grupoExiste, Textos.Grupos.MENSAJE_GRUPO_NO_EXISTE_ID);
 
-            var permisoExiste = await _permisoRepositorio.ObtenerPorIdAsync(grupoPermisoCreacionRequest.PermisoId);
-            _permisoValidador.ValidarDatoNoEncontrado(permisoExiste, Textos.Permisos.MENSAJE_PERMISO_NO_EXISTE_ID);
+                var permisoExiste = await _permisoRepositorio.ObtenerPorIdAsync(grupoPermisoCreacionRequest.PermisoId);
+                _permisoValidador.ValidarDatoNoEncontrado(permisoExiste, Textos.Permisos.MENSAJE_PERMISO_NO_EXISTE_ID);
 
-            var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
+                var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-            var grupoPermiso = _mapper.Map(grupoPermisoCreacionRequest);
-            grupoPermiso.UsuarioCreadorId = usuarioId;
+                var grupoPermiso = _mapper.Map(grupoPermisoCreacionRequest);
+                grupoPermiso.UsuarioCreadorId = usuarioId;
 
-            var id = await _grupoPermisoRepositorio.CrearAsync(grupoPermiso);
+                _grupoPermisoRepositorio.MarcarCrear(grupoPermiso);
 
-            // Llamada para actualizar la sincronización de permisos
-            await _autorizacionSincronizacion.SincronizarPermisosAsync();
+                var urls = _appSettings.ObtenerEventosNotificarActualizarPermisos();
+                colas = await _colaSolicitudServicio.AgregarColasSolicitudes(EventosColas.PERMISOSACTUALIZADOS, "", urls);
+
+                await _unidadDeTrabajo.GuardarCambiosAsync();
+
+                id = grupoPermiso.Id;
+            });
+
+            // Llamada para actualizar la sincronización de permisos después de modificar un permiso
+            await _sincronizadorMicroservicios.SincronizarPermisosAsync(colas.Select(c => c.Id).ToList());
 
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
         }
 
         public async Task<ApiResponseDto<string>> ModificarAsync(GrupoPermisoModificacionRequest grupoPermisoModificacionRequest)
         {
-            var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerPorIdAsync(grupoPermisoModificacionRequest.Id);
-            _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_NO_EXISTE_ID);
+            var colas = new List<SEG_ColaSolicitud>();
+            await _procesadorTransacciones.EjecutarEnTransaccionAsync(async () =>
+            {
+                var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerPorIdAsync(grupoPermisoModificacionRequest.Id);
+                _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_NO_EXISTE_ID);
 
-            var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
+                var usuarioId = _usuarioContextoServicio.ObtenerUsuarioIdToken();
 
-            grupoPermisoExiste!.EstadoActivo = grupoPermisoModificacionRequest.EstadoActivo;
-            grupoPermisoExiste.FechaModificado = DateTime.UtcNow;
-            grupoPermisoExiste.UsuarioModificadorId = usuarioId;
+                grupoPermisoExiste!.EstadoActivo = grupoPermisoModificacionRequest.EstadoActivo;
+                grupoPermisoExiste.FechaModificado = DateTime.UtcNow;
+                grupoPermisoExiste.UsuarioModificadorId = usuarioId;
 
-            await _grupoPermisoRepositorio.ModificarAsync(grupoPermisoExiste);
+                _grupoPermisoRepositorio.MarcarModificar(grupoPermisoExiste);
 
-            // Llamada para actualizar la sincronización de permisos
-            await _autorizacionSincronizacion.SincronizarPermisosAsync();
+                var urls = _appSettings.ObtenerEventosNotificarActualizarPermisos();
+                colas = await _colaSolicitudServicio.AgregarColasSolicitudes(EventosColas.PERMISOSACTUALIZADOS, "", urls);
+
+                await _unidadDeTrabajo.GuardarCambiosAsync();
+            });
+
+            // Llamada para actualizar la sincronización de permisos después de modificar un permiso
+            await _sincronizadorMicroservicios.SincronizarPermisosAsync(colas.Select(c => c.Id).ToList());
 
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ACTUALIZADO, "");
         }
 
         public async Task<ApiResponseDto<string>> EliminarAsync(int id)
         {
-            var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerPorIdAsync(id);
-            _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_NO_EXISTE_ID);
-
-            var eliminado = await _grupoPermisoRepositorio.EliminarAsync(id);
-
-            if (eliminado)
+            var colas = new List<SEG_ColaSolicitud>();
+            await _procesadorTransacciones.EjecutarEnTransaccionAsync(async () =>
             {
-                // Llamada para actualizar la sincronización de permisos
-                await _autorizacionSincronizacion.SincronizarPermisosAsync();
-                return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO, "");
-            }
+                var grupoPermisoExiste = await _grupoPermisoRepositorio.ObtenerPorIdAsync(id);
+                _grupoPermisoValidador.ValidarDatoNoEncontrado(grupoPermisoExiste, Textos.GruposPermisos.MENSAJE_GRUPOPERMISO_NO_EXISTE_ID);
 
-            return _apiResponse.CrearRespuesta(false, Textos.Generales.MENSAJE_REGISTRO_NO_ELIMINADO, "");
+                _grupoPermisoRepositorio.MarcarEliminar(grupoPermisoExiste!);
+
+                var urls = _appSettings.ObtenerEventosNotificarActualizarPermisos();
+                colas = await _colaSolicitudServicio.AgregarColasSolicitudes(EventosColas.PERMISOSACTUALIZADOS, "", urls);
+
+                await _unidadDeTrabajo.GuardarCambiosAsync();
+            });
+
+            // Llamada para actualizar la sincronización de permisos después de modificar un permiso
+            await _sincronizadorMicroservicios.SincronizarPermisosAsync(colas.Select(c => c.Id).ToList());
+
+            return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_ELIMINADO, "");
         }
 
         public async Task<ApiResponseDto<GrupoPermisoDto?>> ObtenerGrupoPermisoAsync(int grupoId, int permisoId)
