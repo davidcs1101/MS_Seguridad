@@ -31,15 +31,15 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IEntidadValidador<SEG_Grupo> _grupoValidador;
         private readonly IColaSolicitudRepositorio _colaSolicitudRepositorio;
         private readonly IUsuarioSedeGrupoRepositorio _usuarioSedeGrupoRepositorio;
-        private readonly ISerializadorJsonServicio _serializadorJsonServicio;
         private readonly IJobEncoladorServicio _jobEncoladorServicio;
         private readonly IMSEmpresas _msEmpresas;
         private readonly IMaestroExternoCache _maestroExternoCache;
         private readonly IEntidadValidador<MaestroExternoDto> _parametroExternoDtoValidador;
         private readonly IProcesadorTransacciones _procesadorTransacciones;
+        private readonly IColaSolicitudServicio _colaSolicitudServicio;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, ISerializadorJsonServicio serializadorJsonServicio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IProcesadorTransacciones procesadorTransacciones, IMaestroExternoCache maestroExternoCache, IEntidadValidador<MaestroExternoDto> parametroExternoDtoValidador)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IColaSolicitudRepositorio colaSolicitudRepositorio, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IProcesadorTransacciones procesadorTransacciones, IMaestroExternoCache maestroExternoCache, IEntidadValidador<MaestroExternoDto> parametroExternoDtoValidador, IColaSolicitudServicio colaSolicitudServicio)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;
@@ -52,12 +52,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _grupoValidador = grupoValidador;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
             _usuarioSedeGrupoRepositorio = usuarioSedeGrupoRepositorio;
-            _serializadorJsonServicio = serializadorJsonServicio;
             _jobEncoladorServicio = jobEncoladorServicio;
             _msEmpresas = msEmpresas;
             _procesadorTransacciones = procesadorTransacciones;
             _maestroExternoCache = maestroExternoCache;
             _parametroExternoDtoValidador = parametroExternoDtoValidador;
+            _colaSolicitudServicio = colaSolicitudServicio;
         }
 
 
@@ -72,7 +72,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 _usuarioRepositorio.MarcarCrear(usuario);
 
                 var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeCreacionUsuario(usuario, nuevaClave);
-                cola = this.AgregarColaSolicitud(datosCorreo);
+                cola = await _colaSolicitudServicio.AgregarColaSolicitud(EventosColas.ENVIARCORREO, datosCorreo);
 
                 await _unidadDeTrabajo.GuardarCambiosAsync();
 
@@ -111,7 +111,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 _usuarioSedeGrupoRepositorio.MarcarCrear(usuarioSedeGrupo);
 
                 var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeCreacionUsuario(usuario, nuevaClave);
-                cola = this.AgregarColaSolicitud(datosCorreo);
+                cola = await _colaSolicitudServicio.AgregarColaSolicitud(EventosColas.ENVIARCORREO, datosCorreo);
 
                 await _unidadDeTrabajo.GuardarCambiosAsync();
 
@@ -155,7 +155,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                 _usuarioRepositorio.MarcarModificar(usuarioExiste);
 
                 var datosCorreo = _constructorMensajesNotificacionCorreo.ConstruirMensajeRestablecimientoClaveUsuario(usuarioExiste, nuevaClave);
-                cola = this.AgregarColaSolicitud(datosCorreo);
+                cola = await _colaSolicitudServicio.AgregarColaSolicitud(EventosColas.ENVIARCORREO, datosCorreo);
 
                 await _unidadDeTrabajo.GuardarCambiosAsync();
             });
@@ -249,19 +249,6 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             usuario.UsuarioCreadorId = usuarioCreadorId;
 
             return usuario;
-        }
-
-        private SEG_ColaSolicitud AgregarColaSolicitud(DatoCorreoRequest datoCorreoRequest) 
-        {
-            var solicitud = new SEG_ColaSolicitud
-            {
-                Tipo = EventosColas.ENVIARCORREO,
-                Payload = _serializadorJsonServicio.Serializar(datoCorreoRequest),
-                Estado = EstadoCola.Pendiente,
-                Intentos = 0
-            };
-            _colaSolicitudRepositorio.MarcarCrear(solicitud);
-            return solicitud;
         }
     }
 }

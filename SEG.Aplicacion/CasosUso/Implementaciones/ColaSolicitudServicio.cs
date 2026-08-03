@@ -11,6 +11,7 @@ using SEG.Dtos;
 using Utilidades;
 using Utilidades.Dtos;
 using Utilidades.Servicios.Responses.Interfaces;
+using Utilidades.Servicios.Serializacion.Interfaces;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -24,8 +25,9 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IApiResponse _apiResponse;
         private readonly IProcesadorEventos _procesadorEventos;
         private readonly IJobEncoladorServicio _jobEncoladorServicio;
+        private readonly ISerializadorJsonServicio _serializadorJsonServicio;
 
-        public ColaSolicitudServicio(IUnidadDeTrabajo unidadDeTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IProcesadorTransacciones procesadorTransacciones, IApiResponse apiResponse, IProcesadorEventos procesadorEventos, IJobEncoladorServicio jobEncoladorServicio)
+        public ColaSolicitudServicio(IUnidadDeTrabajo unidadDeTrabajo, IColaSolicitudRepositorio colaSolicitudRepositorio, IEntidadValidador<SEG_ColaSolicitud> colaSolicitudValidador, IAppSettings appSettings, IProcesadorTransacciones procesadorTransacciones, IApiResponse apiResponse, IProcesadorEventos procesadorEventos, IJobEncoladorServicio jobEncoladorServicio, ISerializadorJsonServicio serializadorJsonServicio)
         {
             _unidadDeTrabajo = unidadDeTrabajo;
             _colaSolicitudRepositorio = colaSolicitudRepositorio;
@@ -35,6 +37,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _apiResponse = apiResponse;
             _procesadorEventos = procesadorEventos;
             _jobEncoladorServicio = jobEncoladorServicio;
+            _serializadorJsonServicio = serializadorJsonServicio;
         }
 
         public async Task ProcesarColaSolicitudesAsync()
@@ -104,6 +107,19 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _ = _jobEncoladorServicio.EncolarPorColaSolicitudId(id, true);
 
             return _apiResponse.CrearRespuesta(true, Textos.Generales.MENSAJE_REGISTRO_CREADO, id);
+        }
+
+        public async Task<SEG_ColaSolicitud> AgregarColaSolicitud(string tipo, object payload, string urlDestino = "")
+        {
+            var solicitud = new SEG_ColaSolicitud
+            {
+                Tipo = tipo,
+                UrlDestino = urlDestino,
+                Payload = payload != null ? _serializadorJsonServicio.Serializar(payload) : string.Empty,
+                Estado = EstadoCola.Pendiente,
+            };
+            _colaSolicitudRepositorio.MarcarCrear(solicitud);
+            return solicitud;
         }
     }
 }
