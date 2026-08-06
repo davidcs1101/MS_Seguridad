@@ -1,5 +1,5 @@
 ﻿using SEG.Dominio.Entidades;
-
+using SEG.Dominio.Entidades.ParametrosConsultas;
 namespace SEG.Dominio.Repositorio
 {
     public interface IUsuarioRepositorio
@@ -12,6 +12,8 @@ namespace SEG.Dominio.Repositorio
         void MarcarModificar(SEG_Usuario usuario);
         Task<int> CrearAsync(SEG_Usuario usuario);
         void MarcarCrear(SEG_Usuario usuario);
-        IQueryable<SEG_Usuario> Listar();
+        Task<List<SEG_Usuario>> ListarAsync();
+        Task<List<SEG_Usuario>> ListarAsync(UsuarioConsulta consulta);
+        Task<int> ContarRegistrosAsync(UsuarioConsulta consulta);
     }
 }

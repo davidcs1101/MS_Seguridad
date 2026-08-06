@@ -1,5 +1,4 @@
 ﻿using SEG.Dtos;
-using Microsoft.EntityFrameworkCore;
 using SEG.Dominio.Entidades;
 using SEG.Dominio.Repositorio;
 using SEG.Aplicacion.CasosUso.Interfaces;
@@ -8,12 +7,12 @@ using SEG.Aplicacion.Servicios.Interfaces;
 using Utilidades;
 using SEG.Dominio.Servicios.Interfaces;
 using SEG.Dominio.Repositorio.UnidadTrabajo;
-using SEG.Dominio.Enumeraciones;
 using SEG.Aplicacion.Servicios.Interfaces.Cache;
 using Utilidades.Seguridad;
 using SEG.Aplicacion.ServiciosExternos.Mapeo;
 using Utilidades.Dtos;
 using Utilidades.Servicios.Responses.Interfaces;
+using SEG.Dominio.Entidades.ParametrosConsultas;
 
 namespace SEG.Aplicacion.CasosUso.Implementaciones
 {
@@ -32,12 +31,12 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private readonly IJobEncoladorServicio _jobEncoladorServicio;
         private readonly IMSEmpresas _msEmpresas;
         private readonly IMaestroExternoCache _maestroExternoCache;
-        private readonly IEntidadValidador<MaestroExternoDto> _parametroExternoDtoValidador;
+        private readonly IEntidadValidador<MaestroExternoDto> _maestroExternoDtoValidador;
         private readonly IProcesadorTransacciones _procesadorTransacciones;
         private readonly IColaSolicitudServicio _colaSolicitudServicio;
 
         public UsuarioServicio(IUsuarioRepositorio usuarioRepositorio, IMapperPerfiles mapper, IUsuarioContextoServicio usuarioContextoServicio,
-            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IProcesadorTransacciones procesadorTransacciones, IMaestroExternoCache maestroExternoCache, IEntidadValidador<MaestroExternoDto> parametroExternoDtoValidador, IColaSolicitudServicio colaSolicitudServicio)
+            IUsuarioValidador usuarioValidador, IConstructorMensajesNotificacionCorreo constructorMensajesNotificacionCorreo, IApiResponse apiResponseServicio, IUnidadDeTrabajo unidadDeTrabajo, IGrupoRepositorio grupoRepositorio, IEntidadValidador<SEG_Grupo> grupoValidador, IUsuarioSedeGrupoRepositorio usuarioSedeGrupoRepositorio, IJobEncoladorServicio jobEncoladorServicio, IMSEmpresas msEmpresas, IProcesadorTransacciones procesadorTransacciones, IMaestroExternoCache maestroExternoCache, IEntidadValidador<MaestroExternoDto> maestroExternoDtoValidador, IColaSolicitudServicio colaSolicitudServicio)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _mapper = mapper;
@@ -53,7 +52,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
             _msEmpresas = msEmpresas;
             _procesadorTransacciones = procesadorTransacciones;
             _maestroExternoCache = maestroExternoCache;
-            _parametroExternoDtoValidador = parametroExternoDtoValidador;
+            _maestroExternoDtoValidador = maestroExternoDtoValidador;
             _colaSolicitudServicio = colaSolicitudServicio;
         }
 
@@ -189,7 +188,8 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
         public async Task<ApiResponseDto<List<UsuarioDto>?>> ListarAsync(IdsListadoDto? idsListado = null)
         {
-            var usuariosResultado = _usuarioRepositorio.Listar()
+            var usuarios = await _usuarioRepositorio.ListarAsync();
+            var usuariosResultado = usuarios
                 .Select(u => new UsuarioDto
                 {
                     Id = u.Id,
@@ -205,13 +205,71 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
                     UsuarioModificadorId = u.UsuarioModificadorId,
                     FechaModificado = u.FechaModificado,
                     EstadoActivo = u.EstadoActivo
-                });
+                }).ToList();
 
             if (idsListado != null && idsListado.Ids.Any())
-                usuariosResultado = usuariosResultado.Where(u => idsListado.Ids.Contains(u.Id));
+                usuariosResultado = usuariosResultado.Where(u => idsListado.Ids.Contains(u.Id)).ToList();
 
-            var usuariosObtenidos = await usuariosResultado.ToListAsync();
-            return _apiResponse.CrearRespuesta<List<UsuarioDto>?>(true,"", usuariosObtenidos);
+            return _apiResponse.CrearRespuesta<List<UsuarioDto>?>(true,"", usuariosResultado);
+        }
+
+        public async Task<ApiResponseDto<PaginacionResponse<UsuarioDto>>> ListarAsync(UsuarioListadoRequest request)
+        {
+            var consulta = new UsuarioConsulta
+            {
+                Pagina = request.Paginacion.Pagina,
+                RegistrosPorPagina = request.Paginacion.RegistrosPorPagina,
+                CampoOrden = request.Paginacion.CampoOrden,
+                Descendente = request.Paginacion.Descendente,
+
+                TipoIdentificacionId = request.TipoIdentificacionId,
+                Identificacion = request.Identificacion,
+                Nombre1 = request.Nombre1,
+                Nombre2 = request.Nombre2,
+                Apellido1 = request.Apellido1,
+                Apellido2 = request.Apellido2,
+                Email = request.Email,
+                NombreUsuario = request.NombreUsuario,
+                EstadoActivo = request.EstadoActivo
+            };
+
+            var totalRegistros = await _usuarioRepositorio.ContarRegistrosAsync(consulta);
+
+            var usuarios = await _usuarioRepositorio.ListarAsync(consulta);
+
+            var usuariosResultado = usuarios
+                .Select(a => new UsuarioDto
+                {
+                    Id = a.Id,
+                    TipoIdentificacionId = a.TipoIdentificacionId,
+                    Nombre1 = a.Nombre1,
+                    Nombre2 = a.Nombre2,
+                    Apellido1 = a.Apellido1,
+                    Apellido2 = a.Apellido2,
+                    Email = a.Email,
+                    NombreUsuario = a.NombreUsuario,
+                    CambiarClave = a.CambiarClave,
+
+                    UsuarioCreadorId = a.UsuarioCreadorId,
+                    NombreUsuarioCreador = a.UsuarioCreador.NombreUsuario,
+                    FechaCreado = a.FechaCreado,
+                    UsuarioModificadorId = a.UsuarioModificadorId,
+                    NombreUsuarioModificador = a.UsuarioModificador?.NombreUsuario,
+                    FechaModificado = a.FechaModificado,
+                    EstadoActivo = a.EstadoActivo
+                })
+                .ToList();
+
+            return _apiResponse.CrearRespuesta(
+                true,
+                "",
+                new PaginacionResponse<UsuarioDto>
+                {
+                    Pagina = request.Paginacion.Pagina,
+                    RegistrosPorPagina = request.Paginacion.RegistrosPorPagina,
+                    TotalRegistros = totalRegistros,
+                    Registros = usuariosResultado
+                });
         }
 
 
@@ -219,7 +277,7 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
         private async Task<SEG_Usuario> AsignarDatosAsync(UsuarioCreacionRequest usuarioCreacionRequest, int usuarioCreadorId, string nuevaClave) 
         {
             var tipoIdentificacion = _maestroExternoCache.ObtenerPorCodigoMaestroYCodigo(CodigosConstantes.TIPOIDENTIREGISTROUSUARIO, usuarioCreacionRequest.TipoIdentificacion);
-            _parametroExternoDtoValidador.ValidarDatoNoEncontrado(tipoIdentificacion, Textos.Generales.MENSAJE_PARAMETROEXTERNO_NO_EXISTE_EN_CODIGOCATALOGO(CodigosConstantes.TIPOIDENTIREGISTROUSUARIO, usuarioCreacionRequest.TipoIdentificacion));
+            _maestroExternoDtoValidador.ValidarDatoNoEncontrado(tipoIdentificacion, Textos.Generales.MENSAJE_PARAMETROEXTERNO_NO_EXISTE_EN_CODIGOCATALOGO(CodigosConstantes.TIPOIDENTIREGISTROUSUARIO, usuarioCreacionRequest.TipoIdentificacion));
 
             var usuarioExiste = await _usuarioRepositorio.ObtenerPorUsuarioAsync(usuarioCreacionRequest.NombreUsuario);
             _usuarioValidador.ValidarDatoYaExiste(usuarioExiste, Textos.Usuarios.MENSAJE_USUARIO_NOMBRE_EXISTE);

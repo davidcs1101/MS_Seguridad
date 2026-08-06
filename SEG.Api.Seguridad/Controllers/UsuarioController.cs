@@ -88,5 +88,12 @@ namespace SEG.Api.Seguridad.Controllers
             return await _usuarioServicio.ListarAsync(ids);
         }
 
+        [HttpPost("listarPaginado")]
+        [Permiso(CodigosPermisos.Usuarios.LISTAR)]
+        public async Task<ActionResult<ApiResponseDto<PaginacionResponse<UsuarioDto>>>> ListarAsync(UsuarioListadoRequest request)
+        {
+            return await _usuarioServicio.ListarAsync(request);
+        }
+
     }
 }

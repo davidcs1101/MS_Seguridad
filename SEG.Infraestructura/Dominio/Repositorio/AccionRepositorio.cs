@@ -2,12 +2,16 @@
 using SEG.DataAccess;
 using SEG.Dominio.Entidades;
 using SEG.Dominio.Repositorio;
+using System.Linq.Expressions;
+using Utilidades.Dtos;
+using Utilidades.Helpers;
 
 namespace SEG.Infraestructura.Dominio.Repositorio
 {
     public class AccionRepositorio : IAccionRepositorio
     {
         private readonly AppDbContext _context;
+
         public AccionRepositorio(AppDbContext context) 
         {
             _context = context;
@@ -39,13 +43,6 @@ namespace SEG.Infraestructura.Dominio.Repositorio
         public async Task<SEG_Accion?> ObtenerPorCodigoAsync(string codigo) 
         {
             return await _context.SEG_Acciones.FirstOrDefaultAsync(a => a.Codigo == codigo);
-        }
-
-        public IQueryable<SEG_Accion> Listar() 
-        {
-            return _context.SEG_Acciones
-                .Include(a => a.UsuarioCreador)
-                .Include(a => a.UsuarioModificador);
         }
     }
 }

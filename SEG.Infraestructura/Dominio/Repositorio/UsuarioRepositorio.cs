@@ -1,13 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEG.DataAccess;
 using SEG.Dominio.Entidades;
+using SEG.Dominio.Entidades.ParametrosConsultas;
 using SEG.Dominio.Repositorio;
+using SEG.Infraestructura.Dominio.Repositorio.Helpers;
+using System.Linq.Expressions;
+using Utilidades.Helpers;
 
 namespace SEG.Infraestructura.Dominio.Repositorio
 {   
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
         private readonly AppDbContext _context;
+        private static readonly Dictionary<string,
+            Expression<Func<SEG_Usuario, object>>> ColumnasOrdenables =
+            new()
+            {
+                { "Identificacion", x => x.Identificacion },
+                { "Nombre1", x => x.Nombre1 },
+                { "Nombre2", x => x.Nombre2 },
+                { "Apellido1", x => x.Apellido1 },
+                { "Apellido2", x => x.Apellido2 },
+                { "Email", x => x.Email },
+                { "NombreUsuario", x => x.NombreUsuario },
+                { "EstadoActivo", x => x.EstadoActivo }
+            };
+
         public UsuarioRepositorio(AppDbContext context)
         {
             _context = context;
@@ -56,9 +74,44 @@ namespace SEG.Infraestructura.Dominio.Repositorio
             _context.SEG_Usuarios.Update(usuario);
         }
 
-        public IQueryable<SEG_Usuario> Listar()
+        public async Task<List<SEG_Usuario>> ListarAsync()
         {
-            return _context.SEG_Usuarios;
+            return await _context.SEG_Usuarios
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+
+        public async Task<List<SEG_Usuario>> ListarAsync(UsuarioConsulta consulta)
+        {
+            IQueryable<SEG_Usuario> query = _context.SEG_Usuarios
+                .Include(x => x.UsuarioCreador)
+                .Include(x => x.UsuarioModificador)
+                .AsNoTracking();
+
+            query = UsuarioQueryHelper.AplicarFiltros(query, consulta);
+
+            query = QueryOrdenamientoHelper.Aplicar(
+                query,
+                consulta.CampoOrden,
+                consulta.Descendente,
+                ColumnasOrdenables);
+
+            query = QueryPaginacionHelper.Aplicar(
+                query,
+                consulta.Pagina,
+                consulta.RegistrosPorPagina);
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<int> ContarRegistrosAsync(UsuarioConsulta consulta)
+        {
+            IQueryable<SEG_Usuario> query = _context.SEG_Usuarios.AsNoTracking();
+
+            query = UsuarioQueryHelper.AplicarFiltros(query, consulta);
+
+            return await query.CountAsync();
         }
     }
 }

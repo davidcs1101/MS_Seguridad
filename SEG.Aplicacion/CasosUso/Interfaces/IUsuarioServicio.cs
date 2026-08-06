@@ -11,5 +11,6 @@ namespace SEG.Aplicacion.CasosUso.Interfaces
         Task<ApiResponseDto<string>> ModificarEmailAsync(string email);
         Task<ApiResponseDto<string>> ObtenerNombreUsuarioPorIdAsync(int id);
         Task<ApiResponseDto<List<UsuarioDto>?>> ListarAsync(IdsListadoDto ids);
+        Task<ApiResponseDto<PaginacionResponse<UsuarioDto>>> ListarAsync(UsuarioListadoRequest request);
     }
 }

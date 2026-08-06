@@ -10,6 +10,5 @@ namespace SEG.Aplicacion.CasosUso.Interfaces
         Task<ApiResponseDto<string>> EliminarAsync(int id);
         Task<ApiResponseDto<AccionDto?>> ObtenerPorIdAsync(int id);
         Task<ApiResponseDto<AccionDto?>> ObtenerPorCodigoAsync(string codigo);
-        Task<ApiResponseDto<List<AccionDto>?>> ListarAsync();
     }
 }

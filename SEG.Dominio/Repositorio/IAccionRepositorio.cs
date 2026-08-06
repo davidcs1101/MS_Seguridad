@@ -9,6 +9,5 @@ namespace SEG.Dominio.Repositorio
         Task<bool> EliminarAsync(int id);
         Task<SEG_Accion?> ObtenerPorIdAsync(int id);
         Task<SEG_Accion?> ObtenerPorCodigoAsync(string codigo);
-        IQueryable<SEG_Accion> Listar();
     }
 }

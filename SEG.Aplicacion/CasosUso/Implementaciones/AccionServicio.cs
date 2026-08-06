@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SEG.Aplicacion.CasosUso.Interfaces;
+﻿using SEG.Aplicacion.CasosUso.Interfaces;
 using SEG.Aplicacion.Servicios.Interfaces;
 using SEG.Aplicacion.ServiciosExternos;
 using SEG.Aplicacion.ServiciosExternos.config;
@@ -118,28 +117,5 @@ namespace SEG.Aplicacion.CasosUso.Implementaciones
 
             return _apiResponse.CrearRespuesta<AccionDto?>(true, "", accionDto);
         }
-
-        public async Task<ApiResponseDto<List<AccionDto>?>> ListarAsync()
-        {
-            var acciones = await _accionRepositorio.Listar().ToListAsync();
-
-            var accionesResultado = acciones
-                .Select(a => new AccionDto
-                {
-                    Id = a.Id,
-                    Codigo = a.Codigo,
-                    Nombre = a.Nombre,
-                    UsuarioCreadorId = a.UsuarioCreadorId,
-                    NombreUsuarioCreador = a.UsuarioCreador.NombreUsuario,
-                    FechaCreado = a.FechaCreado,
-                    UsuarioModificadorId = a.UsuarioModificadorId,
-                    NombreUsuarioModificador = a.UsuarioModificador != null ? a.UsuarioModificador.NombreUsuario : null,
-                    FechaModificado = a.FechaModificado,
-                    EstadoActivo = a.EstadoActivo
-                }).ToList();
-
-            return _apiResponse.CrearRespuesta<List<AccionDto>?>(true, "", accionesResultado);
-        }
-
     }
 }

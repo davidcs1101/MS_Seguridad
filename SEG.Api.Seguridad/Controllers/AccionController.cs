@@ -26,13 +26,6 @@ namespace SEG.Api.Seguridad.Controllers
             return await _accionServicio.ObtenerPorCodigoAsync(codigo);
         }
 
-        [HttpGet("listar")]
-        [Permiso(CodigosPermisos.Acciones.LISTAR)]
-        public async Task<ActionResult<ApiResponseDto<List<AccionDto>?>>> Listar()
-        {
-            return await _accionServicio.ListarAsync();
-        }
-
         [HttpPost("crear")]
         [Permiso(CodigosPermisos.Acciones.CREAR)]
         public async Task<ActionResult<ApiResponseDto<int>>> Crear(AccionCreacionRequest accionCreacionRequest)
